@@ -1,0 +1,596 @@
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import html2canvas from 'html2canvas';
+
+/* ======================== DATOS DEL MUNDIAL 2026 ======================== */
+const GR = [
+  {n:'A',t:[{id:'mex',nm:'Mexico',c:'mx'},{id:'can',nm:'Canada',c:'ca'},{id:'cri',nm:'Costa Rica',c:'cr'},{id:'nzl',nm:'N. Zelanda',c:'nz'}]},
+  {n:'B',t:[{id:'usa',nm:'EE.UU.',c:'us'},{id:'jam',nm:'Jamaica',c:'jm'},{id:'slv',nm:'El Salvador',c:'sv'},{id:'tri',nm:'Trinidad T.',c:'tt'}]},
+  {n:'C',t:[{id:'arg',nm:'Argentina',c:'ar'},{id:'chi',nm:'Chile',c:'cl'},{id:'ksa',nm:'Arabia S.',c:'sa'},{id:'tun',nm:'Tunez',c:'tn'}]},
+  {n:'D',t:[{id:'bra',nm:'Brasil',c:'br'},{id:'col',nm:'Colombia',c:'co'},{id:'cmr',nm:'Camerun',c:'cm'},{id:'uzb',nm:'Uzbekistan',c:'uz'}]},
+  {n:'E',t:[{id:'fra',nm:'Francia',c:'fr'},{id:'sui',nm:'Suiza',c:'ch'},{id:'kor',nm:'Corea S.',c:'kr'},{id:'mli',nm:'Mali',c:'ml'}]},
+  {n:'F',t:[{id:'eng',nm:'Inglaterra',c:'gb-eng'},{id:'pol',nm:'Polonia',c:'pl'},{id:'irn',nm:'Iran',c:'ir'},{id:'ecu',nm:'Ecuador',c:'ec'}]},
+  {n:'G',t:[{id:'esp',nm:'Espana',c:'es'},{id:'aut',nm:'Austria',c:'at'},{id:'mar',nm:'Marruecos',c:'ma'},{id:'pry',nm:'Paraguay',c:'py'}]},
+  {n:'H',t:[{id:'ger',nm:'Alemania',c:'de'},{id:'den',nm:'Dinamarca',c:'dk'},{id:'jpn',nm:'Japon',c:'jp'},{id:'per',nm:'Peru',c:'pe'}]},
+  {n:'I',t:[{id:'por',nm:'Portugal',c:'pt'},{id:'swe',nm:'Suecia',c:'se'},{id:'egy',nm:'Egipto',c:'eg'},{id:'ven',nm:'Venezuela',c:'ve'}]},
+  {n:'J',t:[{id:'ned',nm:'P. Bajos',c:'nl'},{id:'rou',nm:'Rumania',c:'ro'},{id:'nga',nm:'Nigeria',c:'ng'},{id:'aus',nm:'Australia',c:'au'}]},
+  {n:'K',t:[{id:'ita',nm:'Italia',c:'it'},{id:'ukr',nm:'Ucrania',c:'ua'},{id:'sen',nm:'Senegal',c:'sn'},{id:'hon',nm:'Honduras',c:'hn'}]},
+  {n:'L',t:[{id:'bel',nm:'Belgica',c:'be'},{id:'cro',nm:'Croacia',c:'hr'},{id:'tur',nm:'Turquia',c:'tr'},{id:'cze',nm:'R. Checa',c:'cz'}]}
+];
+
+/* Mapa de equipos por ID */
+const TM = {};
+GR.forEach(g => g.t.forEach(t => { TM[t.id] = {...t, gr: g.n}; }));
+
+/* Slots de los 16 partidos de Dieciseisavos */
+const R32_SLOTS = [
+  [{g:'A',p:0},{bt:0}], [{g:'B',p:0},{bt:1}], [{g:'C',p:0},{bt:2}], [{g:'D',p:0},{bt:3}],
+  [{g:'E',p:0},{bt:4}], [{g:'F',p:0},{bt:5}], [{g:'G',p:0},{bt:6}], [{g:'H',p:0},{bt:7}],
+  [{g:'I',p:0},{g:'L',p:1}], [{g:'J',p:0},{g:'K',p:1}], [{g:'K',p:0},{g:'J',p:1}], [{g:'L',p:0},{g:'I',p:1}],
+  [{g:'A',p:1},{g:'B',p:1}], [{g:'C',p:1},{g:'D',p:1}], [{g:'E',p:1},{g:'F',p:1}], [{g:'G',p:1},{g:'H',p:1}]
+];
+
+/* Conexiones entre rondas */
+const FEED = {
+  r16:[[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]],
+  qf:[[0,1],[2,3],[4,5],[6,7]],
+  sf:[[0,1],[2,3]],
+  fi:[[0,1]]
+};
+const RORD=['r32','r16','qf','sf','fi'];
+const RN={r32:'Dieciseisavos',r16:'Octavos',qf:'Cuartos',sf:'Semifinales',fi:'Final'};
+const RS={r32:'32AVOS',r16:'16AVOS',qf:'CUARTOS',sf:'SEMIS',fi:'FINAL'};
+
+function flg(c){return '/flags/'+c+'.svg';}
+
+function Icon({label,children,className='',style}){
+  return <span className={"icon "+className} aria-hidden="true" style={style}>{children || label}</span>;
+}
+
+/* ======================== APP PRINCIPAL ======================== */
+export default function App(){
+  const[phase,setPhase]=useState('groups');
+  const[gSel,setGSel]=useState({});
+  const[btSel,setBtSel]=useState([]);
+  const[bracket,setBracket]=useState({r32:[],r16:[],qf:[],sf:[],fi:[]});
+  const[curRound,setCurRound]=useState('r32');
+  const[champion,setChampion]=useState(null);
+  const[toast,setToast]=useState({s:false,m:''});
+
+  const notify=(m)=>{setToast({s:true,m});setTimeout(()=>setToast({s:false,m:''}),2500);};
+
+  /* Toggle seleccion en grupo */
+  const toggleGroup=(gn,tid)=>{
+    setGSel(prev=>{
+      const cur=prev[gn]||[];
+      const idx=cur.indexOf(tid);
+      if(idx>=0) return{...prev,[gn]:cur.filter(x=>x!==tid)};
+      if(cur.length>=3) return prev;
+      return{...prev,[gn]:[...cur,tid]};
+    });
+  };
+
+  /* Equipos terceros */
+  const thirdTeams=useMemo(()=>{
+    return GR.map(g=>{
+      const sel=gSel[g.n]||[];
+      const third=sel.length===3?sel[2]:null;
+      return{group:g.n,team:third?TM[third]:null,tid:third};
+    }).filter(x=>x.tid);
+  },[gSel]);
+
+  /* Avanzar a mejores terceros */
+  const goBestThird=()=>{
+    const allDone=GR.every(g=>(gSel[g.n]||[]).length===3);
+    if(!allDone) return;
+    setPhase('bestThird');
+  };
+
+  /* Toggle mejor tercero */
+  const toggleBT=(tid)=>{
+    setBtSel(prev=>{
+      if(prev.includes(tid)) return prev.filter(x=>x!==tid);
+      if(prev.length>=8) return prev;
+      return[...prev,tid];
+    });
+  };
+
+  /* Avanzar a eliminatorias */
+  const goKnockout=()=>{
+    if(btSel.length!==8) return;
+    const sorted=[...btSel].sort((a,b)=>{
+      const ga=TM[a].gr,gb=TM[b].gr;
+      return GR.findIndex(g=>g.n===ga)-GR.findIndex(g=>g.n===gb);
+    });
+    const gs=gSel;
+    const r32=R32_SLOTS.map(([s1,s2])=>{
+      let t1=null,t2=null;
+      if(s1.g!==undefined) t1=(gs[s1.g]||[])[s1.p]||null;
+      else t1=sorted[s1.bt]||null;
+      if(s2.g!==undefined) t2=(gs[s2.g]||[])[s2.p]||null;
+      else t2=sorted[s2.bt]||null;
+      return{team1:t1,team2:t2,winner:null};
+    });
+    setBracket({
+      r32,
+      r16:Array.from({length:8},()=>({team1:null,team2:null,winner:null})),
+      qf:Array.from({length:4},()=>({team1:null,team2:null,winner:null})),
+      sf:Array.from({length:2},()=>({team1:null,team2:null,winner:null})),
+      fi:[{team1:null,team2:null,winner:null}]
+    });
+    setCurRound('r32');
+    setPhase('knockout');
+  };
+
+  /* Limpiar resultados en cascada */
+  function clearDown(bk,rnd,mi){
+    bk[rnd][mi].winner=null;
+    const ri=RORD.indexOf(rnd);
+    if(ri<RORD.length-1){
+      const nr=RORD[ri+1];
+      const fd=FEED[nr];
+      const fi=fd.findIndex(f=>f.includes(mi));
+      if(fi>=0){
+        const slot=fd[fi].indexOf(mi);
+        if(slot===0) bk[nr][fi].team1=null;
+        else bk[nr][fi].team2=null;
+        clearDown(bk,nr,fi);
+      }
+    }
+  }
+
+  /* Seleccionar ganador en eliminatoria */
+  const pickWinner=(rnd,mi,tid)=>{
+    const nb=JSON.parse(JSON.stringify(bracket));
+    nb[rnd][mi].winner=tid;
+    const ri=RORD.indexOf(rnd);
+    if(ri<RORD.length-1){
+      const nr=RORD[ri+1];
+      const fd=FEED[nr];
+      const fi=fd.findIndex(f=>f.includes(mi));
+      if(fi>=0){
+        const slot=fd[fi].indexOf(mi);
+        if(slot===0) nb[nr][fi].team1=tid;
+        else nb[nr][fi].team2=tid;
+        const nm=nb[nr][fi];
+        if(nm.winner&&nm.winner!==nm.team1&&nm.winner!==nm.team2){
+          clearDown(nb,nr,fi);
+        }
+      }
+    }
+    const allDone=nb[rnd].every(m=>m.winner);
+    if(allDone&&rnd!=='fi'){
+      const nri=RORD.indexOf(rnd);
+      setCurRound(RORD[nri+1]);
+    }
+    if(rnd==='fi'){
+      setChampion(tid);
+      setTimeout(()=>setPhase('champion'),600);
+    }
+    setBracket(nb);
+  };
+
+  /* Reiniciar */
+  const restart=()=>{
+    setPhase('groups');setGSel({});setBtSel([]);
+    setBracket({r32:[],r16:[],qf:[],sf:[],fi:[]});
+    setCurRound('r32');setChampion(null);
+  };
+
+  return (
+    <div className="relative z-10 min-h-screen flex flex-col">
+      <Header/>
+      <Stepper phase={phase}/>
+      <main className="flex-1 pb-8">
+        {phase==='groups'&&<GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird}/>}
+        {phase==='bestThird'&&<BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout}/>}
+        {phase==='knockout'&&<KOPhase bracket={bracket} cur={curRound} pick={pickWinner}/>}
+        {phase==='champion'&&<ChampScreen champ={champion} bracket={bracket} restart={restart} notify={notify}/>}
+      </main>
+      <ToastC msg={toast.m} show={toast.s}/>
+    </div>
+  );
+}
+
+/* ======================== HEADER ======================== */
+function Header(){
+  return (
+    <header className="border-b border-[#1C1C2E] bg-[#060609]/80 backdrop-blur-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="font-display font-bold text-xl tracking-widest" style={{color:'#A3E635'}}>RPP</span>
+          <div className="w-px h-6 bg-[#1C1C2E]"></div>
+          <span className="font-display font-medium text-sm tracking-wider text-gray-400">MUNDIAL 2026</span>
+        </div>
+        <div className="font-display text-xs tracking-widest text-gray-600">SIMULADOR</div>
+      </div>
+    </header>
+  );
+}
+
+/* ======================== STEPPER ======================== */
+function Stepper({phase}){
+  const steps=[{id:'groups',l:'Grupos'},{id:'bestThird',l:'3ros'},{id:'knockout',l:'Eliminatoria'},{id:'champion',l:'Campeon'}];
+  const idx=steps.findIndex(s=>s.id===phase);
+  return (
+    <div className="flex items-center justify-center gap-0 py-3 px-4 overflow-x-auto">
+      {steps.map((s,i)=>(
+        <Fragment key={s.id}>
+          <div className={"step-item "+(i<idx?'ok ':'')+(i===idx?'act':'')}>
+            <div className="step-dot"></div>
+            <span className="hidden sm:inline">{s.l}</span>
+          </div>
+          {i<steps.length-1&&<div className={"step-line "+(i<idx?'ok':'')}></div>}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+/* ======================== FASE DE GRUPOS ======================== */
+function GroupPhase({gSel,toggle,go}){
+  const allDone=GR.every(g=>(gSel[g.n]||[]).length===3);
+  return (
+    <div>
+      <div className="text-center mb-6 a-up">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">FASE DE GRUPOS</h2>
+        <p className="text-gray-500 text-sm mt-1">Selecciona los 3 mejores de cada grupo en orden de posicion</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 max-w-7xl mx-auto">
+        {GR.map((g,gi)=>(
+          <GCard key={g.n} group={g} sel={gSel[g.n]||[]} toggle={toggle} delay={gi}/>
+        ))}
+      </div>
+      <div className="text-center mt-8 pb-4 a-up">
+        <button className="btn-p" disabled={!allDone} onClick={go}>Continuar a Mejores Terceros</button>
+      </div>
+    </div>
+  );
+}
+
+function GCard({group,sel,toggle,delay}){
+  const cnt=sel.length;
+  const ok=cnt===3;
+  return (
+    <div className="bg-[#0F0F16] border border-[#1C1C2E] rounded-2xl overflow-hidden a-up" style={{animationDelay:delay*40+'ms'}}>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#1C1C2E]">
+        <span className="font-display font-bold text-sm tracking-widest" style={{color:'#A3E635'}}>GRUPO {group.n}</span>
+        <span className={"text-xs font-medium px-2 py-0.5 rounded-full "+(ok?"bg-[#A3E635]/15 text-[#A3E635]":"bg-[#1C1C2E] text-gray-500")}>
+          {ok?'Completo':cnt+'/3'}
+        </span>
+      </div>
+      <div className="p-2 flex flex-col gap-1">
+        {group.t.map(tm=>{
+          const pi=sel.indexOf(tm.id);
+          const cls=pi>=0?' s'+(pi+1):'';
+          return (
+            <div key={tm.id} className={"team-row"+cls} onClick={()=>toggle(group.n,tm.id)}>
+              <div className="pos-b">{pi>=0?(pi+1):''}</div>
+              <img className="flag-img" src={flg(tm.c,160)} alt={tm.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+              <span className="font-medium text-sm flex-1">{tm.nm}</span>
+              {pi>=0&&(
+                <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full" style={{
+                  background:['rgba(163,230,53,.12)','rgba(132,204,22,.12)','rgba(101,163,13,.12)'][pi],
+                  color:['#A3E635','#84CC16','#65a30d'][pi]
+                }}>{['1°','2°','3°'][pi]}</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ======================== MEJORES TERCEROS ======================== */
+function BTPhase({teams,sel,toggle,go}){
+  const cnt=sel.length;
+  return (
+    <div className="max-w-3xl mx-auto px-4">
+      <div className="text-center mb-6 a-up">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">MEJORES TERCEROS</h2>
+        <p className="text-gray-500 text-sm mt-1">Selecciona los 8 mejores equipos de los 12 terceros</p>
+        <div className="mt-3 flex items-center justify-center gap-2">
+          <div className="h-2 flex-1 max-w-xs rounded-full bg-[#1C1C2E] overflow-hidden">
+            <div className="h-full rounded-full transition-all duration-300" style={{background:'#A3E635',width:(cnt/8*100)+'%'}}></div>
+          </div>
+          <span className={"text-sm font-semibold "+(cnt===8?"text-[#A3E635]":"text-gray-500")}>{cnt}/8</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {teams.map(({team,tid,group})=>{
+          if(!team) return null;
+          const isSel=sel.includes(tid);
+          return (
+            <div key={tid} className={"third-c"+(isSel?' sel':'')} onClick={()=>toggle(tid)}>
+              <img className="flag-img" src={flg(team.c,160)} alt={team.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+              <div className="flex-1">
+                <div className="font-medium text-sm">{team.nm}</div>
+                <div className="text-xs text-gray-500">3° Grupo {group}</div>
+              </div>
+              {isSel&&(
+                <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{background:'#A3E635'}}>
+                  <Icon label="Seleccionado" style={{fontSize:'10px',color:'#060609'}}>✓</Icon>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div className="text-center mt-8 pb-4">
+        <button className="btn-p" disabled={cnt!==8} onClick={go}>Continuar a Eliminatorias</button>
+      </div>
+    </div>
+  );
+}
+
+/* ======================== ELIMINATORIAS ======================== */
+function KOPhase({bracket,cur,pick}){
+  return (
+    <div>
+      <div className="text-center mb-4 a-up">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">TORNEO ELIMINATORIO</h2>
+        <p className="text-gray-500 text-sm mt-1">Selecciona el ganador de cada partido</p>
+      </div>
+      <div className="bk-m"><KOMobile bracket={bracket} cur={cur} pick={pick}/></div>
+      <div className="bk-d"><KODesktop bracket={bracket} cur={cur} pick={pick}/></div>
+    </div>
+  );
+}
+
+/* Componente de partido */
+function MatchView({match,onPick,interactive}){
+  const t1=match.team1?TM[match.team1]:null;
+  const t2=match.team2?TM[match.team2]:null;
+  const w=match.winner;
+  return (
+    <div className="m-card">
+      <div className={"m-tm"+(!t1?' empty':(w===match.team1?' w':(w?' l':'')))}
+           onClick={t1&&interactive?()=>onPick(match.team1):undefined}>
+        {t1?(
+          <>
+            <img className="flag-img" src={flg(t1.c,160)} alt={t1.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+            <span className="font-medium text-sm flex-1">{t1.nm}</span>
+            {w===match.team1&&<Icon label="Ganador" className="text-xs" style={{color:'#A3E635'}}>›</Icon>}
+          </>
+        ):<span className="text-xs text-gray-600">Por definir</span>}
+      </div>
+      <div className="border-t border-[#1C1C2E]"></div>
+      <div className={"m-tm"+(!t2?' empty':(w===match.team2?' w':(w?' l':'')))}
+           onClick={t2&&interactive?()=>onPick(match.team2):undefined}>
+        {t2?(
+          <>
+            <img className="flag-img" src={flg(t2.c,160)} alt={t2.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+            <span className="font-medium text-sm flex-1">{t2.nm}</span>
+            {w===match.team2&&<Icon label="Ganador" className="text-xs" style={{color:'#A3E635'}}>›</Icon>}
+          </>
+        ):<span className="text-xs text-gray-600">Por definir</span>}
+      </div>
+    </div>
+  );
+}
+
+/* Bracket Mobile */
+function KOMobile({bracket,cur,pick}){
+  const[tab,setTab]=useState(cur);
+  useEffect(()=>{setTab(cur);},[cur]);
+
+  const matches=bracket[tab]||[];
+  const ri=RORD.indexOf(tab);
+  const prevDone=ri===0||(bracket[RORD[ri-1]]&&bracket[RORD[ri-1]].every(m=>m.winner));
+  const interactive=tab===cur&&prevDone;
+
+  return (
+    <div className="px-4 py-2">
+      <div className="flex gap-2 overflow-x-auto pb-3 mb-4">
+        {RORD.map(r=>{
+          const ms=bracket[r]||[];
+          const done=ms.length>0&&ms.every(m=>m.winner);
+          const locked=RORD.indexOf(r)>RORD.indexOf(cur);
+          return (
+            <button key={r}
+              className={"r-tab"+(tab===r?' act':'')+(done?' done':'')+(locked?' lock':'')}
+              onClick={!locked?()=>setTab(r):undefined}
+              disabled={locked}>{RS[r]}</button>
+          );
+        })}
+      </div>
+      <div className="flex flex-col gap-3">
+        {matches.map((m,mi)=>(
+          <div key={tab+mi} className="a-up" style={{animationDelay:mi*40+'ms'}}>
+            <div className="text-xs text-gray-600 font-display mb-1.5 ml-1 tracking-widest">PARTIDO {mi+1}</div>
+            <MatchView match={m} onPick={tid=>pick(tab,mi,tid)} interactive={interactive}/>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Bracket Desktop */
+function KODesktop({bracket,cur,pick}){
+  return (
+    <div className="overflow-x-auto px-4 py-4">
+      <div className="flex items-stretch gap-0 min-w-max">
+        {RORD.map((rnd,ri)=>{
+          const ms=bracket[rnd]||[];
+          const prevDone=ri===0||(bracket[RORD[ri-1]]&&bracket[RORD[ri-1]].every(m=>m.winner));
+          const interactive=rnd===cur&&prevDone;
+          const done=ms.length>0&&ms.every(m=>m.winner);
+          return (
+            <Fragment key={rnd}>
+              <div className="flex flex-col" style={{minWidth:'200px'}}>
+                <div className={"font-display text-xs tracking-[3px] text-center py-2 mb-2 "+(done?"text-[#84CC16]":"text-[#A3E635]/60")}>{RS[rnd]}</div>
+                <div className="flex flex-col justify-around flex-1 gap-3 px-1">
+                  {ms.map((m,mi)=>(
+                    <div key={mi}>
+                      <MatchView match={m} onPick={tid=>pick(rnd,mi,tid)} interactive={interactive}/>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {ri<RORD.length-1&&(
+                <div className="flex flex-col items-center justify-around" style={{width:'40px'}}>
+                  <div style={{height:'28px'}}></div>
+                  {FEED[RORD[ri+1]].map((_,fi)=>(
+                    <div key={fi} className="flex-1 flex items-center justify-center">
+                      <div className="w-6 h-0.5 bg-[#2A2A40] rounded"></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Fragment>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ======================== PANTALLA CAMPEON ======================== */
+function ChampScreen({champ,bracket,restart,notify}){
+  const[showConfetti,setShowConfetti]=useState(true);
+  const team=TM[champ];
+
+  useEffect(()=>{const t=setTimeout(()=>setShowConfetti(false),4000);return()=>clearTimeout(t);},[]);
+
+  /* Timeline: camino del campeon */
+  const timeline=useMemo(()=>{
+    const path=[];
+    RORD.forEach(rnd=>{
+      (bracket[rnd]||[]).forEach(m=>{
+        if(m.winner===champ){
+          const opp=m.team1===champ?m.team2:m.team1;
+          path.push({round:RN[rnd],short:RS[rnd],opponent:opp,isFinal:rnd==='fi'});
+        }
+      });
+    });
+    return path.reverse();
+  },[champ,bracket]);
+
+  /* Confetti */
+  const confetti=useMemo(()=>{
+    const pcs=[];const cols=['#A3E635','#84CC16','#65a30d','#ffffff','#3b82f6','#f59e0b','#ef4444'];
+    for(let i=0;i<50;i++) pcs.push({
+      l:Math.random()*100,d:Math.random()*2,dur:2+Math.random()*3,
+      c:cols[~~(Math.random()*cols.length)],sz:6+Math.random()*8,
+      br:Math.random()>.5?'50%':'2px'
+    });
+    return pcs;
+  },[]);
+
+  const copyURL=()=>{
+    navigator.clipboard.writeText(window.location.href).then(()=>notify('URL copiada al portapapeles')).catch(()=>notify('No se pudo copiar'));
+  };
+  const shareNative=async()=>{
+    const text='Mi campeon del Mundial 2026: '+team.nm+' - Simula tu pronostico en RPP';
+    if(!navigator.share){
+      copyURL();
+      return;
+    }
+    try{
+      await navigator.share({title:'Mundial 2026 - Simulador RPP',text,url:window.location.href});
+    }catch(e){
+      notify('No se pudo compartir');
+    }
+  };
+
+  const downloadImg=async()=>{
+    const card=document.getElementById('share-card');
+    card.style.left='0';
+    const tlRows=timeline.map(t=>{
+      const opp=TM[t.opponent];
+      return '<div style="display:flex;align-items:center;gap:12px;font-size:14px;margin-bottom:10px">'+
+        '<div style="width:90px;font-family:Arial Narrow,Arial,sans-serif;font-weight:500;color:#A3E635;font-size:12px;text-transform:uppercase;letter-spacing:1px">'+t.short+'</div>'+
+        '<div style="color:#777">vs</div>'+
+        '<div style="display:flex;align-items:center;gap:8px">'+
+        '<img src="'+flg(opp?opp.c:'xx',80)+'" style="width:26px;height:18px;border-radius:3px;object-fit:cover" />'+
+        '<span style="color:#ccc">'+(opp?opp.nm:'?')+'</span></div>'+
+        '<div style="background:#A3E635;color:#060609;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:Arial Narrow,Arial,sans-serif;letter-spacing:1px;margin-left:auto">ELIMINADO</div></div>';
+    }).join('');
+    card.innerHTML=
+      '<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(163,230,53,.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(163,230,53,.05) 0%,transparent 50%)"></div>'+
+      '<div style="position:relative;z-index:1">'+
+      '<div style="font-family:Arial Narrow,Arial,sans-serif;font-size:26px;font-weight:700;color:#A3E635;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px">Tu Campeon del Mundial 2026</div>'+
+      '<div style="font-size:13px;color:#666;margin-bottom:24px">Simulador RPP</div>'+
+      '<div style="display:flex;align-items:center;gap:16px;padding:20px;background:rgba(163,230,53,.08);border:1.5px solid rgba(163,230,53,.25);border-radius:16px;margin-bottom:24px">'+
+      '<img src="'+flg(team.c,160)+'" style="width:56px;height:40px;border-radius:6px;object-fit:cover" />'+
+      '<div><div style="font-size:11px;color:#84CC16;font-family:Arial Narrow,Arial,sans-serif;letter-spacing:2px;text-transform:uppercase">CAMPEON</div>'+
+      '<div style="font-family:Arial Narrow,Arial,sans-serif;font-size:30px;font-weight:700;color:#f0f0f5">'+team.nm.toUpperCase()+'</div></div>'+
+      '<div style="margin-left:auto;font-size:36px">&#x1F451;</div></div>'+
+      '<div style="font-family:Arial Narrow,Arial,sans-serif;font-size:13px;color:#A3E635;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">CAMINO AL TITULO</div>'+
+      tlRows+
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #1C1C2E;margin-top:20px">'+
+      '<div style="font-family:Arial Narrow,Arial,sans-serif;font-weight:700;font-size:18px;color:#A3E635;letter-spacing:2px">RPP</div>'+
+      '<div style="font-family:Arial Narrow,Arial,sans-serif;font-size:12px;color:#444;letter-spacing:2px">MUNDIAL 2026</div></div></div>';
+    try{
+      const canvas=await html2canvas(card,{backgroundColor:'#060609',scale:2,useCORS:true,allowTaint:true});
+      const link=document.createElement('a');
+      link.download='mi-campeon-mundial-2026.png';
+      link.href=canvas.toDataURL('image/png');
+      link.click();
+      notify('Imagen descargada exitosamente');
+    }catch(e){notify('Error al generar la imagen');}
+    card.style.left='-9999px';
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center pt-6 pb-12 px-4">
+      {showConfetti&&confetti.map((p,i)=>(
+        <div key={i} className="confetti" style={{
+          left:p.l+'%',animationDelay:p.d+'s',animationDuration:p.dur+'s',
+          backgroundColor:p.c,width:p.sz+'px',height:p.sz+'px',borderRadius:p.br,top:'-20px'
+        }}></div>
+      ))}
+      <div className="a-up text-center mb-8">
+        <div className="font-display text-xs tracking-[4px] mb-2" style={{color:'rgba(163,230,53,.6)'}}>MUNDIAL 2026</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-wide">TU CAMPEON</h1>
+      </div>
+      <div className="a-up border rounded-3xl p-8 sm:p-10 text-center max-w-md w-full pulse-glow" style={{background:'#0F0F16',borderColor:'#1C1C2E',animationDelay:'.3s'}}>
+        <div className="text-5xl mb-3 a-crown">&#x1F451;</div>
+        <img className="mx-auto mb-4 rounded-lg" style={{width:'80px',height:'56px',objectFit:'cover'}}
+             src={flg(team.c,160)} alt={team.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+        <div className="font-display text-xs tracking-[3px] mb-1" style={{color:'#A3E635'}}>CAMPEON</div>
+        <h2 className="font-display text-4xl sm:text-5xl font-bold">{team.nm.toUpperCase()}</h2>
+      </div>
+      <div className="a-up max-w-md w-full mt-8" style={{animationDelay:'.5s'}}>
+        <div className="font-display text-xs tracking-[3px] text-center mb-4" style={{color:'rgba(163,230,53,.7)'}}>CAMINO AL TITULO</div>
+        <div className="flex flex-col gap-2.5">
+          {timeline.map((t,i)=>{
+            const opp=TM[t.opponent];
+            return (
+              <div key={i} className="flex items-center gap-3 border rounded-xl px-4 py-3 a-slide" style={{background:'#0F0F16',borderColor:'#1C1C2E',animationDelay:(.6+i*.08)+'s'}}>
+                <div className="font-display text-xs tracking-wider w-20 shrink-0" style={{color:'rgba(163,230,53,.7)'}}>{t.short}</div>
+                <div className="flex-1 flex items-center gap-2">
+                  <span className="text-gray-500 text-xs">vs</span>
+                  {opp?(
+                    <>
+                      <img style={{width:'22px',height:'15px',objectFit:'cover',borderRadius:'2px'}} src={flg(opp.c,80)} alt={opp.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+                      <span className="text-sm">{opp.nm}</span>
+                    </>
+                  ):<span className="text-sm text-gray-500">?</span>}
+                </div>
+                <div className="text-[10px] font-bold font-display px-2 py-0.5 rounded tracking-wider" style={{background:'rgba(163,230,53,.15)',color:'#A3E635'}}>ELIMINADO</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="a-up mt-10 max-w-md w-full" style={{animationDelay:'1s'}}>
+        <div className="font-display text-xs tracking-[3px] text-gray-600 mb-4 text-center">COMPARTIR</div>
+        <div className="flex items-center justify-center gap-4">
+          <button className="share-btn" onClick={shareNative} title="Compartir"><Icon label="Compartir">sh</Icon></button>
+          <button className="share-btn" onClick={copyURL} title="Copiar URL"><Icon label="Copiar URL">ln</Icon></button>
+          <button className="share-btn" onClick={downloadImg} title="Descargar imagen"><Icon label="Descargar imagen">↓</Icon></button>
+        </div>
+      </div>
+      <div className="a-up mt-8" style={{animationDelay:'1.2s'}}>
+        <button className="btn-s" onClick={restart}>Hacer un nuevo pronostico</button>
+      </div>
+    </div>
+  );
+}
+
+/* ======================== TOAST ======================== */
+function ToastC({msg,show}){
+  return <div className={"toast-c"+(show?' show':'')}>{msg}</div>;
+}
