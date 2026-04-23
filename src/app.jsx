@@ -41,12 +41,42 @@ const RN={r32:'Dieciseisavos',r16:'Octavos',qf:'Cuartos',sf:'Semifinales',fi:'Fi
 const RS={r32:'32AVOS',r16:'16AVOS',qf:'CUARTOS',sf:'SEMIS',fi:'FINAL'};
 
 const TEAM_STRENGTH = {
-  arg:94,fra:93,bra:92,esp:91,eng:90,por:89,ned:88,ger:87,bel:86,cro:85,
-  uru:84,col:83,mar:82,usa:81,sui:80,jpn:79,mex:78,sen:77,ecu:76,den:75,
-  aut:75,kor:74,irn:73,aus:72,tur:72,swe:71,can:70,civ:70,pry:69,
-  nor:69,alg:68,tun:67,egy:67,gha:66,qat:64,ksa:64,pan:63,sco:63,cz:62,
-  cze:62,uzb:61,zaf:60,irq:59,jor:58,cpv:57,cur:56,
-  cod:56,bih:55,nzl:54,hai:52
+  arg:96,fra:95,bra:93,eng:92,esp:92,por:91,ger:90,ned:88,bel:86,cro:84,
+  uru:84,col:83,mar:82,sui:81,usa:80,nor:80,mex:79,swe:78,jpn:77,sen:76,
+  ecu:76,tur:75,aut:75,can:74,kor:73,irn:73,pry:71,gha:70,egy:70,civ:69,
+  alg:68,sco:68,aus:67,cze:67,bih:66,tun:66,pan:64,ksa:63,uzb:63,qat:61,
+  zaf:60,irq:59,jor:58,cpv:57,cod:57,nzl:56,cur:55,hai:53
+};
+
+const SOURCE_URL='https://www.365scores.com/es/football/league/fifa-world-cup-5930/stats';
+
+const TEAM_STATS = {
+  eng:{gf:{t:13,p:2.6},ga:{t:4,p:.8},cs:{pj:5,v:3},pos:{pj:5,v:'63%'},cor:{t:25,p:5},ps:{g:13,v:'1/2'},pc:{ga:4,v:'1/1'},rc:{ya:1,v:0},yc:{rc:0,v:1}},
+  por:{gf:{t:12,p:2.4},ga:{t:6,p:1.2},cs:{pj:5,v:1},pos:{pj:5,v:'60%'},cor:{t:28,p:5.6},ps:{g:12,v:'2/2'},rc:{ya:6,v:0},yc:{rc:0,v:6}},
+  fra:{gf:{t:16,p:2.29},ga:{t:8,p:1.14},cs:{pj:7,v:1},pos:{pj:7,v:'52%'},cor:{t:38,p:5.43},ps:{g:16,v:'2/2'},pc:{ga:8,v:'3/4'},rc:{ya:8,v:0},yc:{rc:0,v:8}},
+  esp:{gf:{t:9,p:2.25},ga:{t:3,p:.75},cs:{pj:4,v:2},pos:{pj:4,v:'77%'},cor:{t:22,p:5.5},ps:{g:9,v:'1/1'},rc:{ya:2,v:0},yc:{rc:0,v:2}},
+  arg:{gf:{t:15,p:2.14},ga:{t:8,p:1.14},cs:{pj:7,v:3},pos:{pj:7,v:'57%'},cor:{t:39,p:5.57},ps:{g:15,v:'4/5'},pc:{ga:8,v:'2/2'},rc:{ya:17,v:0},yc:{rc:0,v:17}},
+  ned:{gf:{t:10,p:2},ga:{t:4,p:.8},cs:{pj:5,v:2},pos:{pj:5,v:'53%'},cor:{t:19,p:3.8},pc:{ga:4,v:'1/1'},rc:{ya:10,v:1},yc:{rc:1,v:10}},
+  ger:{gf:{t:6,p:2},ga:{t:5,p:1.67},cs:{pj:3,v:0},pos:{pj:3,v:'59%'},cor:{t:25,p:8.33},ps:{g:6,v:'1/1'},rc:{ya:3,v:0},yc:{rc:0,v:3}},
+  gha:{gf:{t:5,p:1.67},ga:{t:7,p:2.33},cs:{pj:3,v:0},pos:{pj:3,v:'42%'},cor:{t:13,p:4.33},ps:{g:5,v:'0/1'},pc:{ga:7,v:'1/1'},rc:{ya:8,v:0},yc:{rc:0,v:8}},
+  bra:{gf:{t:8,p:1.6},ga:{t:3,p:.6},cs:{pj:5,v:2},pos:{pj:5,v:'55%'},cor:{t:37,p:7.4},ps:{g:8,v:'1/1'},rc:{ya:6,v:0},yc:{rc:0,v:6}},
+  ecu:{gf:{t:4,p:1.33},ga:{t:3,p:1},cs:{pj:3,v:1},pos:{pj:3,v:'53%'},cor:{t:11,p:3.67},ps:{g:4,v:'1/1'},pc:{ga:3,v:'1/1'},rc:{ya:3,v:0},yc:{rc:0,v:3}},
+  irn:{gf:{t:4,p:1.33},ga:{t:7,p:2.33},cs:{pj:3,v:1},pos:{pj:3,v:'36%'},cor:{t:8,p:2.67},ps:{g:4,v:'1/1'},rc:{ya:7,v:0},yc:{rc:0,v:7}},
+  kor:{gf:{t:5,p:1.25},ga:{t:8,p:2},cs:{pj:4,v:1},pos:{pj:4,v:'48%'},cor:{t:25,p:6.25},pc:{ga:8,v:'1/1'},rc:{ya:6,v:0},yc:{rc:0,v:6}},
+  jpn:{gf:{t:5,p:1.25},ga:{t:4,p:1},cs:{pj:4,v:0},pos:{pj:4,v:'35%'},cor:{t:19,p:4.75},pc:{ga:4,v:'1/1'},rc:{ya:6,v:0},yc:{rc:0,v:6}},
+  sen:{gf:{t:5,p:1.25},ga:{t:7,p:1.75},cs:{pj:4,v:0},pos:{pj:4,v:'45%'},cor:{t:22,p:5.5},ps:{g:5,v:'1/1'},rc:{ya:7,v:0},yc:{rc:0,v:7}},
+  sui:{gf:{t:5,p:1.25},ga:{t:9,p:2.25},cs:{pj:4,v:1},pos:{pj:4,v:'49%'},cor:{t:20,p:5},rc:{ya:9,v:0},yc:{rc:0,v:9}},
+  cro:{gf:{t:8,p:1.14},ga:{t:7,p:1},cs:{pj:7,v:2},pos:{pj:7,v:'54%'},cor:{t:31,p:4.43},pc:{ga:7,v:'1/1'},rc:{ya:8,v:0},yc:{rc:0,v:8}},
+  aus:{gf:{t:4,p:1},ga:{t:6,p:1.5},cs:{pj:4,v:2},pos:{pj:4,v:'38%'},cor:{t:8,p:2},rc:{ya:7,v:0},yc:{rc:0,v:7}},
+  ksa:{gf:{t:3,p:1},ga:{t:5,p:1.67},cs:{pj:3,v:0},pos:{pj:3,v:'45%'},cor:{t:8,p:2.67},ps:{g:3,v:'0/1'},pc:{ga:5,v:'1/1'},rc:{ya:14,v:0},yc:{rc:0,v:14}},
+  mar:{gf:{t:6,p:.86},ga:{t:5,p:.71},cs:{pj:7,v:4},pos:{pj:7,v:'38%'},cor:{t:12,p:1.71},rc:{ya:7,v:1},yc:{rc:1,v:7}},
+  usa:{gf:{t:3,p:.75},ga:{t:4,p:1},cs:{pj:4,v:2},pos:{pj:4,v:'53%'},cor:{t:22,p:5.5},pc:{ga:4,v:'1/1'},rc:{ya:5,v:0},yc:{rc:0,v:5}},
+  can:{gf:{t:2,p:.67},ga:{t:7,p:2.33},cs:{pj:3,v:0},pos:{pj:3,v:'52%'},cor:{t:12,p:4},ps:{g:2,v:'0/1'},rc:{ya:8,v:0},yc:{rc:0,v:8}},
+  mex:{gf:{t:2,p:.67},ga:{t:3,p:1},cs:{pj:3,v:1},pos:{pj:3,v:'54%'},cor:{t:16,p:5.33},pc:{ga:3,v:'0/1'},rc:{ya:7,v:0},yc:{rc:0,v:7}},
+  uru:{gf:{t:2,p:.67},ga:{t:2,p:.67},cs:{pj:3,v:2},pos:{pj:3,v:'49%'},cor:{t:8,p:2.67},pc:{ga:2,v:'1/2'},rc:{ya:8,v:0},yc:{rc:0,v:8}},
+  bel:{gf:{t:1,p:.33},ga:{t:2,p:.67},cs:{pj:3,v:2},pos:{pj:3,v:'57%'},cor:{t:17,p:5.67},pc:{ga:2,v:'0/1'},rc:{ya:5,v:0},yc:{rc:0,v:5}},
+  qat:{gf:{t:1,p:.33},ga:{t:7,p:2.33},cs:{pj:3,v:0},pos:{pj:3,v:'43%'},cor:{t:9,p:3},pc:{ga:7,v:'1/1'},rc:{ya:7,v:0},yc:{rc:0,v:7}},
+  tun:{gf:{t:1,p:.33},ga:{t:1,p:.33},cs:{pj:3,v:2},pos:{pj:3,v:'43%'},cor:{t:21,p:7},rc:{ya:5,v:0},yc:{rc:0,v:5}}
 };
 
 function simulateGroups(){
@@ -74,6 +104,10 @@ function Icon({name='check',label,className='',style}){
     chevron:<path d="M9 6l6 6-6 6"/>,
     share:<><path d="M8.5 13.5l7-4"/><path d="M8.5 10.5l7 4"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="7.5" r="2.5"/><circle cx="18" cy="16.5" r="2.5"/></>,
     link:<><path d="M10.2 13.8a4 4 0 0 1 0-5.6l1.6-1.6a4 4 0 0 1 5.6 5.6l-.8.8"/><path d="M13.8 10.2a4 4 0 0 1 0 5.6l-1.6 1.6a4 4 0 0 1-5.6-5.6l.8-.8"/></>,
+    chart:<><path d="M5 19V5"/><path d="M5 19h14"/><path d="M9 15v-4"/><path d="M13 15V8"/><path d="M17 15v-6"/></>,
+    info:<><circle cx="12" cy="12" r="8"/><path d="M12 11v5"/><path d="M12 8h.01"/></>,
+    close:<><path d="M6 6l12 12"/><path d="M18 6L6 18"/></>,
+    external:<><path d="M14 5h5v5"/><path d="M10 14L19 5"/><path d="M19 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4"/></>,
     download:<><path d="M12 4v10"/><path d="M8 10l4 4 4-4"/><path d="M5 19h14"/></>,
     trophy:<><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5.5A2.5 2.5 0 0 0 8 10"/><path d="M16 6h2.5A2.5 2.5 0 0 1 16 10"/><path d="M12 13v4"/><path d="M8.5 20h7"/></>,
     restart:<><path d="M4 12a8 8 0 1 0 2.35-5.65"/><path d="M4 5v5h5"/></>,
@@ -94,6 +128,7 @@ export default function App(){
   const[bracket,setBracket]=useState({r32:[],r16:[],qf:[],sf:[],fi:[]});
   const[curRound,setCurRound]=useState('r32');
   const[champion,setChampion]=useState(null);
+  const[insightTeam,setInsightTeam]=useState(null);
   const[toast,setToast]=useState({s:false,m:''});
 
   const completedGroups=GR.filter(g=>(gSel[g.n]||[]).length===3).length;
@@ -233,11 +268,12 @@ export default function App(){
       <Header phase={phase} progress={totalProgress}/>
       <Stepper phase={phase}/>
       <main className="flex-1 pb-8">
-        {phase==='groups'&&<GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups}/>}
+        {phase==='groups'&&<GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups} openInsight={setInsightTeam}/>}
         {phase==='bestThird'&&<BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout}/>}
         {phase==='knockout'&&<KOPhase bracket={bracket} cur={curRound} pick={pickWinner}/>}
         {phase==='champion'&&<ChampScreen champ={champion} bracket={bracket} restart={restart} notify={notify}/>}
       </main>
+      {insightTeam&&<TeamInsight team={TM[insightTeam]} onClose={()=>setInsightTeam(null)}/>}
       <ToastC msg={toast.m} show={toast.s}/>
     </div>
   );
@@ -249,11 +285,13 @@ function Header({phase,progress}){
     <header className="app-header sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="brand-mark">RPP</span>
+          <span className="brand-mark">
+            <img src="/img/logo_rpp.svg" alt="RPP"/>
+          </span>
           <div className="header-divider"></div>
           <div>
-            <span className="header-title">MUNDIAL 2026</span>
-            <span className="header-subtitle">{phaseLabel(phase)}</span>
+            <span className="header-title">SIMULADOR</span>
+            <span className="header-subtitle">Mundial 2026</span>
           </div>
         </div>
         <div className="header-status">
@@ -285,7 +323,7 @@ function Stepper({phase}){
 }
 
 /* ======================== FASE DE GRUPOS ======================== */
-function GroupPhase({gSel,toggle,go,simulate}){
+function GroupPhase({gSel,toggle,go,simulate,openInsight}){
   const allDone=GR.every(g=>(gSel[g.n]||[]).length===3);
   const completeCount=GR.filter(g=>(gSel[g.n]||[]).length===3).length;
   const groupProgress=Math.round(completeCount/12*100);
@@ -313,7 +351,7 @@ function GroupPhase({gSel,toggle,go,simulate}){
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 max-w-7xl mx-auto">
         {GR.map((g,gi)=>(
-          <GCard key={g.n} group={g} sel={gSel[g.n]||[]} toggle={toggle} delay={gi}/>
+          <GCard key={g.n} group={g} sel={gSel[g.n]||[]} toggle={toggle} delay={gi} openInsight={openInsight}/>
         ))}
       </div>
       <div className="sticky-action text-center mt-8 pb-4 a-up">
@@ -323,7 +361,7 @@ function GroupPhase({gSel,toggle,go,simulate}){
   );
 }
 
-function GCard({group,sel,toggle,delay}){
+function GCard({group,sel,toggle,delay,openInsight}){
   const cnt=sel.length;
   const ok=cnt===3;
   return (
@@ -344,12 +382,11 @@ function GCard({group,sel,toggle,delay}){
               <div className="pos-b">{pi>=0?(pi+1):''}</div>
               <img className="flag-img" src={flg(tm.c,160)} alt={tm.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
               <span className="font-medium text-sm flex-1">{tm.nm}</span>
-              {pi>=0&&(
-                <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full" style={{
-                  background:['rgba(163,230,53,.12)','rgba(132,204,22,.12)','rgba(101,163,13,.12)'][pi],
-                  color:['#A3E635','#84CC16','#65a30d'][pi]
-                }}>{['1°','2°','3°'][pi]}</span>
-              )}
+              <button className="stats-btn" type="button" title="Ver datos del equipo"
+                onClick={e=>{e.stopPropagation();openInsight(tm.id);}}>
+                <Icon name="info" label={'Datos de '+tm.nm}/>
+                <span>Datos</span>
+              </button>
             </div>
           );
         })}
@@ -668,6 +705,77 @@ function ChampScreen({champ,bracket,restart,notify}){
       </div>
       <div className="a-up mt-8" style={{animationDelay:'1.2s'}}>
         <button className="btn-s icon-btn" onClick={restart}><Icon name="restart" label="Nuevo pronóstico"/> Hacer un nuevo pronóstico</button>
+      </div>
+    </div>
+  );
+}
+
+function teamProfile(score){
+  if(score>=92) return 'Favorito al título';
+  if(score>=86) return 'Candidato fuerte';
+  if(score>=78) return 'Competitivo';
+  if(score>=68) return 'Outsider';
+  return 'Sorpresa';
+}
+
+function TeamInsight({team,onClose}){
+  const score=TEAM_STRENGTH[team.id] ?? 60;
+  const stats=TEAM_STATS[team.id];
+  const statRows=stats?[
+    {label:'Goles por partido',value:stats.gf.p,meta:'Total de goles: '+stats.gf.t},
+    {label:'Goles recibidos por partido',value:stats.ga.p,meta:'Total recibidos: '+stats.ga.t},
+    {label:'Porterías a cero',value:stats.cs.v,meta:'Partidos jugados: '+stats.cs.pj},
+    {label:'Posesión del balón',value:stats.pos.v,meta:'Partidos jugados: '+stats.pos.pj},
+    {label:'Corners por partido',value:stats.cor.p,meta:'Corners totales: '+stats.cor.t},
+    stats.ps?{label:'Penaltis convertidos',value:stats.ps.v,meta:'Total de goles: '+stats.ps.g}:null,
+    stats.pc?{label:'Penaltis cometidos',value:stats.pc.v,meta:'Total recibidos: '+stats.pc.ga}:null,
+    {label:'Tarjetas rojas',value:stats.rc.v,meta:'Tarjetas amarillas: '+stats.rc.ya},
+    {label:'Tarjetas amarillas',value:stats.yc.v,meta:'Tarjetas rojas: '+stats.yc.rc}
+  ].filter(Boolean):[];
+
+  return (
+    <div className="insight-overlay" role="dialog" aria-modal="true" aria-label={'Estadísticas de '+team.nm} onClick={onClose}>
+      <div className="insight-panel" onClick={e=>e.stopPropagation()}>
+        <button className="insight-close" type="button" onClick={onClose} title="Cerrar">
+          <Icon name="close" label="Cerrar"/>
+        </button>
+        <div className="insight-head">
+          <img className="insight-flag" src={flg(team.c)} alt={team.nm} onError={e=>{e.target.style.opacity='0.2'}}/>
+          <div>
+            <div className="eyebrow">Ficha del equipo</div>
+            <h3>{team.nm}</h3>
+            <p>Grupo {team.gr} · {teamProfile(score)}</p>
+          </div>
+        </div>
+
+        <div className="insight-score">
+          <div>
+            <span>Índice del simulador</span>
+            <strong>{score}</strong>
+          </div>
+          <p>Resumen comparativo del rendimiento reciente por equipo, basado en métricas de ataque, defensa, posesión y disciplina.</p>
+        </div>
+
+        <div className="insight-section">
+          <h4>Estadísticas de equipo</h4>
+          {stats?(
+            <div className="stats-grid">
+              {statRows.map(row=>(
+                <div className="stat-card" key={row.label}>
+                  <span>{row.label}</span>
+                  <strong>{row.value}</strong>
+                  <small>{row.meta}</small>
+                </div>
+              ))}
+            </div>
+          ):(
+            <p className="insight-muted">No hay estadísticas de equipo disponibles para esta selección en la información compartida.</p>
+          )}
+        </div>
+
+        <a className="source-link" href={SOURCE_URL} target="_blank" rel="noreferrer">
+          Ver fuente en 365Scores <Icon name="external" label="Abrir fuente"/>
+        </a>
       </div>
     </div>
   );

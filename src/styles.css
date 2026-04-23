@@ -35,7 +35,8 @@ background-image:radial-gradient(rgba(255,255,255,.75) .8px,transparent .8px);ba
 .pulse-glow{animation:pulseGlow 2.5s ease-in-out infinite}
 
 .app-header{border-bottom:1px solid rgba(255,255,255,.075);background:rgba(4,4,6,.78);backdrop-filter:blur(18px) saturate(150%)}
-.brand-mark{font-family:var(--font-jakarta);font-weight:800;font-size:24px;letter-spacing:1.6px;color:var(--lime);text-shadow:0 0 24px rgba(163,230,53,.28)}
+.brand-mark{width:34px;height:34px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 18px rgba(163,230,53,.18))}
+.brand-mark img{width:100%;height:100%;display:block;object-fit:contain}
 .header-divider{width:1px;height:30px;background:linear-gradient(180deg,transparent,var(--brd2),transparent)}
 .header-title{display:block;font-family:var(--font-jakarta);font-size:13px;font-weight:800;letter-spacing:1.8px;color:#f7f7fb}
 .header-subtitle{display:block;margin-top:1px;font-size:11px;color:#6f7280}
@@ -78,6 +79,11 @@ font-family:var(--font-jakarta);font-weight:800;font-size:12px;flex-shrink:0;tra
 .team-row.s1 .pos-b{background:var(--lime);color:var(--bg)}
 .team-row.s2 .pos-b{background:var(--gold);color:var(--bg)}
 .team-row.s3 .pos-b{background:var(--blue);color:var(--bg)}
+.stats-btn{position:relative;width:28px;height:28px;border-radius:7px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:#777b88;display:flex;align-items:center;justify-content:center;gap:0;cursor:pointer;transition:all .18s ease;flex-shrink:0;overflow:hidden;white-space:nowrap}
+.stats-btn span{max-width:0;opacity:0;overflow:hidden;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;transition:all .18s ease}
+.stats-btn:hover,.stats-btn:focus-visible{width:76px;gap:6px;border-color:rgba(163,230,53,.42);color:var(--lime);background:rgba(163,230,53,.08)}
+.stats-btn:hover span,.stats-btn:focus-visible span{max-width:40px;opacity:1}
+.stats-btn .icon{width:15px;height:15px}
 
 .survival-grid{position:relative}
 .third-c{position:relative;padding:13px 15px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,.08);
@@ -148,6 +154,32 @@ background:var(--brd2);color:var(--lime);padding:12px 26px;border-radius:11px;fo
 z-index:10000;border:1px solid rgba(163,230,53,.25);transition:transform .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .toast-c.show{transform:translateX(-50%) translateY(0)}
 
+.insight-overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.68);backdrop-filter:blur(14px)}
+.insight-panel{position:relative;width:min(540px,100%);max-height:min(720px,92vh);overflow:auto;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:linear-gradient(180deg,rgba(20,20,30,.98),rgba(7,7,10,.98));box-shadow:0 30px 90px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.08);padding:22px}
+.insight-panel:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 25% 0%,rgba(163,230,53,.12),transparent 42%),radial-gradient(ellipse at 90% 15%,rgba(245,197,66,.08),transparent 46%);pointer-events:none}
+.insight-panel>*{position:relative;z-index:1}
+.insight-close{position:absolute;right:14px;top:14px;z-index:2;width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#8b8f9c;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s ease}
+.insight-close:hover{color:#fff;border-color:rgba(255,255,255,.2)}
+.insight-close .icon{width:17px;height:17px}
+.insight-head{display:flex;align-items:center;gap:16px;padding-right:42px}
+.insight-flag{width:72px;height:50px;border-radius:7px;object-fit:cover;box-shadow:0 16px 40px rgba(0,0,0,.28)}
+.insight-head h3{font-family:var(--font-jakarta);font-size:32px;line-height:1;font-weight:800;letter-spacing:.2px}
+.insight-head p{margin-top:6px;color:#888c99;font-size:13px}
+.insight-score{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin:22px 0;padding:16px;border:1px solid rgba(245,197,66,.2);border-radius:8px;background:rgba(245,197,66,.055)}
+.insight-score span{display:block;color:#8f937f;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+.insight-score strong{display:block;margin-top:3px;color:var(--gold);font-size:42px;line-height:1;font-weight:800}
+.insight-score p{color:#a3a5ad;font-size:13px;line-height:1.55}
+.insight-section{margin-top:18px}
+.insight-section h4{font-family:var(--font-jakarta);font-size:12px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:rgba(163,230,53,.78);margin-bottom:10px}
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat-card{min-height:104px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.035);padding:13px 14px;display:flex;flex-direction:column;justify-content:space-between}
+.stat-card span{color:#8f929e;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;line-height:1.35}
+.stat-card strong{margin-top:10px;font-size:28px;line-height:1;color:#fff;font-weight:800}
+.stat-card small{margin-top:8px;color:#6e7280;font-size:11px;line-height:1.35}
+.insight-muted{color:#8f929e;font-size:13px;line-height:1.55}
+.source-link{display:inline-flex;align-items:center;gap:7px;margin-top:20px;color:var(--lime);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-decoration:none}
+.source-link .icon{width:14px;height:14px}
+
 #share-card{position:fixed;left:-9999px;top:0;width:540px;min-height:675px;background:var(--bg);padding:38px;font-family:var(--font-jakarta);color:var(--fg);overflow:hidden}
 
 .champ-stage{position:relative}
@@ -173,6 +205,11 @@ z-index:10000;border:1px solid rgba(163,230,53,.25);transition:transform .3s eas
   .phase-progress{justify-content:flex-start}
   .phase-progress-bar{width:min(220px,58vw)}
   .sticky-action{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,rgba(4,4,6,.95) 32%);padding-top:28px;z-index:20}
+  .insight-overlay{align-items:flex-end;padding:0}
+  .insight-panel{width:100%;max-height:88vh;border-radius:14px 14px 0 0;padding:20px}
+  .insight-head h3{font-size:28px}
+  .insight-score{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr}
   .champ-card{padding:30px 24px 34px}
 }
 @media(min-width:769px){.bk-d{display:flex!important}.bk-m{display:none!important}}
