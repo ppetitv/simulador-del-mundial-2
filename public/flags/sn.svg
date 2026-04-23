@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="112" viewBox="0 0 160 112"><rect width="160" height="112" fill="#00853f"/><rect y="37.33" width="160" height="37.34" fill="#fdef42"/><rect y="74.67" width="160" height="37.33" fill="#e31b23"/><rect x="1" y="1" width="158" height="110" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="2"/><text x="80" y="64" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#111" paint-order="stroke" stroke="rgba(255,255,255,.55)" stroke-width="1">SN</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-sn" viewBox="0 0 640 480">
+  <g fill-rule="evenodd" stroke-width="1pt">
+    <path fill="#0b7226" d="M0 0h213.3v480H0z"/>
+    <path fill="#ff0" d="M213.3 0h213.3v480H213.3z"/>
+    <path fill="#bc0000" d="M426.6 0H640v480H426.6z"/>
+  </g>
+  <path fill="#0b7226" d="M342 218.8h71.8l-56.6 43.6 20.7 69.3-56.6-43.6-56.6 41.6 20.7-67.3-56.6-43.6h69.8l22.7-71.3z"/>
+</svg>

@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="112" viewBox="0 0 160 112"><rect width="160" height="112" fill="#009246"/><rect y="37.33" width="160" height="37.34" fill="#fff"/><rect y="74.67" width="160" height="37.33" fill="#ce2b37"/><rect x="1" y="1" width="158" height="110" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="2"/><text x="80" y="64" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#111" paint-order="stroke" stroke="rgba(255,255,255,.55)" stroke-width="1">IT</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-it" viewBox="0 0 640 480">
+  <g fill-rule="evenodd" stroke-width="1pt">
+    <path fill="#fff" d="M0 0h640v480H0z"/>
+    <path fill="#009246" d="M0 0h213.3v480H0z"/>
+    <path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/>
+  </g>
+</svg>

@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="112" viewBox="0 0 160 112"><rect width="160" height="112" fill="#fff"/><rect y="37.33" width="160" height="37.34" fill="#bc002d"/><rect y="74.67" width="160" height="37.33" fill="#fff"/><rect x="1" y="1" width="158" height="110" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="2"/><text x="80" y="64" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#fff" paint-order="stroke" stroke="rgba(255,255,255,.55)" stroke-width="1">JP</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-jp" viewBox="0 0 640 480">
+  <defs>
+    <clipPath id="jp-a">
+      <path fill-opacity=".7" d="M-88 32h640v480H-88z"/>
+    </clipPath>
+  </defs>
+  <g fill-rule="evenodd" stroke-width="1pt" clip-path="url(#jp-a)" transform="translate(88 -32)">
+    <path fill="#fff" d="M-128 32h720v480h-720z"/>
+    <circle cx="523.1" cy="344.1" r="194.9" fill="#bc002d" transform="translate(-168.4 8.6)scale(.76554)"/>
+  </g>
+</svg>

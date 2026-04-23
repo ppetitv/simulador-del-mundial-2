@@ -3,18 +3,18 @@ import html2canvas from 'html2canvas';
 
 /* ======================== DATOS DEL MUNDIAL 2026 ======================== */
 const GR = [
-  {n:'A',t:[{id:'mex',nm:'Mexico',c:'mx'},{id:'can',nm:'Canada',c:'ca'},{id:'cri',nm:'Costa Rica',c:'cr'},{id:'nzl',nm:'N. Zelanda',c:'nz'}]},
-  {n:'B',t:[{id:'usa',nm:'EE.UU.',c:'us'},{id:'jam',nm:'Jamaica',c:'jm'},{id:'slv',nm:'El Salvador',c:'sv'},{id:'tri',nm:'Trinidad T.',c:'tt'}]},
-  {n:'C',t:[{id:'arg',nm:'Argentina',c:'ar'},{id:'chi',nm:'Chile',c:'cl'},{id:'ksa',nm:'Arabia S.',c:'sa'},{id:'tun',nm:'Tunez',c:'tn'}]},
-  {n:'D',t:[{id:'bra',nm:'Brasil',c:'br'},{id:'col',nm:'Colombia',c:'co'},{id:'cmr',nm:'Camerun',c:'cm'},{id:'uzb',nm:'Uzbekistan',c:'uz'}]},
-  {n:'E',t:[{id:'fra',nm:'Francia',c:'fr'},{id:'sui',nm:'Suiza',c:'ch'},{id:'kor',nm:'Corea S.',c:'kr'},{id:'mli',nm:'Mali',c:'ml'}]},
-  {n:'F',t:[{id:'eng',nm:'Inglaterra',c:'gb-eng'},{id:'pol',nm:'Polonia',c:'pl'},{id:'irn',nm:'Iran',c:'ir'},{id:'ecu',nm:'Ecuador',c:'ec'}]},
-  {n:'G',t:[{id:'esp',nm:'Espana',c:'es'},{id:'aut',nm:'Austria',c:'at'},{id:'mar',nm:'Marruecos',c:'ma'},{id:'pry',nm:'Paraguay',c:'py'}]},
-  {n:'H',t:[{id:'ger',nm:'Alemania',c:'de'},{id:'den',nm:'Dinamarca',c:'dk'},{id:'jpn',nm:'Japon',c:'jp'},{id:'per',nm:'Peru',c:'pe'}]},
-  {n:'I',t:[{id:'por',nm:'Portugal',c:'pt'},{id:'swe',nm:'Suecia',c:'se'},{id:'egy',nm:'Egipto',c:'eg'},{id:'ven',nm:'Venezuela',c:'ve'}]},
-  {n:'J',t:[{id:'ned',nm:'P. Bajos',c:'nl'},{id:'rou',nm:'Rumania',c:'ro'},{id:'nga',nm:'Nigeria',c:'ng'},{id:'aus',nm:'Australia',c:'au'}]},
-  {n:'K',t:[{id:'ita',nm:'Italia',c:'it'},{id:'ukr',nm:'Ucrania',c:'ua'},{id:'sen',nm:'Senegal',c:'sn'},{id:'hon',nm:'Honduras',c:'hn'}]},
-  {n:'L',t:[{id:'bel',nm:'Belgica',c:'be'},{id:'cro',nm:'Croacia',c:'hr'},{id:'tur',nm:'Turquia',c:'tr'},{id:'cze',nm:'R. Checa',c:'cz'}]}
+  {n:'A',t:[{id:'mex',nm:'Mexico',c:'mx'},{id:'zaf',nm:'Sudafrica',c:'za'},{id:'kor',nm:'Corea del Sur',c:'kr'},{id:'cze',nm:'Republica Checa',c:'cz'}]},
+  {n:'B',t:[{id:'can',nm:'Canada',c:'ca'},{id:'bih',nm:'Bosnia y Herz.',c:'ba'},{id:'qat',nm:'Catar',c:'qa'},{id:'sui',nm:'Suiza',c:'ch'}]},
+  {n:'C',t:[{id:'bra',nm:'Brasil',c:'br'},{id:'mar',nm:'Marruecos',c:'ma'},{id:'hai',nm:'Haiti',c:'ht'},{id:'sco',nm:'Escocia',c:'gb-sct'}]},
+  {n:'D',t:[{id:'usa',nm:'EE.UU.',c:'us'},{id:'pry',nm:'Paraguay',c:'py'},{id:'aus',nm:'Australia',c:'au'},{id:'tur',nm:'Turquia',c:'tr'}]},
+  {n:'E',t:[{id:'ger',nm:'Alemania',c:'de'},{id:'cur',nm:'Curazao',c:'cw'},{id:'civ',nm:'Costa de Marfil',c:'ci'},{id:'ecu',nm:'Ecuador',c:'ec'}]},
+  {n:'F',t:[{id:'ned',nm:'Paises Bajos',c:'nl'},{id:'jpn',nm:'Japon',c:'jp'},{id:'swe',nm:'Suecia',c:'se'},{id:'tun',nm:'Tunez',c:'tn'}]},
+  {n:'G',t:[{id:'bel',nm:'Belgica',c:'be'},{id:'egy',nm:'Egipto',c:'eg'},{id:'irn',nm:'Iran',c:'ir'},{id:'nzl',nm:'Nueva Zelanda',c:'nz'}]},
+  {n:'H',t:[{id:'esp',nm:'Espana',c:'es'},{id:'cpv',nm:'Cabo Verde',c:'cv'},{id:'ksa',nm:'Arabia Saudi',c:'sa'},{id:'uru',nm:'Uruguay',c:'uy'}]},
+  {n:'I',t:[{id:'fra',nm:'Francia',c:'fr'},{id:'sen',nm:'Senegal',c:'sn'},{id:'irq',nm:'Iraq',c:'iq'},{id:'nor',nm:'Noruega',c:'no'}]},
+  {n:'J',t:[{id:'arg',nm:'Argentina',c:'ar'},{id:'alg',nm:'Argelia',c:'dz'},{id:'aut',nm:'Austria',c:'at'},{id:'jor',nm:'Jordania',c:'jo'}]},
+  {n:'K',t:[{id:'por',nm:'Portugal',c:'pt'},{id:'cod',nm:'RD Congo',c:'cd'},{id:'uzb',nm:'Uzbekistan',c:'uz'},{id:'col',nm:'Colombia',c:'co'}]},
+  {n:'L',t:[{id:'eng',nm:'Inglaterra',c:'gb-eng'},{id:'cro',nm:'Croacia',c:'hr'},{id:'gha',nm:'Ghana',c:'gh'},{id:'pan',nm:'Panama',c:'pa'}]}
 ];
 
 /* Mapa de equipos por ID */

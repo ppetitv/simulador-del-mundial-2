@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="112" viewBox="0 0 160 112"><rect width="160" height="112" fill="#009b3a"/><rect y="37.33" width="160" height="37.34" fill="#fed100"/><rect y="74.67" width="160" height="37.33" fill="#000"/><rect x="1" y="1" width="158" height="110" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="2"/><text x="80" y="64" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#fff" paint-order="stroke" stroke="rgba(255,255,255,.55)" stroke-width="1">JM</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-jm" viewBox="0 0 640 480">
+  <g fill-rule="evenodd">
+    <path fill="#000001" d="m0 0 320 240L0 480zm640 0L320 240l320 240z"/>
+    <path fill="#090" d="m0 0 320 240L640 0zm0 480 320-240 320 240z"/>
+    <path fill="#fc0" d="M640 0h-59.6L0 435.3V480h59.6L640 44.7z"/>
+    <path fill="#fc0" d="M0 0v44.7L580.4 480H640v-44.7L59.6 0z"/>
+  </g>
+</svg>
