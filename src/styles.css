@@ -176,6 +176,24 @@ body {
   animation: fadeUp .45s ease both
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .a-up {
+    animation: none
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px)
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0)
+  }
+}
+
 .a-slide {
   animation: slideR .35s ease both
 }
@@ -184,8 +202,44 @@ body {
   animation: crownFloat 2s ease-in-out infinite
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .a-crown {
+    animation: none
+  }
+}
+
+@keyframes crownFloat {
+
+  0%,
+  100% {
+    transform: translateY(0)
+  }
+
+  50% {
+    transform: translateY(-6px)
+  }
+}
+
 .pulse-glow {
   animation: pulseGlow 2.5s ease-in-out infinite
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-glow {
+    animation: none
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(163, 230, 53, .15)
+  }
+
+  50% {
+    box-shadow: 0 0 28px rgba(163, 230, 53, .35)
+  }
 }
 
 .app-header {
@@ -234,10 +288,10 @@ body {
 
 .header-status {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
   min-width: 128px;
-  justify-content: flex-end;
   font-family: var(--font-jakarta);
   font-size: 12px;
   font-weight: 800;
@@ -259,6 +313,14 @@ body {
   border-radius: inherit;
   background: linear-gradient(90deg, var(--lime), var(--gold));
   transition: width .35s ease
+}
+
+.header-status-label {
+  display: block;
+  margin-top: 1px;
+  font-size: 11px;
+  color: #6f7280;
+  font-weight: normal
 }
 
 .phase-wrap,
@@ -431,7 +493,10 @@ body {
   border-radius: 7px;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+  background: none;
+  text-align: left;
+  width: 100%
 }
 
 .team-row:hover {
@@ -551,7 +616,9 @@ body {
   align-items: center;
   gap: 11px;
   background: rgba(15, 15, 22, .82);
-  overflow: hidden
+  overflow: hidden;
+  text-align: left;
+  width: 100%
 }
 
 .third-c:before {
@@ -625,7 +692,11 @@ body {
   cursor: pointer;
   transition: all .2s;
   border-left: 3px solid transparent;
-  min-height: 45px
+  min-height: 45px;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%
 }
 
 .m-tm:hover {
@@ -646,6 +717,11 @@ body {
   cursor: default;
   color: #c4c7d2;
   background: rgba(255, 255, 255, .035)
+}
+
+.m-tm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed
 }
 
 .m-tm.empty span {
@@ -844,6 +920,12 @@ body {
   width: 50%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .5), transparent);
   animation: lineSweep 2.8s ease-in-out infinite
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connector-line:after {
+    animation: none
+  }
 }
 
 .step-dot {
@@ -1198,6 +1280,12 @@ body {
   animation: champBurst 1.8s ease-out forwards
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .champ-burst {
+    animation: none
+  }
+}
+
 .champ-spark {
   position: absolute;
   border-radius: 50%;
@@ -1205,6 +1293,12 @@ body {
   z-index: 4;
   box-shadow: 0 0 14px currentColor;
   animation: sparkDrift ease-out forwards
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .champ-spark {
+    animation: none
+  }
 }
 
 .champ-card {
@@ -1272,7 +1366,8 @@ body {
   }
 
   .header-status {
-    min-width: 86px
+    min-width: 86px;
+    gap: 2px
   }
 
   .header-meter {
@@ -1382,4 +1477,10 @@ body {
   .bk-m {
     display: none !important
   }
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
 }

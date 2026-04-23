@@ -140,6 +140,10 @@ export default function App() {
 
   const notify = (m) => { setToast({ s: true, m }); setTimeout(() => setToast({ s: false, m: '' }), 2500); };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [phase]);
+
   /* Toggle seleccion en grupo */
   const toggleGroup = (gn, tid) => {
     setGSel(prev => {
@@ -295,7 +299,10 @@ function Header({ phase, progress }) {
           </div>
         </div>
         <div className="header-status">
-          <span>{progress}%</span>
+          <div className="flex items-center gap-2">
+            <span>{progress}%</span>
+            <span className="header-status-label">Global</span>
+          </div>
           <div className="header-meter"><i style={{ width: progress + '%' }}></i></div>
         </div>
       </div>
@@ -378,16 +385,16 @@ function GCard({ group, sel, toggle, delay, openInsight }) {
           const pi = sel.indexOf(tm.id);
           const cls = pi >= 0 ? ' s' + (pi + 1) : '';
           return (
-            <div key={tm.id} className={"team-row" + cls} onClick={() => toggle(group.n, tm.id)} role="button" tabIndex="0">
+            <button key={tm.id} type="button" className={"team-row" + cls} onClick={() => toggle(group.n, tm.id)}>
               <div className="pos-b">{pi >= 0 ? (pi + 1) : ''}</div>
               <img className="flag-img" src={flg(tm.c, 160)} alt={tm.nm} onError={e => { e.target.style.opacity = '0.2' }} />
               <span className="font-medium text-sm flex-1">{tm.nm}</span>
-              <button className="stats-btn" type="button" title="Ver datos del equipo"
+              <button className="stats-btn" type="button" aria-label={`Ver datos de ${tm.nm}`}
                 onClick={e => { e.stopPropagation(); openInsight(tm.id); }}>
                 <Icon name="info" label={'Datos de ' + tm.nm} />
                 <span>Datos</span>
               </button>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -417,7 +424,7 @@ function BTPhase({ teams, sel, toggle, go }) {
           if (!team) return null;
           const isSel = sel.includes(tid);
           return (
-            <div key={tid} className={"third-c" + (isSel ? ' sel' : '')} onClick={() => toggle(tid)} role="button" tabIndex="0">
+            <button key={tid} type="button" className={"third-c" + (isSel ? ' sel' : '')} onClick={() => toggle(tid)}>
               <img className="flag-img" src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
               <div className="flex-1">
                 <div className="font-medium text-sm">{team.nm}</div>
@@ -428,7 +435,7 @@ function BTPhase({ teams, sel, toggle, go }) {
                   <Icon name="check" label="Seleccionado" />
                 </div>
               )}
-            </div>
+            </button>
           );
         })}
       </div>
@@ -461,8 +468,10 @@ function MatchView({ match, onPick, interactive }) {
   const w = match.winner;
   return (
     <div className={"m-card" + (w ? ' decided' : '') + (!interactive ? ' locked' : '')}>
-      <div className={"m-tm" + (!t1 ? ' empty' : (w === match.team1 ? ' w' : (w ? ' l' : '')))}
-        onClick={t1 && interactive ? () => onPick(match.team1) : undefined}>
+      <button type="button" className={"m-tm" + (!t1 ? ' empty' : (w === match.team1 ? ' w' : (w ? ' l' : '')))}
+        onClick={t1 && interactive ? () => onPick(match.team1) : undefined}
+        disabled={!t1 || !interactive}
+        aria-label={t1 ? `Seleccionar ${t1.nm} como ganador` : undefined}>
         {t1 ? (
           <>
             <img className="flag-img" src={flg(t1.c, 160)} alt={t1.nm} onError={e => { e.target.style.opacity = '0.2' }} />
@@ -470,10 +479,12 @@ function MatchView({ match, onPick, interactive }) {
             {w === match.team1 && <Icon name="chevron" label="Ganador" className="winner-icon" />}
           </>
         ) : <span className="text-xs text-gray-600">Por definir</span>}
-      </div>
+      </button>
       <div className="border-t border-[#1C1C2E]"></div>
-      <div className={"m-tm" + (!t2 ? ' empty' : (w === match.team2 ? ' w' : (w ? ' l' : '')))}
-        onClick={t2 && interactive ? () => onPick(match.team2) : undefined}>
+      <button type="button" className={"m-tm" + (!t2 ? ' empty' : (w === match.team2 ? ' w' : (w ? ' l' : '')))}
+        onClick={t2 && interactive ? () => onPick(match.team2) : undefined}
+        disabled={!t2 || !interactive}
+        aria-label={t2 ? `Seleccionar ${t2.nm} como ganador` : undefined}>
         {t2 ? (
           <>
             <img className="flag-img" src={flg(t2.c, 160)} alt={t2.nm} onError={e => { e.target.style.opacity = '0.2' }} />
@@ -481,7 +492,7 @@ function MatchView({ match, onPick, interactive }) {
             {w === match.team2 && <Icon name="chevron" label="Ganador" className="winner-icon" />}
           </>
         ) : <span className="text-xs text-gray-600">Por definir</span>}
-      </div>
+      </button>
     </div>
   );
 }
@@ -773,7 +784,7 @@ function TeamInsight({ team, onClose }) {
       <div className="insight-panel" onClick={e => e.stopPropagation()}>
         <div className="insight-top">
           <div className="sheet-handle" aria-hidden="true"></div>
-          <button className="insight-close" type="button" onClick={onClose} title="Cerrar">
+          <button className="insight-close" type="button" onClick={onClose} aria-label="Cerrar">
             <Icon name="close" label="Cerrar" />
           </button>
           <div className="insight-head">
