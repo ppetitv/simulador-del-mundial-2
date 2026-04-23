@@ -771,15 +771,18 @@ function TeamInsight({ team, onClose }) {
   return (
     <div className="insight-overlay" role="dialog" aria-modal="true" aria-label={'Estadísticas de ' + team.nm} onClick={onClose}>
       <div className="insight-panel" onClick={e => e.stopPropagation()}>
-        <button className="insight-close" type="button" onClick={onClose} title="Cerrar">
-          <Icon name="close" label="Cerrar" />
-        </button>
-        <div className="insight-head">
-          <img className="insight-flag" src={flg(team.c)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
-          <div>
-            <div className="eyebrow">Ficha del equipo</div>
-            <h3>{team.nm}</h3>
-            <p>Grupo {team.gr} · {teamProfile(score)}</p>
+        <div className="insight-top">
+          <div className="sheet-handle" aria-hidden="true"></div>
+          <button className="insight-close" type="button" onClick={onClose} title="Cerrar">
+            <Icon name="close" label="Cerrar" />
+          </button>
+          <div className="insight-head">
+            <img className="insight-flag" src={flg(team.c)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
+            <div>
+              <div className="eyebrow">Ficha del equipo</div>
+              <h3>{team.nm}</h3>
+              <p>Grupo {team.gr} · {teamProfile(score)}</p>
+            </div>
           </div>
         </div>
 

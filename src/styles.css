@@ -937,7 +937,7 @@ body {
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(20, 20, 30, .98), rgba(7, 7, 10, .98));
   box-shadow: 0 30px 90px rgba(0, 0, 0, .58), inset 0 1px 0 rgba(255, 255, 255, .08);
-  padding: 22px
+  padding: 0
 }
 
 .insight-panel:before {
@@ -953,10 +953,27 @@ body {
   z-index: 1
 }
 
+.insight-top {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  padding: 14px 22px 16px;
+  background: linear-gradient(180deg, rgba(17, 17, 25, .98), rgba(17, 17, 25, .92), rgba(17, 17, 25, .72));
+  backdrop-filter: blur(14px)
+}
+
+.sheet-handle {
+  width: 46px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .16);
+  margin: 0 auto 14px
+}
+
 .insight-close {
   position: absolute;
-  right: 14px;
-  top: 14px;
+  right: 16px;
+  top: 12px;
   z-index: 2;
   width: 34px;
   height: 34px;
@@ -1015,7 +1032,7 @@ body {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 18px;
   align-items: center;
-  margin: 22px 0;
+  margin: 0 22px 22px;
   padding: 16px;
   border: 1px solid rgba(245, 197, 66, .2);
   border-radius: 8px;
@@ -1047,7 +1064,7 @@ body {
 }
 
 .insight-section {
-  margin-top: 18px
+  margin: 18px 22px 0
 }
 
 .insight-section h4 {
@@ -1063,42 +1080,59 @@ body {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px
+  gap: 12px
 }
 
 .stat-card {
-  min-height: 104px;
-  border: 1px solid rgba(255, 255, 255, .08);
+  position: relative;
+  min-height: 118px;
+  border: 1px solid rgba(255, 255, 255, .09);
   border-radius: 8px;
-  background: rgba(255, 255, 255, .035);
-  padding: 13px 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .028));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 16px 38px rgba(0, 0, 0, .18);
+  padding: 14px 15px 13px;
   display: flex;
   flex-direction: column;
   justify-content: space-between
 }
 
+.stat-card:before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  top: 1px;
+  height: 2px;
+  border-radius: 7px 7px 0 0;
+  background: linear-gradient(90deg, rgba(163, 230, 53, .72), rgba(245, 197, 66, .5), rgba(255, 255, 255, 0))
+}
+
 .stat-card span {
-  color: #8f929e;
-  font-size: 11px;
+  color: #9295a1;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 1.15px;
   text-transform: uppercase;
-  line-height: 1.35
+  line-height: 1.35;
+  max-width: 90%
 }
 
 .stat-card strong {
-  margin-top: 10px;
-  font-size: 28px;
+  margin-top: 12px;
+  font-size: 30px;
   line-height: 1;
-  color: #fff;
-  font-weight: 800
+  color: #f4f5f8;
+  font-weight: 800;
+  text-shadow: 0 0 22px rgba(255, 255, 255, .04)
 }
 
 .stat-card small {
-  margin-top: 8px;
-  color: #6e7280;
+  margin-top: 10px;
+  color: #767b89;
   font-size: 11px;
-  line-height: 1.35
+  line-height: 1.35;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, .06)
 }
 
 .insight-muted {
@@ -1111,7 +1145,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-top: 20px;
+  margin: 20px 22px 22px;
   color: var(--lime);
   font-size: 12px;
   font-weight: 800;
@@ -1309,7 +1343,11 @@ body {
     width: 100%;
     max-height: 88vh;
     border-radius: 14px 14px 0 0;
-    padding: 20px
+    box-shadow: 0 -18px 60px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .08)
+  }
+
+  .insight-top {
+    padding: 10px 18px 14px
   }
 
   .insight-head h3 {
@@ -1322,6 +1360,13 @@ body {
 
   .stats-grid {
     grid-template-columns: 1fr
+  }
+
+  .insight-score,
+  .insight-section,
+  .source-link {
+    margin-left: 18px;
+    margin-right: 18px
   }
 
   .champ-card {
