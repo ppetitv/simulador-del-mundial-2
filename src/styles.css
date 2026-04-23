@@ -103,7 +103,8 @@ transition:all .2s;display:flex;align-items:center;gap:11px;background:rgba(15,1
 .m-tm:hover{background:rgba(255,255,255,.045)}
 .m-tm.w{background:linear-gradient(90deg,rgba(163,230,53,.14),rgba(163,230,53,.04));border-left-color:var(--lime)}
 .m-tm.l{opacity:.3}
-.m-tm.empty{opacity:.25;cursor:default}
+.m-tm.empty{opacity:1;cursor:default;color:#c4c7d2;background:rgba(255,255,255,.035)}
+.m-tm.empty span{font-weight:700;letter-spacing:.2px}
 .winner-icon{width:17px;height:17px;color:var(--lime)}
 .match-label{font-family:var(--font-jakarta);font-size:10px;font-weight:800;color:#5c6070;margin:0 0 6px 4px;letter-spacing:1.8px}
 
