@@ -646,11 +646,10 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       const oppPng = pngMap[oppCode] || '';
       return '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">' +
         '<div style="width:85px;' + F + 'font-weight:800;color:#A3E635;font-size:12px;text-transform:uppercase;letter-spacing:1px;line-height:22px;">' + t.short + '</div>' +
-        '<div style="color:#777;' + F + 'font-size:11px;width:20px;text-align:center;line-height:22px;">vs</div>' +
+        '<div style="color:rgba(163,230,53,.82);' + F + 'font-size:11px;font-weight:800;letter-spacing:1px;line-height:22px;text-transform:uppercase;white-space:nowrap;">SUPERÓ A</div>' +
         '<div style="display:flex;align-items:center;gap:10px;flex:1">' +
-        (oppPng ? '<img src="' + oppPng + '" width="28" height="21" style="width:28px;height:21px;border-radius:3px;object-fit:cover;display:block;" />' : '') +
-        '<span style="color:#f4f4f7;' + F + 'font-weight:700;font-size:15px;line-height:22px;">' + (opp ? opp.nm : '?') + '</span></div>' +
-        '<div style="background:#A3E635;color:#060609;padding:5px 10px;border-radius:4px;font-size:10px;font-weight:900;' + F + 'letter-spacing:1px;line-height:12px;text-align:center;">ELIMINADO</div></div>';
+        (oppPng ? '<img src="' + oppPng + '" width="28" height="21" style="width:28px;height:21px;border-radius:3px;object-fit:cover;display:block;transform:translateY(5px);" />' : '') +
+        '<span style="color:#f4f4f7;' + F + 'font-weight:700;font-size:15px;line-height:22px;">' + (opp ? opp.nm : '?') + '</span></div></div>';
     }).join('');
 
     const champPng = pngMap[team.c] || '';
@@ -662,18 +661,18 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:34px">' +
       (logoPng ? '<img src="' + logoPng + '" style="height:45px;width:auto;display:block;" />' : '') +
       '<div style="' + F + 'font-weight:800;font-size:12px;color:#666;letter-spacing:2px;">MUNDIAL 2026</div></div>' +
-      '<div style="' + F + 'font-size:38px;line-height:1.1;font-weight:800;color:#f4f4f7;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Tu Campeón</div>' +
-      '<div style="' + F + 'font-size:14px;color:#8b8b98;margin-bottom:30px;line-height:1;">Pronóstico creado en el simulador RPP</div>' +
+      '<div style="' + F + 'font-size:32px;line-height:1.08;font-weight:800;color:#f4f4f7;letter-spacing:.2px;margin-bottom:8px">Mi campeón del Mundial 2026 es</div>' +
+      '<div style="height:18px"></div>' +
       '<div style="display:flex;align-items:center;gap:20px;padding:24px;background:rgba(245,197,66,.09);border:1.5px solid rgba(245,197,66,.28);border-radius:10px;margin-bottom:32px">' +
       (champPng ? '<img src="' + champPng + '" width="80" height="60" style="width:80px;height:60px;border-radius:6px;object-fit:cover;display:block;" />' : '') +
       '<div style="flex:1"><div style="font-size:11px;color:#84CC16;' + F + 'font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;line-height:1;">CAMPEÓN</div>' +
       '<div style="' + F + 'font-size:36px;line-height:1;font-weight:800;color:#f0f0f5">' + team.nm.toUpperCase() + '</div></div>' +
-      '<div style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(245,197,66,.14);color:#F5C542;font-size:26px;font-weight:900;' + F + 'line-height:56px;text-align:center;">#1</div></div>' +
-      '<div style="' + F + 'font-weight:800;font-size:13px;color:#A3E635;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;line-height:1;">CAMINO AL TÍTULO</div>' +
+      '<div style="position:relative;width:56px;height:56px;border-radius:50%;display:block;background:rgba(245,197,66,.14);color:#F5C542;font-size:26px;font-weight:900;' + F + 'text-align:center;"><span style="position:absolute;left:50%;top:calc(50% - 11px);transform:translate(-50%,-50%);white-space:nowrap;line-height:1">#1</span></div></div>' +
+      '<div style="' + F + 'font-weight:800;font-size:13px;color:#A3E635;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;line-height:1;">RUTA AL TROFEO</div>' +
       tlRows +
-      '<div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #1C1C2E;margin-top:24px">' +
-      '<div style="' + F + 'font-weight:800;font-size:18px;color:#A3E635;letter-spacing:2px;line-height:1;">SIMULADOR</div>' +
-      '<div style="' + F + 'font-weight:800;font-size:12px;color:#444;letter-spacing:2px;line-height:1;">ARMA TAMBIÉN EL TUYO</div></div></div>';
+      '<div style="padding-top:16px;border-top:1px solid #1C1C2E;margin-top:24px">' +
+      '<div style="' + F + 'font-weight:800;font-size:16px;color:#A3E635;line-height:1.2;margin-bottom:8px">Haz el tuyo con el Simulador de RPP</div>' +
+      '<div style="' + F + 'font-weight:700;font-size:12px;color:#6b7080;line-height:1.2">rpp.pe/mundial-2026/simulador-rpp</div></div></div>';
 
     /* Wait for PNG data-url images to paint in the DOM */
     await new Promise(r => setTimeout(r, 300));
@@ -717,8 +716,8 @@ function ChampScreen({ champ, bracket, restart, notify }) {
             return (
               <div key={i} className="champ-path-row flex items-center gap-3 a-slide" style={{ animationDelay: (.6 + i * .08) + 's' }}>
                 <div className="font-display text-xs tracking-wider w-20 shrink-0" style={{ color: 'rgba(163,230,53,.7)' }}>{t.short}</div>
+                <div className="text-[10px] font-bold font-display tracking-wider shrink-0" style={{ color: 'rgba(163,230,53,.78)' }}>SUPERÓ A</div>
                 <div className="flex-1 flex items-center gap-2">
-                  <span className="text-gray-500 text-xs">vs</span>
                   {opp ? (
                     <>
                       <img style={{ width: '22px', height: '15px', objectFit: 'cover', borderRadius: '2px' }} src={flg(opp.c, 80)} alt={opp.nm} onError={e => { e.target.style.opacity = '0.2' }} />
@@ -726,7 +725,6 @@ function ChampScreen({ champ, bracket, restart, notify }) {
                     </>
                   ) : <span className="text-sm text-gray-500">?</span>}
                 </div>
-                <div className="text-[10px] font-bold font-display px-2 py-0.5 rounded tracking-wider" style={{ background: 'rgba(163,230,53,.15)', color: '#A3E635' }}>ELIMINADO</div>
               </div>
             );
           })}
