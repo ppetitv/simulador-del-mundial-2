@@ -3,8 +3,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Arial Narrow', 'Roboto Condensed', 'Franklin Gothic Medium', 'Arial', 'sans-serif'],
-        body: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        display: ['Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Arial Narrow', 'Arial', 'sans-serif'],
+        body: ['Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
     },
   },
