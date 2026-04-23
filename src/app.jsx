@@ -822,9 +822,11 @@ function TeamInsight({ team, onClose }) {
           )}
         </div>
 
-        <a className="source-link" href={SOURCE_URL} target="_blank" rel="noreferrer">
-          Ver fuente en 365Scores <Icon name="external" label="Abrir fuente" />
-        </a>
+        {stats && (
+          <a className="source-link" href={SOURCE_URL} target="_blank" rel="noreferrer">
+            Ver fuente en 365Scores <Icon name="external" label="Abrir fuente" />
+          </a>
+        )}
       </div>
     </div>
   );

@@ -1220,7 +1220,8 @@ body {
 .insight-muted {
   color: #8f929e;
   font-size: 13px;
-  line-height: 1.55
+  line-height: 1.55;
+  margin-bottom: 22px
 }
 
 .source-link {
