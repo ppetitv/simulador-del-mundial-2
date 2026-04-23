@@ -71,9 +71,9 @@ Si no hay estadísticas disponibles para una selección, la herramienta muestra:
 
 Las estadísticas de equipo están basadas en la información proporcionada desde:
 
-https://www.365scores.com/es/football/league/fifa-world-cup-5930/stats
+https://www.365scores.com/es/football/league/fifa-world-cup-5930/stats *
 
-La herramienta no muestra cuotas ni probabilidades de apuestas en las fichas de equipo.
+*NOTA: La herramienta no muestra cuotas ni probabilidades de apuestas en las fichas de equipo.
 
 ## Compartir Resultado
 
@@ -94,7 +94,7 @@ La interfaz usa una estética editorial deportiva:
 - Tipografía Plus Jakarta Sans.
 - Header con logo RPP.
 - Transiciones suaves.
-- Celebración final con burst dorado y destellos, en lugar de confetti genérico.
+- Celebración final con burst dorado y destellos.
 
 ## Estructura Técnica
 
