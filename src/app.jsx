@@ -445,7 +445,7 @@ function KOPhase({bracket,cur,pick}){
     <div className="ko-shell">
       <div className="phase-hero text-center mb-4 a-up">
         <div className="eyebrow">Ruta al título</div>
-        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">TORNEO ELIMINATORIO</h2>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">FASE ELIMINATORIA</h2>
         <p className="text-gray-500 text-sm mt-1">Selecciona el ganador de cada partido</p>
       </div>
       <div className="bk-m"><KOMobile bracket={bracket} cur={cur} pick={pick}/></div>
