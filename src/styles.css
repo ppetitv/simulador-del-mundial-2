@@ -25,7 +25,8 @@ background-image:radial-gradient(rgba(255,255,255,.75) .8px,transparent .8px);ba
 @keyframes pulseGlow{0%,100%{box-shadow:0 0 10px rgba(163,230,53,.15)}50%{box-shadow:0 0 28px rgba(163,230,53,.35)}}
 @keyframes slideR{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes crownFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes confettiFall{0%{transform:translateY(-100vh) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes champBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}24%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}}
+@keyframes sparkDrift{0%{opacity:0;transform:translateY(10px) scale(.6)}18%{opacity:1}100%{opacity:0;transform:translateY(-46px) scale(0)}}
 @keyframes lineSweep{0%{transform:translateX(-100%)}100%{transform:translateX(140%)}}
 
 .a-up{animation:fadeUp .45s ease both}
@@ -45,8 +46,15 @@ background-image:radial-gradient(rgba(255,255,255,.75) .8px,transparent .8px);ba
 .phase-wrap,.ko-shell{position:relative}
 .phase-hero{padding:18px 16px 0}
 .eyebrow{font-family:var(--font-jakarta);text-transform:uppercase;letter-spacing:2.6px;color:rgba(163,230,53,.72);font-size:12px;font-weight:800;margin-bottom:6px}
-.phase-progress{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px auto 0;color:var(--muted);font-size:12px}
-.phase-progress-bar{width:min(330px,64vw);height:6px;border-radius:999px;background:#171720;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+.flow-hero{max-width:1180px;margin:0 auto 18px;padding:20px 16px 0;text-align:center}
+.phase-lead{max-width:640px;margin:10px auto 0;color:#a4a6b3;font-size:15px;line-height:1.55}
+.phase-bar{display:grid;grid-template-columns:auto minmax(180px,1fr) auto;align-items:center;gap:18px;max-width:1180px;margin:0 auto 18px;padding:12px 16px;border-block:1px solid rgba(255,255,255,.065);background:linear-gradient(90deg,transparent,rgba(15,15,22,.58),transparent)}
+.phase-bar .eyebrow{margin-bottom:3px}
+.phase-bar p{color:#7f8290;font-size:13px}
+.phase-tools{display:flex;align-items:center;justify-content:flex-end;gap:14px}
+.phase-tools .btn-s{background:rgba(163,230,53,.06);border-color:rgba(163,230,53,.28);padding:10px 15px}
+.phase-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;color:#696d7a;font-size:11px;white-space:nowrap}
+.phase-progress-bar{width:132px;height:5px;border-radius:999px;background:#171720;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
 .phase-progress-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--lime),var(--gold));transition:width .35s ease}
 
 .g-card{position:relative;background:linear-gradient(180deg,rgba(22,22,34,.9),rgba(11,11,17,.92));border:1px solid rgba(255,255,255,.075);border-radius:8px;overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,.22);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
@@ -115,7 +123,6 @@ color:#444;background:transparent;white-space:nowrap}
 .r-tab.done{color:var(--lime2)}
 .r-tab.lock{color:#222;cursor:not-allowed}
 
-.confetti{position:fixed;z-index:9999;pointer-events:none;animation:confettiFall linear forwards}
 .flag-img{width:34px;height:24px;object-fit:cover;border-radius:4px;flex-shrink:0}
 .icon{display:inline-block;width:1em;height:1em}
 
@@ -145,6 +152,8 @@ z-index:10000;border:1px solid rgba(163,230,53,.25);transition:transform .3s eas
 
 .champ-stage{position:relative}
 .champ-stage:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 10%,rgba(245,197,66,.12),transparent 45%),radial-gradient(ellipse at 20% 55%,rgba(163,230,53,.09),transparent 42%);pointer-events:none}
+.champ-burst{position:absolute;left:50%;top:28%;width:min(520px,86vw);aspect-ratio:1;border-radius:50%;pointer-events:none;z-index:0;background:repeating-conic-gradient(from 8deg,rgba(245,197,66,.32) 0deg 3deg,transparent 3deg 12deg),radial-gradient(circle,rgba(245,197,66,.18),transparent 58%);filter:blur(.2px);animation:champBurst 1.8s ease-out forwards}
+.champ-spark{position:absolute;border-radius:50%;pointer-events:none;z-index:4;box-shadow:0 0 14px currentColor;animation:sparkDrift ease-out forwards}
 .champ-card{position:relative;border:1px solid rgba(245,197,66,.32);border-radius:8px;padding:34px 36px 38px;text-align:center;max-width:460px;width:100%;background:linear-gradient(180deg,rgba(23,22,18,.96),rgba(12,12,16,.96));box-shadow:0 25px 80px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08)}
 .champ-card:before{content:"";position:absolute;inset:12px;border:1px solid rgba(245,197,66,.12);pointer-events:none}
 .champ-trophy{width:58px;height:58px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:rgba(245,197,66,.12);color:var(--gold);box-shadow:0 0 35px rgba(245,197,66,.16)}
@@ -155,6 +164,14 @@ z-index:10000;border:1px solid rgba(163,230,53,.25);transition:transform .3s eas
 @media(max-width:768px){
   .bk-d{display:none!important}.bk-m{display:block!important}
   .header-status{min-width:86px}.header-meter{width:48px}.header-subtitle{display:none}
+  .flow-hero{margin-bottom:12px;padding-top:16px;text-align:left}
+  .flow-hero h1{font-size:30px;line-height:1.08}
+  .phase-lead{margin-left:0;margin-right:0;font-size:14px;line-height:1.45}
+  .phase-bar{grid-template-columns:1fr;gap:8px;margin-bottom:14px;padding:11px 16px}
+  .phase-bar p{font-size:12px}
+  .phase-tools{align-items:flex-start;flex-direction:column;gap:10px}
+  .phase-progress{justify-content:flex-start}
+  .phase-progress-bar{width:min(220px,58vw)}
   .sticky-action{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,rgba(4,4,6,.95) 32%);padding-top:28px;z-index:20}
   .champ-card{padding:30px 24px 34px}
 }

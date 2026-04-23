@@ -40,6 +40,31 @@ const RORD=['r32','r16','qf','sf','fi'];
 const RN={r32:'Dieciseisavos',r16:'Octavos',qf:'Cuartos',sf:'Semifinales',fi:'Final'};
 const RS={r32:'32AVOS',r16:'16AVOS',qf:'CUARTOS',sf:'SEMIS',fi:'FINAL'};
 
+const TEAM_STRENGTH = {
+  arg:94,fra:93,bra:92,esp:91,eng:90,por:89,ned:88,ger:87,bel:86,cro:85,
+  uru:84,col:83,mar:82,usa:81,sui:80,jpn:79,mex:78,sen:77,ecu:76,den:75,
+  aut:75,kor:74,irn:73,aus:72,tur:72,swe:71,can:70,civ:70,pry:69,
+  nor:69,alg:68,tun:67,egy:67,gha:66,qat:64,ksa:64,pan:63,sco:63,cz:62,
+  cze:62,uzb:61,zaf:60,irq:59,jor:58,cpv:57,cur:56,
+  cod:56,bih:55,nzl:54,hai:52
+};
+
+function simulateGroups(){
+  const next={};
+  GR.forEach(g=>{
+    next[g.n]=[...g.t]
+      .map(t=>{
+        const base=TEAM_STRENGTH[t.id] ?? 60;
+        const volatility=10+Math.random()*8;
+        return {...t,score:base+(Math.random()-.5)*volatility};
+      })
+      .sort((a,b)=>b.score-a.score)
+      .slice(0,3)
+      .map(t=>t.id);
+  });
+  return next;
+}
+
 function flg(c){return '/flags/'+c+'.svg';}
 
 function Icon({name='check',label,className='',style}){
@@ -89,6 +114,11 @@ export default function App(){
       if(cur.length>=3) return prev;
       return{...prev,[gn]:[...cur,tid]};
     });
+  };
+
+  const autoFillGroups=()=>{
+    setGSel(simulateGroups());
+    notify('Grupos simulados. Puedes ajustar cualquier selección.');
   };
 
   /* Equipos terceros */
@@ -203,7 +233,7 @@ export default function App(){
       <Header phase={phase} progress={totalProgress}/>
       <Stepper phase={phase}/>
       <main className="flex-1 pb-8">
-        {phase==='groups'&&<GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird}/>}
+        {phase==='groups'&&<GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups}/>}
         {phase==='bestThird'&&<BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout}/>}
         {phase==='knockout'&&<KOPhase bracket={bracket} cur={curRound} pick={pickWinner}/>}
         {phase==='champion'&&<ChampScreen champ={champion} bracket={bracket} restart={restart} notify={notify}/>}
@@ -255,18 +285,30 @@ function Stepper({phase}){
 }
 
 /* ======================== FASE DE GRUPOS ======================== */
-function GroupPhase({gSel,toggle,go}){
+function GroupPhase({gSel,toggle,go,simulate}){
   const allDone=GR.every(g=>(gSel[g.n]||[]).length===3);
   const completeCount=GR.filter(g=>(gSel[g.n]||[]).length===3).length;
+  const groupProgress=Math.round(completeCount/12*100);
   return (
     <div className="phase-wrap">
-      <div className="phase-hero text-center mb-6 a-up">
-        <div className="eyebrow">Pronóstico inicial</div>
-        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">FASE DE GRUPOS</h2>
-        <p className="text-gray-500 text-sm mt-1">Ordena los 3 clasificados de cada grupo.</p>
-        <div className="phase-progress">
-          <div className="phase-progress-bar"><i style={{width:(completeCount/12*100)+'%'}}></i></div>
-          <span>{completeCount}/12 grupos cerrados</span>
+      <div className="flow-hero a-up">
+        <h1 className="font-display text-3xl sm:text-5xl font-bold tracking-wide">Simulador del Mundial 2026</h1>
+        <p className="phase-lead">Crea tu ruta al título, define clasificados y comparte tu campeón.</p>
+      </div>
+      <div className="phase-bar a-up">
+        <div>
+          <div className="eyebrow">Pronóstico inicial</div>
+          <h2 className="font-display text-lg sm:text-xl font-bold tracking-wide">FASE DE GRUPOS</h2>
+        </div>
+        <p>Ordena los 3 clasificados de cada grupo.</p>
+        <div className="phase-tools">
+          <div className="phase-progress">
+            <div className="phase-progress-bar"><i style={{width:groupProgress+'%'}}></i></div>
+            <span>{completeCount}/12 grupos cerrados</span>
+          </div>
+          <button className="btn-s icon-btn" onClick={simulate} title="Autocompleta con una proyección balanceada; luego puedes editar cualquier grupo.">
+            <Icon name="spark" label="Simular grupos"/> Simular grupos
+          </button>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 max-w-7xl mx-auto">
@@ -486,10 +528,10 @@ function KODesktop({bracket,cur,pick}){
 
 /* ======================== PANTALLA CAMPEÓN ======================== */
 function ChampScreen({champ,bracket,restart,notify}){
-  const[showConfetti,setShowConfetti]=useState(true);
+  const[showCelebration,setShowCelebration]=useState(true);
   const team=TM[champ];
 
-  useEffect(()=>{const t=setTimeout(()=>setShowConfetti(false),4000);return()=>clearTimeout(t);},[]);
+  useEffect(()=>{const t=setTimeout(()=>setShowCelebration(false),4200);return()=>clearTimeout(t);},[]);
 
   /* Timeline: camino del campeón */
   const timeline=useMemo(()=>{
@@ -505,13 +547,12 @@ function ChampScreen({champ,bracket,restart,notify}){
     return path.reverse();
   },[champ,bracket]);
 
-  /* Confetti */
-  const confetti=useMemo(()=>{
-    const pcs=[];const cols=['#A3E635','#84CC16','#65a30d','#ffffff','#3b82f6','#f59e0b','#ef4444'];
-    for(let i=0;i<50;i++) pcs.push({
-      l:Math.random()*100,d:Math.random()*2,dur:2+Math.random()*3,
-      c:cols[~~(Math.random()*cols.length)],sz:6+Math.random()*8,
-      br:Math.random()>.5?'50%':'2px'
+  /* Celebración */
+  const sparks=useMemo(()=>{
+    const pcs=[];const cols=['#F5C542','#A3E635','#fff7d6'];
+    for(let i=0;i<34;i++) pcs.push({
+      x:46+(Math.random()-.5)*68,y:22+Math.random()*42,d:Math.random()*1.2,
+      dur:2.4+Math.random()*1.8,c:cols[~~(Math.random()*cols.length)],sz:2+Math.random()*4
     });
     return pcs;
   },[]);
@@ -576,10 +617,11 @@ function ChampScreen({champ,bracket,restart,notify}){
 
   return (
     <div className="champ-stage min-h-screen flex flex-col items-center pt-6 pb-12 px-4">
-      {showConfetti&&confetti.map((p,i)=>(
-        <div key={i} className="confetti" style={{
-          left:p.l+'%',animationDelay:p.d+'s',animationDuration:p.dur+'s',
-          backgroundColor:p.c,width:p.sz+'px',height:p.sz+'px',borderRadius:p.br,top:'-20px'
+      {showCelebration&&<div className="champ-burst" aria-hidden="true"></div>}
+      {showCelebration&&sparks.map((p,i)=>(
+        <div key={i} className="champ-spark" style={{
+          left:p.x+'%',top:p.y+'%',animationDelay:p.d+'s',animationDuration:p.dur+'s',
+          backgroundColor:p.c,width:p.sz+'px',height:p.sz+'px'
         }}></div>
       ))}
       <div className="a-up text-center mb-8">
