@@ -769,7 +769,7 @@ function TeamInsight({team,onClose}){
               ))}
             </div>
           ):(
-            <p className="insight-muted">No hay estadísticas de equipo disponibles para esta selección en la información compartida.</p>
+            <p className="insight-muted">No hay estadísticas de equipo disponibles para esta selección por el momento.</p>
           )}
         </div>
 
