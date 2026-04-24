@@ -122,6 +122,7 @@ function phaseLabel(phase) {
 
 /* ======================== APP PRINCIPAL ======================== */
 export default function App() {
+  const appRef = useRef(null);
   const [phase, setPhase] = useState('groups');
   const [gSel, setGSel] = useState({});
   const [btSel, setBtSel] = useState([]);
@@ -140,8 +141,18 @@ export default function App() {
 
   const notify = (m) => { setToast({ s: true, m }); setTimeout(() => setToast({ s: false, m: '' }), 2500); };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  useLayoutEffect(() => {
+    const scrollTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      appRef.current?.scrollIntoView({ block: 'start', inline: 'nearest' });
+    };
+
+    scrollTop();
+    const frame = window.requestAnimationFrame(scrollTop);
+
+    return () => window.cancelAnimationFrame(frame);
   }, [phase]);
 
   /* Toggle seleccion en grupo */
@@ -268,7 +279,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative z-10 min-h-screen flex flex-col">
+    <div ref={appRef} className="relative z-10 min-h-screen flex flex-col">
       <Header phase={phase} progress={totalProgress} />
       <Stepper phase={phase} />
       <main className="flex-1 pb-8">
@@ -439,7 +450,7 @@ function BTPhase({ teams, sel, toggle, go }) {
           );
         })}
       </div>
-      <div className="text-center mt-8 pb-4">
+      <div className="sticky-action text-center mt-8 pb-4 a-up">
         <button className="btn-p" disabled={cnt !== 8} onClick={go}>Continuar a eliminatorias</button>
       </div>
     </div>
