@@ -106,6 +106,23 @@ body {
   }
 }
 
+@keyframes checkPop {
+  0% {
+    opacity: 0;
+    transform: scale(.7)
+  }
+
+  65% {
+    opacity: 1;
+    transform: scale(1.08)
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1)
+  }
+}
+
 @keyframes slideR {
   from {
     opacity: 0;
@@ -472,12 +489,30 @@ body {
   padding: 3px 8px;
   border-radius: 999px;
   background: #1b1b27;
-  color: #777b88
+  color: #777b88;
+  min-width: 42px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center
 }
 
 .g-pill.done {
   background: rgba(163, 230, 53, .16);
-  color: var(--lime)
+  color: var(--lime);
+  border: 1px solid rgba(163, 230, 53, .18)
+}
+
+.g-pill-check {
+  width: 14px;
+  height: 14px;
+  animation: checkPop .28s ease-out, pulseGlow 2.5s ease-in-out infinite
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .g-pill-check {
+    animation: none
+  }
 }
 
 .g-rankline {
@@ -1214,11 +1249,28 @@ body {
   align-items: center;
   gap: 7px;
   padding: 5px 12px;
+  border: none;
   border-radius: 18px;
+  background: transparent;
   font-size: 12px;
   font-weight: 500;
+  font-family: var(--font-jakarta);
   color: #444;
   transition: all .3s
+}
+
+.step-link {
+  cursor: pointer
+}
+
+.step-link:hover {
+  color: #c7cbd6;
+  background: rgba(255, 255, 255, .04)
+}
+
+.step-lock {
+  cursor: not-allowed;
+  opacity: .55
 }
 
 .step-item.act {

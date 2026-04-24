@@ -138,8 +138,23 @@ export default function App() {
     phase === 'knockout' ? Math.round((36 + bracketDone / 31 * 64)) :
       phase === 'bestThird' ? Math.round(30 + btSel.length / 8 * 6) :
         Math.round(completedGroups / 12 * 30);
+  const allGroupsDone = completedGroups === GR.length;
+  const hasKnockout = bracket.r32.length > 0;
+  const canNavigateTo = {
+    groups: true,
+    bestThird: allGroupsDone,
+    knockout: hasKnockout,
+    champion: !!champion
+  };
 
   const notify = (m) => { setToast({ s: true, m }); setTimeout(() => setToast({ s: false, m: '' }), 2500); };
+
+  const emptyBracket = () => ({ r32: [], r16: [], qf: [], sf: [], fi: [] });
+  const resetKnockoutProgress = () => {
+    setBracket(emptyBracket());
+    setCurRound('r32');
+    setChampion(null);
+  };
 
   useLayoutEffect(() => {
     const scrollTop = () => {
@@ -157,6 +172,7 @@ export default function App() {
 
   /* Toggle seleccion en grupo */
   const toggleGroup = (gn, tid) => {
+    resetKnockoutProgress();
     setGSel(prev => {
       const cur = prev[gn] || [];
       const idx = cur.indexOf(tid);
@@ -167,6 +183,7 @@ export default function App() {
   };
 
   const autoFillGroups = () => {
+    resetKnockoutProgress();
     setGSel(simulateGroups());
     notify('Grupos simulados. Puedes ajustar cualquier selección.');
   };
@@ -182,13 +199,13 @@ export default function App() {
 
   /* Avanzar a mejores terceros */
   const goBestThird = () => {
-    const allDone = GR.every(g => (gSel[g.n] || []).length === 3);
-    if (!allDone) return;
+    if (!allGroupsDone) return;
     setPhase('bestThird');
   };
 
   /* Toggle mejor tercero */
   const toggleBT = (tid) => {
+    resetKnockoutProgress();
     setBtSel(prev => {
       if (prev.includes(tid)) return prev.filter(x => x !== tid);
       if (prev.length >= 8) return prev;
@@ -271,17 +288,27 @@ export default function App() {
     setBracket(nb);
   };
 
+  useEffect(() => {
+    const validThirdIds = new Set(thirdTeams.map(({ tid }) => tid));
+    setBtSel(prev => prev.filter(tid => validThirdIds.has(tid)));
+  }, [thirdTeams]);
+
+  const navigateToPhase = (nextPhase) => {
+    if (!canNavigateTo[nextPhase]) return;
+    setPhase(nextPhase);
+  };
+
   /* Reiniciar */
   const restart = () => {
     setPhase('groups'); setGSel({}); setBtSel([]);
-    setBracket({ r32: [], r16: [], qf: [], sf: [], fi: [] });
+    setBracket(emptyBracket());
     setCurRound('r32'); setChampion(null);
   };
 
   return (
     <div ref={appRef} className="relative z-10 min-h-screen flex flex-col">
       <Header phase={phase} progress={totalProgress} />
-      <Stepper phase={phase} />
+      <Stepper phase={phase} canNavigateTo={canNavigateTo} onNavigate={navigateToPhase} />
       <main className="flex-1 pb-8">
         {phase === 'groups' && <GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups} openInsight={setInsightTeam} />}
         {phase === 'bestThird' && <BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout} />}
@@ -322,17 +349,24 @@ function Header({ phase, progress }) {
 }
 
 /* ======================== STEPPER ======================== */
-function Stepper({ phase }) {
+function Stepper({ phase, canNavigateTo, onNavigate }) {
   const steps = [{ id: 'groups', l: 'Grupos' }, { id: 'bestThird', l: 'Terceros' }, { id: 'knockout', l: 'Eliminatoria' }, { id: 'champion', l: 'Campeón' }];
   const idx = steps.findIndex(s => s.id === phase);
   return (
     <div className="flex items-center justify-center gap-0 py-3 px-4 overflow-x-auto">
       {steps.map((s, i) => (
         <Fragment key={s.id}>
-          <div className={"step-item " + (i < idx ? 'ok ' : '') + (i === idx ? 'act' : '')}>
+          <button
+            type="button"
+            className={"step-item " + (i < idx ? 'ok ' : '') + (i === idx ? 'act ' : '') + (canNavigateTo[s.id] ? 'step-link' : 'step-lock')}
+            onClick={() => onNavigate(s.id)}
+            disabled={!canNavigateTo[s.id]}
+            aria-current={i === idx ? 'step' : undefined}
+            aria-label={canNavigateTo[s.id] ? `Ir a ${s.l}` : `${s.l} aún no disponible`}
+          >
             <div className="step-dot"></div>
             <span className="hidden sm:inline">{s.l}</span>
-          </div>
+          </button>
           {i < steps.length - 1 && <div className={"step-line " + (i < idx ? 'ok' : '')}></div>}
         </Fragment>
       ))}
@@ -387,7 +421,7 @@ function GCard({ group, sel, toggle, delay, openInsight }) {
       <div className="g-card-top">
         <span className="g-title">GRUPO {group.n}</span>
         <span className={"g-pill " + (ok ? 'done' : '')}>
-          {ok ? 'Cerrado' : cnt + '/3'}
+          {ok ? <Icon name="check" label={`Grupo ${group.n} completo`} className="g-pill-check" /> : cnt + '/3'}
         </span>
       </div>
       <div className="g-rankline" style={{ '--rank': (cnt / 3 * 100) + '%' }}></div>
