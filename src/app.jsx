@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 
 /* ======================== DATOS DEL MUNDIAL 2026 ======================== */
@@ -456,7 +456,7 @@ function KOPhase({ bracket, cur, pick }) {
         <p className="text-gray-500 text-sm mt-1">Selecciona el ganador de cada partido</p>
       </div>
       <div className="bk-m"><KOMobile bracket={bracket} cur={cur} pick={pick} /></div>
-      <div className="bk-d"><KODesktop bracket={bracket} cur={cur} pick={pick} /></div>
+      <div className="bk-d justify-center w-full"><KODesktop bracket={bracket} cur={cur} pick={pick} /></div>
     </div>
   );
 }
@@ -535,40 +535,153 @@ function KOMobile({ bracket, cur, pick }) {
 }
 
 /* Bracket Desktop */
+function getRoundDesktopState(bracket, cur, rnd) {
+  const ri = RORD.indexOf(rnd);
+  const ms = bracket[rnd] || [];
+  const prevDone = ri === 0 || (bracket[RORD[ri - 1]] && bracket[RORD[ri - 1]].every(m => m.winner));
+  return {
+    matches: ms,
+    interactive: rnd === cur && prevDone,
+    done: ms.length > 0 && ms.every(m => m.winner),
+    active: rnd === cur
+  };
+}
+
+function KODesktopRound({ title, matches, interactive, done, active, side, rnd, startIndex = 0, onPick, registerShell }) {
+  const pairs = [];
+  for (let i = 0; i < matches.length; i += 2) pairs.push(matches.slice(i, i + 2));
+  return (
+    <div className={"ko-round-col " + side + (done ? ' round-done' : '') + (active ? ' round-active' : '')}>
+      <div className="round-title">{title}</div>
+      <div className="ko-round-stack">
+        {pairs.map((pair, pi) => (
+          <div key={rnd + '-pair-' + (startIndex + pi * 2)} className={"ko-pair " + side + (pair.length === 1 ? ' single' : '')}>
+            {pair.map((m, mi) => {
+              const idx = startIndex + pi * 2 + mi;
+              return (
+                <div key={rnd + idx} className={"ko-match-shell " + side} ref={registerShell(rnd + '-' + idx)}>
+                  <MatchView match={m} onPick={tid => onPick(rnd, idx, tid)} interactive={interactive} />
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function KODesktop({ bracket, cur, pick }) {
+  const leftR32 = getRoundDesktopState(bracket, cur, 'r32');
+  const leftR16 = getRoundDesktopState(bracket, cur, 'r16');
+  const leftQF = getRoundDesktopState(bracket, cur, 'qf');
+  const leftSF = getRoundDesktopState(bracket, cur, 'sf');
+  const fi = getRoundDesktopState(bracket, cur, 'fi');
+  const stageRef = useRef(null);
+  const shellRefs = useRef({});
+  const [connectorPaths, setConnectorPaths] = useState({ left: [], right: [] });
+
+  const registerShell = (key) => (el) => {
+    if (el) shellRefs.current[key] = el;
+    else delete shellRefs.current[key];
+  };
+
+  useLayoutEffect(() => {
+    let raf = 0;
+
+    const computePaths = () => {
+      const stage = stageRef.current;
+      if (!stage) return;
+      const stageRect = stage.getBoundingClientRect();
+      const paths = { left: [], right: [] };
+
+      ['r16', 'qf', 'sf', 'fi'].forEach((round) => {
+        const prevRound = RORD[RORD.indexOf(round) - 1];
+        (FEED[round] || []).forEach((sources, targetIndex) => {
+          const targetEl = shellRefs.current[round + '-' + targetIndex];
+          if (!targetEl) return;
+          const targetRect = targetEl.getBoundingClientRect();
+          const ty = targetRect.top - stageRect.top + targetRect.height / 2;
+
+          sources.forEach((sourceIndex) => {
+            const sourceEl = shellRefs.current[prevRound + '-' + sourceIndex];
+            if (!sourceEl) return;
+            const sourceRect = sourceEl.getBoundingClientRect();
+            const sy = sourceRect.top - stageRect.top + sourceRect.height / 2;
+            const sourceIsLeft = sourceRect.left < targetRect.left;
+            const edgeInset = -1;
+            const sx = sourceIsLeft
+              ? sourceRect.right - stageRect.left - edgeInset
+              : sourceRect.left - stageRect.left + edgeInset;
+            const tx = sourceIsLeft
+              ? targetRect.left - stageRect.left + edgeInset
+              : targetRect.right - stageRect.left - edgeInset;
+            const mx = (sx + tx) / 2;
+            const side = sourceIsLeft ? 'left' : 'right';
+            paths[side].push(`M ${sx} ${sy} H ${mx} V ${ty} H ${tx}`);
+          });
+        });
+      });
+
+      setConnectorPaths(paths);
+    };
+
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(computePaths);
+    };
+
+    schedule();
+    const resizeObserver = new ResizeObserver(schedule);
+    if (stageRef.current) resizeObserver.observe(stageRef.current);
+    window.addEventListener('resize', schedule);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', schedule);
+    };
+  }, [bracket, cur]);
+
   return (
     <div className="ko-desktop overflow-x-auto px-4 py-4">
-      <div className="ko-lanes flex items-stretch gap-0 min-w-max">
-        {RORD.map((rnd, ri) => {
-          const ms = bracket[rnd] || [];
-          const prevDone = ri === 0 || (bracket[RORD[ri - 1]] && bracket[RORD[ri - 1]].every(m => m.winner));
-          const interactive = rnd === cur && prevDone;
-          const done = ms.length > 0 && ms.every(m => m.winner);
-          return (
-            <Fragment key={rnd}>
-              <div className={"ko-round flex flex-col " + (done ? 'round-done' : '') + (rnd === cur ? ' round-active' : '')} style={{ minWidth: '214px' }}>
-                <div className="round-title">{RS[rnd]}</div>
-                <div className="flex flex-col justify-around flex-1 gap-3 px-1">
-                  {ms.map((m, mi) => (
-                    <div key={mi}>
-                      <MatchView match={m} onPick={tid => pick(rnd, mi, tid)} interactive={interactive} />
-                    </div>
-                  ))}
-                </div>
+      <div className="ko-stage-wrap" ref={stageRef}>
+        <svg className="ko-connector-layer left" aria-hidden="true">
+          {connectorPaths.left.map((d, i) => (
+            <g key={i}>
+              <path d={d} className="ko-connector-glow" />
+              <path d={d} className="ko-connector-core" />
+            </g>
+          ))}
+        </svg>
+        <svg className="ko-connector-layer right" aria-hidden="true">
+          {connectorPaths.right.map((d, i) => (
+            <g key={i}>
+              <path d={d} className="ko-connector-glow" />
+              <path d={d} className="ko-connector-core" />
+            </g>
+          ))}
+        </svg>
+        <div className="ko-stage-grid">
+          <KODesktopRound title={RS.r32} matches={leftR32.matches.slice(0, 8)} interactive={leftR32.interactive} done={leftR32.done} active={leftR32.active} side="left outer" rnd="r32" startIndex={0} onPick={pick} registerShell={registerShell} />
+          <KODesktopRound title={RS.r16} matches={leftR16.matches.slice(0, 4)} interactive={leftR16.interactive} done={leftR16.done} active={leftR16.active} side="left" rnd="r16" startIndex={0} onPick={pick} registerShell={registerShell} />
+          <KODesktopRound title={RS.qf} matches={leftQF.matches.slice(0, 2)} interactive={leftQF.interactive} done={leftQF.done} active={leftQF.active} side="left" rnd="qf" startIndex={0} onPick={pick} registerShell={registerShell} />
+          <KODesktopRound title={RS.sf} matches={leftSF.matches.slice(0, 1)} interactive={leftSF.interactive} done={leftSF.done} active={leftSF.active} side="left inner" rnd="sf" startIndex={0} onPick={pick} registerShell={registerShell} />
+
+          <div className={"ko-final-col" + (fi.done ? ' round-done' : '') + (fi.active ? ' round-active' : '')}>
+            <div className="round-title final">FINAL</div>
+            <div className="ko-final-wrap">
+              <div className="ko-match-shell final" ref={registerShell('fi-0')}>
+                <MatchView match={fi.matches[0] || { team1: null, team2: null, winner: null }} onPick={tid => pick('fi', 0, tid)} interactive={fi.interactive} />
               </div>
-              {ri < RORD.length - 1 && (
-                <div className="ko-connector flex flex-col items-center justify-around" style={{ width: '48px' }}>
-                  <div style={{ height: '28px' }}></div>
-                  {FEED[RORD[ri + 1]].map((_, fi) => (
-                    <div key={fi} className="flex-1 flex items-center justify-center">
-                      <div className="connector-line"></div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Fragment>
-          );
-        })}
+            </div>
+          </div>
+
+          <KODesktopRound title={RS.sf} matches={leftSF.matches.slice(1, 2)} interactive={leftSF.interactive} done={leftSF.done} active={leftSF.active} side="right inner" rnd="sf" startIndex={1} onPick={pick} registerShell={registerShell} />
+          <KODesktopRound title={RS.qf} matches={leftQF.matches.slice(2, 4)} interactive={leftQF.interactive} done={leftQF.done} active={leftQF.active} side="right" rnd="qf" startIndex={2} onPick={pick} registerShell={registerShell} />
+          <KODesktopRound title={RS.r16} matches={leftR16.matches.slice(4, 8)} interactive={leftR16.interactive} done={leftR16.done} active={leftR16.active} side="right" rnd="r16" startIndex={4} onPick={pick} registerShell={registerShell} />
+          <KODesktopRound title={RS.r32} matches={leftR32.matches.slice(8, 16)} interactive={leftR32.interactive} done={leftR32.done} active={leftR32.active} side="right outer" rnd="r32" startIndex={8} onPick={pick} registerShell={registerShell} />
+        </div>
       </div>
     </div>
   );

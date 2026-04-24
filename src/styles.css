@@ -172,6 +172,16 @@ body {
   }
 }
 
+@keyframes connectorFlow {
+  0% {
+    background-position: 0% 50%
+  }
+
+  100% {
+    background-position: 200% 50%
+  }
+}
+
 .a-up {
   animation: fadeUp .45s ease both
 }
@@ -663,12 +673,14 @@ body {
 }
 
 .m-card {
+  position: relative;
   background: linear-gradient(180deg, rgba(18, 18, 27, .95), rgba(11, 11, 16, .96));
   border: 1px solid rgba(255, 255, 255, .075);
   border-radius: 8px;
   overflow: hidden;
   transition: all .2s;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .22)
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+  z-index: 2
 }
 
 .m-card:hover {
@@ -681,7 +693,9 @@ body {
 }
 
 .m-card.locked:not(.decided) {
-  opacity: .72
+  opacity: 1;
+  border-color: rgba(255, 255, 255, .11);
+  background: linear-gradient(180deg, rgba(22, 22, 33, .98), rgba(13, 13, 20, .98))
 }
 
 .m-tm {
@@ -709,14 +723,15 @@ body {
 }
 
 .m-tm.l {
-  opacity: .3
+  opacity: .8
 }
 
 .m-tm.empty {
   opacity: 1;
   cursor: default;
-  color: #c4c7d2;
-  background: rgba(255, 255, 255, .035)
+  color: #9ea3b1;
+  background: rgba(255, 255, 255, .018);
+  border-left-color: rgba(255, 255, 255, .06)
 }
 
 .m-tm:disabled {
@@ -725,7 +740,7 @@ body {
 }
 
 .m-tm.empty span {
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .2px
 }
 
@@ -877,12 +892,131 @@ body {
 }
 
 .ko-desktop {
+  display: flex;
+  justify-content: center;
+  width: 100%;
   mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent)
+}
+
+.ko-stage-wrap {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto
+}
+
+.ko-connector-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0
+}
+
+.ko-connector-glow,
+.ko-connector-core {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round
+}
+
+.ko-connector-glow {
+  stroke: rgba(163, 230, 53, .12);
+  stroke-width: 4.5
+}
+
+.ko-connector-core {
+  stroke: rgba(163, 230, 53, .72);
+  stroke-width: 1.85
+}
+
+.ko-stage-grid {
+  --ko-col: 112px;
+  --ko-final: 172px;
+  --ko-qf: 122px;
+  --ko-sf: 132px;
+  --ko-gap: 6px;
+  --ko-conn-gutter: 18px;
+  --ko-card-h: 77px;
+  --ko-pair-gap: 16px;
+  display: grid;
+  grid-template-columns: var(--ko-col) var(--ko-col) var(--ko-qf) var(--ko-sf) var(--ko-final) var(--ko-sf) var(--ko-qf) var(--ko-col) var(--ko-col);
+  gap: var(--ko-gap);
+  width: calc(var(--ko-col) * 4 + var(--ko-qf) * 2 + var(--ko-sf) * 2 + var(--ko-final) + var(--ko-gap) * 8);
+  min-width: calc(var(--ko-col) * 4 + var(--ko-qf) * 2 + var(--ko-sf) * 2 + var(--ko-final) + var(--ko-gap) * 8);
+  min-height: min(740px, calc(100vh - 250px));
+  align-items: stretch;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1
 }
 
 .ko-round {
   position: relative;
   padding: 2px 4px 6px
+}
+
+.ko-round-col,
+.ko-final-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%
+}
+
+.ko-round-stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 12px
+}
+
+.ko-pair {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ko-pair-gap)
+}
+
+.ko-pair.single {
+  justify-content: center
+}
+
+.ko-pair-spine {
+  display: none
+}
+
+.ko-pair-spine.right-edge {
+  right: 0
+}
+
+.ko-pair-spine.left-edge {
+  left: 0
+}
+
+.ko-match-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex
+}
+
+.ko-match-shell.left {
+  padding-right: var(--ko-conn-gutter)
+}
+
+.ko-match-shell.right {
+  padding-left: var(--ko-conn-gutter)
+}
+
+.ko-match-shell .m-card {
+  width: 100%
+}
+
+.ko-conn-h,
+.ko-conn-v {
+  display: none
 }
 
 .round-title {
@@ -895,6 +1029,10 @@ body {
   color: rgba(163, 230, 53, .62)
 }
 
+.round-title.final {
+  color: var(--gold)
+}
+
 .round-active .round-title {
   color: var(--lime);
   text-shadow: 0 0 18px rgba(163, 230, 53, .24)
@@ -902,6 +1040,141 @@ body {
 
 .round-done .round-title {
   color: var(--gold)
+}
+
+.ko-final-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%
+}
+
+.ko-match-shell.final {
+  width: 94%;
+  max-width: 94%;
+  padding-inline: var(--ko-conn-gutter)
+}
+
+.ko-stage-grid .m-tm {
+  gap: 8px;
+  padding: 7px 9px;
+  min-height: 38px
+}
+
+.ko-stage-grid .flag-img {
+  width: 22px;
+  height: 16px;
+  border-radius: 3px
+}
+
+.ko-stage-grid .m-tm .flex-1 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px
+}
+
+.ko-final-col .m-card {
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .28)
+}
+
+.ko-final-col .m-tm {
+  gap: 10px;
+  padding: 11px 13px;
+  min-height: 46px
+}
+
+.ko-final-col .flag-img {
+  width: 26px;
+  height: 18px
+}
+
+.ko-final-col .m-tm .flex-1 {
+  font-size: 12.5px
+}
+
+@media (min-width: 1400px) {
+  .ko-stage-grid {
+    --ko-col: clamp(120px, 8vw, 132px);
+    --ko-final: clamp(188px, 13vw, 210px);
+    --ko-qf: clamp(132px, 9vw, 148px);
+    --ko-sf: clamp(144px, 10vw, 162px);
+    --ko-gap: 8px;
+    --ko-conn-gutter: 22px;
+    --ko-card-h: 85px;
+    --ko-pair-gap: 18px
+  }
+
+  .ko-stage-grid .m-tm {
+    padding: 9px 11px;
+    min-height: 42px
+  }
+
+  .ko-stage-grid .flag-img {
+    width: 25px;
+    height: 17px
+  }
+
+  .ko-stage-grid .m-tm .flex-1 {
+    font-size: 12.25px
+  }
+
+  .ko-final-col .m-tm {
+    padding: 13px 15px;
+    min-height: 52px
+  }
+
+  .ko-final-col .flag-img {
+    width: 29px;
+    height: 19px
+  }
+
+  .ko-final-col .m-tm .flex-1 {
+    font-size: 13.25px
+  }
+}
+
+@media (min-width: 1680px) {
+  .ko-stage-grid {
+    --ko-col: 136px;
+    --ko-final: 216px;
+    --ko-qf: 150px;
+    --ko-sf: 164px;
+    --ko-gap: 10px;
+    --ko-conn-gutter: 24px;
+    --ko-card-h: 89px;
+    --ko-pair-gap: 20px
+  }
+
+  .ko-stage-grid .m-tm {
+    padding: 10px 12px;
+    min-height: 44px
+  }
+
+  .ko-stage-grid .flag-img {
+    width: 27px;
+    height: 18px
+  }
+
+  .ko-stage-grid .m-tm .flex-1 {
+    font-size: 12.75px
+  }
+
+  .ko-final-col .m-tm {
+    padding: 14px 16px;
+    min-height: 56px
+  }
+
+  .ko-final-col .flag-img {
+    width: 31px;
+    height: 20px
+  }
+
+  .ko-final-col .m-tm .flex-1 {
+    font-size: 13.75px
+  }
 }
 
 .connector-line {
