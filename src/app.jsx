@@ -640,27 +640,32 @@ function KODesktop({ bracket, cur, pick }) {
       const stageRect = stage.getBoundingClientRect();
       const paths = { left: [], right: [] };
 
+      // Helper: get the .m-card inside a shell for accurate visual bounds
+      const getCardRect = (shellEl) => {
+        const card = shellEl.querySelector('.m-card');
+        return card ? card.getBoundingClientRect() : shellEl.getBoundingClientRect();
+      };
+
       ['r16', 'qf', 'sf', 'fi'].forEach((round) => {
         const prevRound = RORD[RORD.indexOf(round) - 1];
         (FEED[round] || []).forEach((sources, targetIndex) => {
           const targetEl = shellRefs.current[round + '-' + targetIndex];
           if (!targetEl) return;
-          const targetRect = targetEl.getBoundingClientRect();
+          const targetRect = getCardRect(targetEl);
           const ty = targetRect.top - stageRect.top + targetRect.height / 2;
 
           sources.forEach((sourceIndex) => {
             const sourceEl = shellRefs.current[prevRound + '-' + sourceIndex];
             if (!sourceEl) return;
-            const sourceRect = sourceEl.getBoundingClientRect();
+            const sourceRect = getCardRect(sourceEl);
             const sy = sourceRect.top - stageRect.top + sourceRect.height / 2;
             const sourceIsLeft = sourceRect.left < targetRect.left;
-            const edgeInset = -1;
             const sx = sourceIsLeft
-              ? sourceRect.right - stageRect.left - edgeInset
-              : sourceRect.left - stageRect.left + edgeInset;
+              ? sourceRect.right - stageRect.left
+              : sourceRect.left - stageRect.left;
             const tx = sourceIsLeft
-              ? targetRect.left - stageRect.left + edgeInset
-              : targetRect.right - stageRect.left - edgeInset;
+              ? targetRect.left - stageRect.left
+              : targetRect.right - stageRect.left;
             const mx = (sx + tx) / 2;
             const side = sourceIsLeft ? 'left' : 'right';
             paths[side].push(`M ${sx} ${sy} H ${mx} V ${ty} H ${tx}`);
