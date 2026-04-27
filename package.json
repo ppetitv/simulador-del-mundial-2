@@ -4,11 +4,11 @@
   "description": "",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1"
-  },
+   "scripts": {
+     "dev": "vite --host 127.0.0.1 --open",
+     "build": "vite build",
+     "preview": "vite preview --host 127.0.0.1"
+   },
   "keywords": [],
   "author": "",
   "license": "ISC",

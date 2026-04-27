@@ -523,7 +523,7 @@ function MatchView({ match, onPick, interactive }) {
             <span className="font-medium text-sm flex-1">{t1.nm}</span>
             {w === match.team1 && <Icon name="chevron" label="Ganador" className="winner-icon" />}
           </>
-        ) : <span className="text-xs text-gray-600">Por definir</span>}
+        ) : <span className="match-empty-label">Por definir</span>}
       </button>
       <div className="border-t border-[#1C1C2E]"></div>
       <button type="button" className={"m-tm" + (!t2 ? ' empty' : (w === match.team2 ? ' w' : (w ? ' l' : '')))}
@@ -536,7 +536,7 @@ function MatchView({ match, onPick, interactive }) {
             <span className="font-medium text-sm flex-1">{t2.nm}</span>
             {w === match.team2 && <Icon name="chevron" label="Ganador" className="winner-icon" />}
           </>
-        ) : <span className="text-xs text-gray-600">Por definir</span>}
+        ) : <span className="match-empty-label">Por definir</span>}
       </button>
     </div>
   );
