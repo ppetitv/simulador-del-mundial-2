@@ -76,7 +76,30 @@ const TEAM_STATS = {
   uru: { gf: { t: 2, p: .67 }, ga: { t: 2, p: .67 }, cs: { pj: 3, v: 2 }, pos: { pj: 3, v: '49%' }, cor: { t: 8, p: 2.67 }, pc: { ga: 2, v: '1/2' }, rc: { ya: 8, v: 0 }, yc: { rc: 0, v: 8 } },
   bel: { gf: { t: 1, p: .33 }, ga: { t: 2, p: .67 }, cs: { pj: 3, v: 2 }, pos: { pj: 3, v: '57%' }, cor: { t: 17, p: 5.67 }, pc: { ga: 2, v: '0/1' }, rc: { ya: 5, v: 0 }, yc: { rc: 0, v: 5 } },
   qat: { gf: { t: 1, p: .33 }, ga: { t: 7, p: 2.33 }, cs: { pj: 3, v: 0 }, pos: { pj: 3, v: '43%' }, cor: { t: 9, p: 3 }, pc: { ga: 7, v: '1/1' }, rc: { ya: 7, v: 0 }, yc: { rc: 0, v: 7 } },
-  tun: { gf: { t: 1, p: .33 }, ga: { t: 1, p: .33 }, cs: { pj: 3, v: 2 }, pos: { pj: 3, v: '43%' }, cor: { t: 21, p: 7 }, rc: { ya: 5, v: 0 }, yc: { rc: 0, v: 5 } }
+  tun: { gf: { t: 1, p: .33 }, ga: { t: 1, p: .33 }, cs: { pj: 3, v: 2 }, pos: { pj: 3, v: '43%' }, cor: { t: 21, p: 7 }, rc: { ya: 5, v: 0 }, yc: { rc: 0, v: 5 } },
+  /* --- Equipos añadidos: fuentes recientes (Euro 2024, AFCON 2024, Copa América 2024, Copa Asiática 2024, Nations League 24-25, Eliminatorias 2026) --- */
+  col: { gf: { t: 28, p: 1.56 }, ga: { t: 18, p: 1 }, cs: { pj: 18, v: 5 }, pos: { pj: 18, v: '55%' }, cor: { t: 86, p: 4.78 }, ps: { g: 28, v: '3/4' }, rc: { ya: 32, v: 1 }, yc: { rc: 1, v: 32 } },
+  tur: { gf: { t: 8, p: 1.6 }, ga: { t: 8, p: 1.6 }, cs: { pj: 5, v: 1 }, pos: { pj: 5, v: '46%' }, cor: { t: 22, p: 4.4 }, rc: { ya: 11, v: 1 }, yc: { rc: 1, v: 11 } },
+  aut: { gf: { t: 7, p: 1.75 }, ga: { t: 6, p: 1.5 }, cs: { pj: 4, v: 0 }, pos: { pj: 4, v: '51%' }, cor: { t: 23, p: 5.75 }, rc: { ya: 6, v: 0 }, yc: { rc: 0, v: 6 } },
+  swe: { gf: { t: 19, p: 3.17 }, ga: { t: 4, p: .67 }, cs: { pj: 6, v: 3 }, pos: { pj: 6, v: '56%' }, cor: { t: 34, p: 5.67 }, ps: { g: 19, v: '2/2' }, rc: { ya: 8, v: 0 }, yc: { rc: 0, v: 8 } },
+  nor: { gf: { t: 19, p: 2.38 }, ga: { t: 10, p: 1.25 }, cs: { pj: 8, v: 3 }, pos: { pj: 8, v: '54%' }, cor: { t: 36, p: 4.5 }, ps: { g: 19, v: '1/1' }, rc: { ya: 10, v: 0 }, yc: { rc: 0, v: 10 } },
+  cze: { gf: { t: 3, p: 1 }, ga: { t: 5, p: 1.67 }, cs: { pj: 3, v: 0 }, pos: { pj: 3, v: '47%' }, cor: { t: 14, p: 4.67 }, rc: { ya: 6, v: 2 }, yc: { rc: 2, v: 6 } },
+  sco: { gf: { t: 2, p: .67 }, ga: { t: 7, p: 2.33 }, cs: { pj: 3, v: 0 }, pos: { pj: 3, v: '44%' }, cor: { t: 11, p: 3.67 }, rc: { ya: 7, v: 1 }, yc: { rc: 1, v: 7 } },
+  bih: { gf: { t: 19, p: 1.9 }, ga: { t: 9, p: .9 }, cs: { pj: 10, v: 4 }, pos: { pj: 10, v: '50%' }, cor: { t: 42, p: 4.2 }, rc: { ya: 28, v: 0 }, yc: { rc: 0, v: 28 } },
+  pry: { gf: { t: 5, p: 1 }, ga: { t: 7, p: 1.4 }, cs: { pj: 5, v: 1 }, pos: { pj: 5, v: '44%' }, cor: { t: 18, p: 3.6 }, rc: { ya: 12, v: 0 }, yc: { rc: 0, v: 12 } },
+  egy: { gf: { t: 7, p: 1.75 }, ga: { t: 7, p: 1.75 }, cs: { pj: 4, v: 0 }, pos: { pj: 4, v: '52%' }, cor: { t: 24, p: 6 }, rc: { ya: 5, v: 0 }, yc: { rc: 0, v: 5 } },
+  civ: { gf: { t: 8, p: 1.14 }, ga: { t: 8, p: 1.14 }, cs: { pj: 7, v: 2 }, pos: { pj: 7, v: '48%' }, cor: { t: 30, p: 4.29 }, rc: { ya: 12, v: 1 }, yc: { rc: 1, v: 12 } },
+  alg: { gf: { t: 7, p: 2.33 }, ga: { t: 1, p: .33 }, cs: { pj: 3, v: 2 }, pos: { pj: 3, v: '64%' }, cor: { t: 18, p: 6 }, ps: { g: 7, v: '1/1' }, rc: { ya: 4, v: 0 }, yc: { rc: 0, v: 4 } },
+  zaf: { gf: { t: 5, p: .71 }, ga: { t: 3, p: .43 }, cs: { pj: 7, v: 4 }, pos: { pj: 7, v: '46%' }, cor: { t: 22, p: 3.14 }, rc: { ya: 9, v: 0 }, yc: { rc: 0, v: 9 } },
+  cpv: { gf: { t: 7, p: 1.75 }, ga: { t: 4, p: 1 }, cs: { pj: 4, v: 1 }, pos: { pj: 4, v: '48%' }, cor: { t: 18, p: 4.5 }, rc: { ya: 6, v: 0 }, yc: { rc: 0, v: 6 } },
+  cod: { gf: { t: 6, p: .86 }, ga: { t: 7, p: 1 }, cs: { pj: 7, v: 2 }, pos: { pj: 7, v: '47%' }, cor: { t: 26, p: 3.71 }, rc: { ya: 14, v: 0 }, yc: { rc: 0, v: 14 } },
+  jor: { gf: { t: 13, p: 1.86 }, ga: { t: 8, p: 1.14 }, cs: { pj: 7, v: 2 }, pos: { pj: 7, v: '45%' }, cor: { t: 28, p: 4 }, rc: { ya: 11, v: 0 }, yc: { rc: 0, v: 11 } },
+  irq: { gf: { t: 10, p: 2.5 }, ga: { t: 7, p: 1.75 }, cs: { pj: 4, v: 0 }, pos: { pj: 4, v: '48%' }, cor: { t: 18, p: 4.5 }, rc: { ya: 8, v: 0 }, yc: { rc: 0, v: 8 } },
+  uzb: { gf: { t: 7, p: 1.4 }, ga: { t: 3, p: .6 }, cs: { pj: 5, v: 2 }, pos: { pj: 5, v: '52%' }, cor: { t: 22, p: 4.4 }, rc: { ya: 7, v: 0 }, yc: { rc: 0, v: 7 } },
+  pan: { gf: { t: 6, p: 1.5 }, ga: { t: 10, p: 2.5 }, cs: { pj: 4, v: 0 }, pos: { pj: 4, v: '42%' }, cor: { t: 14, p: 3.5 }, rc: { ya: 10, v: 1 }, yc: { rc: 1, v: 10 } },
+  nzl: { gf: { t: 8, p: 2 }, ga: { t: 4, p: 1 }, cs: { pj: 4, v: 1 }, pos: { pj: 4, v: '48%' }, cor: { t: 18, p: 4.5 }, rc: { ya: 5, v: 0 }, yc: { rc: 0, v: 5 } },
+  hai: { gf: { t: 2, p: .67 }, ga: { t: 4, p: 1.33 }, cs: { pj: 3, v: 0 }, pos: { pj: 3, v: '40%' }, cor: { t: 8, p: 2.67 }, rc: { ya: 6, v: 0 }, yc: { rc: 0, v: 6 } },
+  cur: { gf: { t: 6, p: 1.5 }, ga: { t: 4, p: 1 }, cs: { pj: 4, v: 1 }, pos: { pj: 4, v: '50%' }, cor: { t: 16, p: 4 }, rc: { ya: 7, v: 0 }, yc: { rc: 0, v: 7 } }
 };
 
 function simulateGroups() {
