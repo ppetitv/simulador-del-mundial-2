@@ -1369,7 +1369,7 @@ body {
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(20, 20, 30, .98), rgba(7, 7, 10, .98));
   box-shadow: 0 30px 90px rgba(0, 0, 0, .58), inset 0 1px 0 rgba(255, 255, 255, .08);
-  padding: 0
+  padding: 0 0 24px 0
 }
 
 .insight-panel:before {
