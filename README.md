@@ -104,7 +104,7 @@ Archivos principales:
 - `src/styles.css`: estilos globales, UI, responsive y animaciones.
 - `src/main.jsx`: entrada de React e importación de fuente local.
 - `public/flags`: banderas de selecciones.
-- `public/img/logo_rpp.svg`: logo usado en el header.
+- `public/img/logo_rpp_original.svg`: logo usado en el header.
 
 ## Dependencias Relevantes
 

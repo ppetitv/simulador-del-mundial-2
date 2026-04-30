@@ -236,6 +236,22 @@ export default function App() {
     });
   };
 
+  const autoFillBestThirds = () => {
+    resetKnockoutProgress();
+    const projected = [...thirdTeams]
+      .map(({ tid }) => {
+        const base = TEAM_STRENGTH[tid] ?? 60;
+        const volatility = 6 + Math.random() * 6;
+        return { tid, score: base + (Math.random() - .5) * volatility };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map(({ tid }) => tid);
+
+    setBtSel(projected);
+    notify('Mejores terceros simulados. Puedes ajustar cualquier selección.');
+  };
+
   /* Avanzar a eliminatorias */
   const goKnockout = () => {
     if (btSel.length !== 8) return;
@@ -334,7 +350,7 @@ export default function App() {
       <Stepper phase={phase} canNavigateTo={canNavigateTo} onNavigate={navigateToPhase} />
       <main className="flex-1 pb-8">
         {phase === 'groups' && <GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups} openInsight={setInsightTeam} />}
-        {phase === 'bestThird' && <BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout} />}
+        {phase === 'bestThird' && <BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout} simulate={autoFillBestThirds} />}
         {phase === 'knockout' && <KOPhase bracket={bracket} cur={curRound} pick={pickWinner} />}
         {phase === 'champion' && <ChampScreen champ={champion} bracket={bracket} restart={restart} notify={notify} />}
       </main>
@@ -351,7 +367,7 @@ function Header({ phase, progress }) {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="brand-mark">
-            <img src="/img/logo_rpp.svg" alt="RPP" />
+            <img src="/img/logo_rpp_original.svg" alt="RPP" />
           </span>
           <div className="header-divider"></div>
           <div>
@@ -376,7 +392,7 @@ function Stepper({ phase, canNavigateTo, onNavigate }) {
   const steps = [{ id: 'groups', l: 'Grupos' }, { id: 'bestThird', l: 'Terceros' }, { id: 'knockout', l: 'Eliminatoria' }, { id: 'champion', l: 'Campeón' }];
   const idx = steps.findIndex(s => s.id === phase);
   return (
-    <div className="flex items-center justify-center gap-0 py-3 px-4 overflow-x-auto">
+    <div className="stepper-shell flex items-center justify-center gap-0 py-3 px-4 overflow-x-auto">
       {steps.map((s, i) => (
         <Fragment key={s.id}>
           <button
@@ -402,6 +418,7 @@ function GroupPhase({ gSel, toggle, go, simulate, openInsight }) {
   const allDone = GR.every(g => (gSel[g.n] || []).length === 3);
   const completeCount = GR.filter(g => (gSel[g.n] || []).length === 3).length;
   const groupProgress = Math.round(completeCount / 12 * 100);
+  const pendingGroups = 12 - completeCount;
   return (
     <div className="phase-wrap">
       <div className="flow-hero a-up">
@@ -424,6 +441,13 @@ function GroupPhase({ gSel, toggle, go, simulate, openInsight }) {
           </button>
         </div>
       </div>
+      <div className="group-guidance a-up">
+        {completeCount === 0
+          ? 'Elige 3 clasificados por grupo para comenzar tu pronóstico.'
+          : pendingGroups > 0
+          ? `Te faltan ${pendingGroups} ${pendingGroups === 1 ? 'grupo por cerrar' : 'grupos por cerrar'}. Completa 3 clasificados por grupo para avanzar.`
+          : 'Todos los grupos están listos. Ya puedes pasar a mejores terceros.'}
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 max-w-7xl mx-auto">
         {GR.map((g, gi) => (
           <GCard key={g.n} group={g} sel={gSel[g.n] || []} toggle={toggle} delay={gi} openInsight={openInsight} />
@@ -439,6 +463,7 @@ function GroupPhase({ gSel, toggle, go, simulate, openInsight }) {
 function GCard({ group, sel, toggle, delay, openInsight }) {
   const cnt = sel.length;
   const ok = cnt === 3;
+  const missing = 3 - cnt;
   return (
     <div className={"g-card a-up" + (ok ? ' complete' : '')} style={{ animationDelay: delay * 40 + 'ms' }}>
       <div className="g-card-top">
@@ -466,12 +491,17 @@ function GCard({ group, sel, toggle, delay, openInsight }) {
           );
         })}
       </div>
+      {!ok && (
+        <div className="group-card-prompt">
+          {missing === 1 ? 'Te falta 1 selección' : `Te faltan ${missing} selecciones`}
+        </div>
+      )}
     </div>
   );
 }
 
 /* ======================== MEJORES TERCEROS ======================== */
-function BTPhase({ teams, sel, toggle, go }) {
+function BTPhase({ teams, sel, toggle, go, simulate }) {
   const cnt = sel.length;
   const remaining = 8 - cnt;
   return (
@@ -481,11 +511,23 @@ function BTPhase({ teams, sel, toggle, go }) {
         <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">MEJORES TERCEROS</h2>
         <p className="text-gray-500 text-sm mt-1">{remaining > 0 ? remaining + ' cupos siguen abiertos.' : 'La frontera está definida.'}</p>
         <div className="mt-3 flex items-center justify-center gap-2">
-          <div className="h-2 flex-1 max-w-xs rounded-full bg-[#1C1C2E] overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-300" style={{ background: '#A3E635', width: (cnt / 8 * 100) + '%' }}></div>
+          <div className="h-2 flex-1 max-w-xs rounded-full overflow-hidden" style={{ background: 'rgba(13,116,200,.08)' }}>
+            <div className="h-full rounded-full transition-all duration-300" style={{ background: '#12c86f', width: (cnt / 8 * 100) + '%' }}></div>
           </div>
-          <span className={"text-sm font-semibold " + (cnt === 8 ? "text-[#A3E635]" : "text-gray-500")}>{cnt}/8</span>
+          <span className={"text-sm font-semibold " + (cnt === 8 ? "text-[#12c86f]" : "text-gray-500")}>{cnt}/8</span>
         </div>
+        <div className="mt-4 flex items-center justify-center">
+          <button className="btn-s icon-btn" onClick={simulate} title="Completa automáticamente una proyección de los mejores terceros; luego puedes editar cualquier selección.">
+            <Icon name="spark" label="Auto-simular terceros" /> Auto-simular terceros
+          </button>
+        </div>
+      </div>
+      <div className="group-guidance a-up">
+        {cnt === 0
+          ? 'Elige 8 mejores terceros para completar el cuadro eliminatorio.'
+          : remaining > 0
+          ? `Te faltan ${remaining} ${remaining === 1 ? 'mejor tercero por definir' : 'mejores terceros por definir'}.`
+          : 'Los mejores terceros están listos. Ya puedes pasar a eliminatorias.'}
       </div>
       <div className="survival-grid grid grid-cols-1 sm:grid-cols-2 gap-3">
         {teams.map(({ team, tid, group }) => {
@@ -494,9 +536,9 @@ function BTPhase({ teams, sel, toggle, go }) {
           return (
             <button key={tid} type="button" className={"third-c" + (isSel ? ' sel' : '')} onClick={() => toggle(tid)}>
               <img className="flag-img" src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
-              <div className="flex-1">
-                <div className="font-medium text-sm">{team.nm}</div>
-                <div className="text-xs text-gray-500">3° Grupo {group}</div>
+              <div className="third-c-body flex-1">
+                <div className="third-c-name">{team.nm}</div>
+                <div className="third-c-meta">3° Grupo {group}</div>
               </div>
               {isSel && (
                 <div className="select-mark">
@@ -516,12 +558,18 @@ function BTPhase({ teams, sel, toggle, go }) {
 
 /* ======================== ELIMINATORIAS ======================== */
 function KOPhase({ bracket, cur, pick }) {
+  const openMatches = (bracket[cur] || []).filter(m => !m.winner).length;
   return (
     <div className="ko-shell">
       <div className="phase-hero text-center mb-4 a-up">
         <div className="eyebrow">Ruta al título</div>
         <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide">FASE ELIMINATORIA</h2>
         <p className="text-gray-500 text-sm mt-1">Selecciona el ganador de cada partido</p>
+        <div className="ko-guidance">
+          {openMatches > 0
+            ? `Completa ${openMatches} ${openMatches === 1 ? 'partido pendiente' : 'partidos pendientes'} de ${RN[cur]} para desbloquear la siguiente ronda.`
+            : `Ronda completada. Avanza a ${RN[RORD[Math.min(RORD.indexOf(cur) + 1, RORD.length - 1)]]}.`}
+        </div>
       </div>
       <div className="bk-m"><KOMobile bracket={bracket} cur={cur} pick={pick} /></div>
       <div className="bk-d justify-center w-full"><KODesktop bracket={bracket} cur={cur} pick={pick} /></div>
@@ -534,8 +582,9 @@ function MatchView({ match, onPick, interactive }) {
   const t1 = match.team1 ? TM[match.team1] : null;
   const t2 = match.team2 ? TM[match.team2] : null;
   const w = match.winner;
+  const needsPick = interactive && !w && t1 && t2;
   return (
-    <div className={"m-card" + (w ? ' decided' : '') + (!interactive ? ' locked' : '')}>
+    <div className={"m-card" + (w ? ' decided' : '') + (!interactive ? ' locked' : '') + (needsPick ? ' needs-pick' : '')}>
       <button type="button" className={"m-tm" + (!t1 ? ' empty' : (w === match.team1 ? ' w' : (w ? ' l' : '')))}
         onClick={t1 && interactive ? () => onPick(match.team1) : undefined}
         disabled={!t1 || !interactive}
@@ -548,7 +597,7 @@ function MatchView({ match, onPick, interactive }) {
           </>
         ) : <span className="match-empty-label">Por definir</span>}
       </button>
-      <div className="border-t border-[#1C1C2E]"></div>
+      <div className="border-t" style={{ borderColor: 'rgba(16,24,40,.08)' }}></div>
       <button type="button" className={"m-tm" + (!t2 ? ' empty' : (w === match.team2 ? ' w' : (w ? ' l' : '')))}
         onClick={t2 && interactive ? () => onPick(match.team2) : undefined}
         disabled={!t2 || !interactive}
@@ -561,6 +610,12 @@ function MatchView({ match, onPick, interactive }) {
           </>
         ) : <span className="match-empty-label">Por definir</span>}
       </button>
+      {needsPick && (
+        <div className="match-prompt">
+          <span className="prompt-mobile">Elige un ganador para continuar</span>
+          <span className="prompt-desktop">Elige ganador</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -783,7 +838,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
 
   /* Celebración */
   const sparks = useMemo(() => {
-    const pcs = []; const cols = ['#F5C542', '#A3E635', '#fff7d6'];
+    const pcs = []; const cols = ['#f7c600', '#12c86f', '#fff7d6'];
     for (let i = 0; i < 34; i++) pcs.push({
       x: 46 + (Math.random() - .5) * 68, y: 22 + Math.random() * 42, d: Math.random() * 1.2,
       dur: 2.4 + Math.random() * 1.8, c: cols[~~(Math.random() * cols.length)], sz: 2 + Math.random() * 4
@@ -841,41 +896,59 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       const opp = TM[t.opponent];
       const oppCode = opp ? opp.c : 'xx';
       const oppPng = pngMap[oppCode] || '';
-      return '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">' +
-        '<div style="width:85px;' + F + 'font-weight:800;color:#A3E635;font-size:12px;text-transform:uppercase;letter-spacing:1px;line-height:22px;">' + t.short + '</div>' +
-        '<div style="color:rgba(163,230,53,.82);' + F + 'font-size:11px;font-weight:800;letter-spacing:1px;line-height:22px;text-transform:uppercase;white-space:nowrap;">SUPERÓ A</div>' +
-        '<div style="display:flex;align-items:center;gap:10px;flex:1">' +
-        (oppPng ? '<img src="' + oppPng + '" width="28" height="21" style="width:28px;height:21px;border-radius:3px;object-fit:cover;display:block;transform:translateY(5px);" />' : '') +
-        '<span style="color:#f4f4f7;' + F + 'font-weight:700;font-size:15px;line-height:22px;">' + (opp ? opp.nm : '?') + '</span></div></div>';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.92);border:1px solid rgba(13,116,200,.1);border-radius:18px;box-shadow:0 10px 20px rgba(13,116,200,.05);margin-bottom:10px;">' +
+        '<div style="width:72px;flex:0 0 72px;"><div style="' + F + 'font-weight:800;color:#12c86f;font-size:10px;text-transform:uppercase;letter-spacing:1.8px;line-height:1;margin-bottom:5px;">' + t.short + '</div>' +
+        '<div style="' + F + 'font-weight:700;color:#61748f;font-size:9px;letter-spacing:1.1px;text-transform:uppercase;line-height:1.1;">' + t.round + '</div></div>' +
+        '<div style="width:1px;height:32px;background:linear-gradient(180deg,rgba(18,200,111,.12),rgba(18,200,111,.62),rgba(13,116,200,.18));flex:0 0 1px;"></div>' +
+        '<div style="flex:1;display:flex;align-items:center;gap:10px;min-width:0;">' +
+        (oppPng ? '<img src="' + oppPng + '" width="32" height="24" style="width:32px;height:24px;border-radius:5px;object-fit:cover;display:block;box-shadow:0 4px 12px rgba(15,23,42,.08);" />' : '') +
+        '<div style="flex:1;min-width:0"><div style="' + F + 'font-weight:700;font-size:14px;line-height:1.15;color:#0f172a;">' + (opp ? opp.nm : '?') + '</div>' +
+        '<div style="' + F + 'font-weight:800;font-size:10px;line-height:1.2;color:#0d74c8;letter-spacing:1.4px;text-transform:uppercase;margin-top:4px;">Superó a este rival</div></div></div></div>';
     }).join('');
 
     const champPng = pngMap[team.c] || '';
 
     card.style.left = '0';
     card.innerHTML =
-      '<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,197,66,.18) 0%,transparent 44%),radial-gradient(ellipse at 20% 70%,rgba(163,230,53,.12) 0%,transparent 48%),linear-gradient(180deg,#0b0b10,#050507)"></div>' +
-      '<div style="position:relative;z-index:1">' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:34px">' +
-      (logoPng ? '<img src="' + logoPng + '" style="height:45px;width:auto;display:block;" />' : '') +
-      '<div style="' + F + 'font-weight:800;font-size:12px;color:#666;letter-spacing:2px;">MUNDIAL 2026</div></div>' +
-      '<div style="' + F + 'font-size:32px;line-height:1.08;font-weight:800;color:#f4f4f7;letter-spacing:.2px;margin-bottom:8px">Mi campeón del Mundial 2026 es</div>' +
-      '<div style="height:18px"></div>' +
-      '<div style="display:flex;align-items:center;gap:20px;padding:24px;background:rgba(245,197,66,.09);border:1.5px solid rgba(245,197,66,.28);border-radius:10px;margin-bottom:32px">' +
-      (champPng ? '<img src="' + champPng + '" width="80" height="60" style="width:80px;height:60px;border-radius:6px;object-fit:cover;display:block;" />' : '') +
-      '<div style="flex:1"><div style="font-size:11px;color:#84CC16;' + F + 'font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;line-height:1;">CAMPEÓN</div>' +
-      '<div style="' + F + 'font-size:36px;line-height:1;font-weight:800;color:#f0f0f5">' + team.nm.toUpperCase() + '</div></div>' +
-      '<div style="position:relative;width:56px;height:56px;border-radius:50%;display:block;background:rgba(245,197,66,.14);color:#F5C542;font-size:26px;font-weight:900;' + F + 'text-align:center;"><span style="position:absolute;left:50%;top:calc(50% - 11px);transform:translate(-50%,-50%);white-space:nowrap;line-height:1">#1</span></div></div>' +
-      '<div style="' + F + 'font-weight:800;font-size:13px;color:#A3E635;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;line-height:1;">RUTA AL TROFEO</div>' +
-      tlRows +
-      '<div style="padding-top:16px;border-top:1px solid #1C1C2E;margin-top:24px">' +
-      '<div style="' + F + 'font-weight:800;font-size:16px;color:#A3E635;line-height:1.2;margin-bottom:8px">Haz el tuyo con el Simulador de RPP</div>' +
-      '<div style="' + F + 'font-weight:700;font-size:12px;color:#6b7080;line-height:1.2">rpp.pe/mundial-2026/simulador-rpp</div></div></div>';
+      '<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.84),transparent 26%),radial-gradient(circle at 50% 10%,rgba(247,198,0,.18),transparent 28%),radial-gradient(circle at 12% 18%,rgba(18,200,111,.18),transparent 28%),radial-gradient(circle at 88% 12%,rgba(13,116,200,.18),transparent 28%),linear-gradient(180deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,.58) 38%,rgba(255,255,255,.94) 68%,#f8fbff 100%) top/100% 18rem no-repeat,linear-gradient(118deg,rgba(18,200,111,.98) 0%,rgba(5,170,152,.92) 46%,rgba(13,116,200,.98) 100%) top/100% 18rem no-repeat,linear-gradient(180deg,#f4fbff 0%,#ffffff 42%,#f4faff 100%);"></div>' +
+      '<div style="position:absolute;left:50%;top:56px;transform:translateX(-50%);width:520px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.88) 0%,rgba(255,255,255,.2) 42%,transparent 76%);filter:blur(10px);"></div>' +
+      '<div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;">' +
+      (logoPng ? '<img src="' + logoPng + '" style="height:42px;width:auto;display:block;" />' : '') +
+      '<div style="text-align:right;padding:10px 14px 12px;border-radius:18px;background:rgba(8,37,63,.18);backdrop-filter:blur(4px);">' +
+      '<div style="' + F + 'font-weight:800;font-size:10px;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.4;">Simulador Mundial 2026 de RPP</div></div></div>' +
+      '<div style="margin-bottom:18px;max-width:420px;"><div style="' + F + 'font-size:28px;line-height:1.02;font-weight:900;color:#ffffff;letter-spacing:.2px;margin-bottom:10px;text-shadow:0 3px 18px rgba(8,37,63,.18);">Mi campeón del Mundial 2026 es</div>' +
+      '<div style="' + F + 'font-size:14px;line-height:1.38;font-weight:700;color:#0f3553;max-width:360px;">Comparte tu cierre de torneo con una pieza vertical pensada para historias.</div></div>' +
+      '<div style="position:relative;overflow:hidden;padding:24px 24px 22px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 100%);border:1.5px solid rgba(247,198,0,.26);box-shadow:0 26px 65px rgba(13,116,200,.14),0 10px 28px rgba(15,23,42,.07);margin-bottom:18px;">' +
+      '<div style="position:absolute;left:50%;top:-18px;transform:translateX(-50%);width:300px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.34) 0%,rgba(247,198,0,.12) 40%,transparent 74%);"></div>' +
+      '<div style="position:relative;z-index:1;text-align:center;">' +
+      '<div style="' + F + 'font-weight:800;font-size:10px;color:#12c86f;letter-spacing:2.6px;text-transform:uppercase;margin-bottom:12px;">Campeón del Mundial 2026</div>' +
+      '<div style="position:relative;width:124px;height:124px;margin:0 auto 14px;border-radius:50%;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(255,250,231,.98));border:1.5px solid rgba(247,198,0,.34);box-shadow:0 14px 30px rgba(247,198,0,.16),0 8px 20px rgba(13,116,200,.07);">' +
+      '<div style="position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.24) 0%,transparent 70%);"></div>' +
+      (champPng ? '<img src="' + champPng + '" width="102" height="102" style="position:relative;z-index:1;width:102px;height:102px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 8px 18px rgba(15,23,42,.12);" />' : '') +
+      '</div>' +
+      '<div style="' + F + 'font-size:40px;line-height:.96;font-weight:900;color:#0f172a;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px;">' + team.nm.toUpperCase() + '</div>' +
+      '<div style="' + F + 'font-size:13px;line-height:1.38;font-weight:700;color:#4f6278;max-width:410px;margin:0 auto 18px;">Tu simulación trazó una ruta de ' + timeline.length + ' rondas hasta levantar la copa.</div>' +
+      '<div style="display:flex;align-items:stretch;gap:12px;text-align:left;">' +
+      '<div style="display:flex;align-items:center;justify-content:center;width:72px;flex:0 0 72px;border-radius:20px;background:linear-gradient(180deg,rgba(247,198,0,.2),rgba(247,198,0,.08));border:1px solid rgba(247,198,0,.34);box-shadow:inset 0 1px 0 rgba(255,255,255,.7);">' +
+      '<div style="' + F + 'font-weight:900;font-size:26px;color:#c99700;line-height:1;">#1</div></div>' +
+      '<div style="flex:1;min-width:0;padding:14px 15px;border-radius:18px;background:linear-gradient(135deg,rgba(18,200,111,.1),rgba(13,116,200,.08));border:1px solid rgba(18,200,111,.14);">' +
+      '<div style="' + F + 'font-weight:800;font-size:10px;color:#0d74c8;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:6px;">Predicción final</div>' +
+      '<div style="' + F + 'font-weight:700;font-size:13px;color:#23405c;line-height:1.32;">Una coronación editorial para compartir el desenlace de tu bracket.</div></div></div></div></div>' +
+      '<div style="flex:1;padding:20px 20px 14px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.98));border:1px solid rgba(13,116,200,.1);box-shadow:0 18px 42px rgba(13,116,200,.08);display:flex;flex-direction:column;">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px;"><div><div style="' + F + 'font-weight:800;font-size:11px;color:#12c86f;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:6px;">Camino al título</div>' +
+      '<div style="' + F + 'font-weight:800;font-size:14px;color:#4f6278;line-height:1.28;max-width:320px;">Así quedó definida la ruta del campeón en tu simulación.</div></div></div>' +
+      '<div style="flex:1;">' + tlRows + '</div>' +
+      '<div style="padding-top:14px;border-top:1px solid rgba(16,24,40,.08);margin-top:2px;display:flex;align-items:center;justify-content:space-between;gap:14px;">' +
+      '<div><div style="' + F + 'font-weight:800;font-size:15px;color:#0d74c8;line-height:1.15;margin-bottom:5px">Haz el tuyo con el Simulador de RPP</div>' +
+      '<div style="' + F + 'font-weight:700;font-size:11px;color:#6b7080;line-height:1.2">rpp.pe/mundial-2026/simulador-rpp</div></div>' +
+      '<div style="padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,#0d74c8,#0b62ab);color:#ffffff;' + F + 'font-weight:800;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 22px rgba(13,116,200,.18);">Comparte tu campeón</div></div></div></div>';
 
     /* Wait for PNG data-url images to paint in the DOM */
     await new Promise(r => setTimeout(r, 300));
 
     try {
-      const canvas = await html2canvas(card, { backgroundColor: '#060609', scale: 2, useCORS: true, allowTaint: true });
+      const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true, allowTaint: true });
       const link = document.createElement('a');
       link.download = 'mi-campeon-mundial-2026.png';
       link.href = canvas.toDataURL('image/png');
@@ -887,6 +960,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
 
   return (
     <div className="champ-stage min-h-screen flex flex-col items-center pt-6 pb-12 px-4">
+      <div className="champ-stage-lights" aria-hidden="true"></div>
       {showCelebration && <div className="champ-burst" aria-hidden="true"></div>}
       {showCelebration && sparks.map((p, i) => (
         <div key={i} className="champ-spark" style={{
@@ -894,26 +968,38 @@ function ChampScreen({ champ, bracket, restart, notify }) {
           backgroundColor: p.c, width: p.sz + 'px', height: p.sz + 'px'
         }}></div>
       ))}
-      <div className="a-up text-center mb-8">
+      <div className="champ-hero a-up text-center mb-8">
         <div className="eyebrow">Mundial 2026</div>
         <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-wide">TU CAMPEÓN</h1>
+        <p className="champ-hero-lead">Tu pronóstico llegó hasta la cima. Este es el país que levantará la copa según tu simulación.</p>
       </div>
       <div className="champ-card a-up pulse-glow" style={{ animationDelay: '.3s' }}>
-        <div className="champ-trophy a-crown"><Icon name="trophy" label="Trofeo" /></div>
-        <img className="mx-auto mb-4 rounded-lg" style={{ width: '80px', height: '56px', objectFit: 'cover' }}
-          src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
-        <div className="champ-kicker">CAMPEÓN</div>
-        <h2 className="font-display text-4xl sm:text-5xl font-bold">{team.nm.toUpperCase()}</h2>
+        <div className="champ-spotlight" aria-hidden="true"></div>
+        <div className="champ-card-inner">
+          <div className="champ-trophy a-crown"><Icon name="trophy" label="Trofeo" /></div>
+          <div className="champ-flag-frame">
+            <img className="champ-flag-image"
+              src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
+          </div>
+          <div className="champ-kicker">CAMPEÓN DEL MUNDIAL 2026</div>
+          <div className="champ-name-wrap">
+            <h2 className="font-display text-4xl sm:text-6xl font-bold">{team.nm.toUpperCase()}</h2>
+            <p className="champ-meta">Tu selección culmina una ruta de {timeline.length} rondas hasta la gloria.</p>
+          </div>
+        </div>
       </div>
-      <div className="a-up max-w-md w-full mt-8" style={{ animationDelay: '.5s' }}>
-        <div className="font-display text-xs tracking-[3px] text-center mb-4" style={{ color: 'rgba(163,230,53,.7)' }}>CAMINO AL TÍTULO</div>
+      <div className="champ-timeline-shell a-up max-w-2xl w-full mt-8" style={{ animationDelay: '.5s' }}>
+        <div className="champ-timeline-head">
+          <div className="font-display text-xs tracking-[3px] text-center" style={{ color: 'rgba(18,200,111,.82)' }}>CAMINO AL TÍTULO</div>
+          <p className="champ-timeline-sub">Así quedó trazada la ruta del campeón en tu bracket.</p>
+        </div>
         <div className="flex flex-col gap-2.5">
           {timeline.map((t, i) => {
             const opp = TM[t.opponent];
             return (
               <div key={i} className="champ-path-row flex items-center gap-3 a-slide" style={{ animationDelay: (.6 + i * .08) + 's' }}>
-                <div className="font-display text-xs tracking-wider w-20 shrink-0" style={{ color: 'rgba(163,230,53,.7)' }}>{t.short}</div>
-                <div className="text-[10px] font-bold font-display tracking-wider shrink-0" style={{ color: 'rgba(163,230,53,.78)' }}>SUPERÓ A</div>
+                <div className="font-display text-xs tracking-wider w-20 shrink-0" style={{ color: 'rgba(18,200,111,.76)' }}>{t.short}</div>
+                <div className="text-[10px] font-bold font-display tracking-wider shrink-0" style={{ color: 'rgba(18,200,111,.82)' }}>SUPERÓ A</div>
                 <div className="flex-1 flex items-center gap-2">
                   {opp ? (
                     <>
@@ -927,7 +1013,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
           })}
         </div>
       </div>
-      <div className="a-up mt-10 max-w-md w-full" style={{ animationDelay: '1s' }}>
+      <div className="champ-actions-shell a-up mt-10 max-w-md w-full" style={{ animationDelay: '1s' }}>
         <div className="font-display text-xs tracking-[3px] text-gray-600 mb-4 text-center">COMPARTIR</div>
         <div className="flex items-center justify-center gap-4">
           <button className="share-btn" onClick={shareNative} title="Compartir"><Icon name="share" label="Compartir" /></button>
