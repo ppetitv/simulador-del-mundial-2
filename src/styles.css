@@ -1887,10 +1887,10 @@ body {
 .champ-card {
   position: relative;
   border: 1px solid rgba(245, 197, 66, .32);
-  border-radius: 28px;
-  padding: 42px 36px 42px;
+  border-radius: 24px;
+  padding: 22px 24px;
   text-align: center;
-  max-width: 560px;
+  max-width: 640px;
   width: 100%;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(246, 252, 250, .98)),
@@ -1901,12 +1901,39 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, .94)
 }
 
+/* Layout horizontal de la card en desktop */
+.champ-card-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-align: left
+}
+
+.champ-card-text {
+  flex: 1;
+  min-width: 0
+}
+
+.champ-rounds-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(18, 200, 111, .1);
+  border: 1px solid rgba(18, 200, 111, .18);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--lime2);
+  letter-spacing: .6px
+}
+
 .champ-card:before {
   content: "";
   position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(247, 198, 0, .18);
-  border-radius: 22px;
+  inset: 10px;
+  border: 1px solid rgba(247, 198, 0, .14);
+  border-radius: 18px;
   pointer-events: none
 }
 
@@ -1931,10 +1958,10 @@ body {
 }
 
 .champ-trophy {
-  width: 82px;
-  height: 82px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  margin: 0 auto 18px;
+  margin: 0 auto 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1944,8 +1971,8 @@ body {
 }
 
 .champ-trophy .icon {
-  width: 40px;
-  height: 40px
+  width: 32px;
+  height: 32px
 }
 
 .champ-hero {
@@ -1954,24 +1981,33 @@ body {
   max-width: 720px
 }
 
+.champ-hero-statement {
+  font-style: italic;
+  color: #0d4a75;
+  letter-spacing: -.01em;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(13, 116, 200, .1)
+}
+
 .champ-hero-lead {
   max-width: 520px;
-  margin: 14px auto 0;
+  margin: 8px auto 0;
   color: #4b5565;
-  font-size: 15px;
-  line-height: 1.6
+  font-size: 14px;
+  line-height: 1.5
 }
 
 .champ-flag-frame {
   position: relative;
-  width: 148px;
-  height: 104px;
-  margin: 0 auto 18px;
-  padding: 12px;
-  border-radius: 26px;
+  width: 110px;
+  height: 78px;
+  flex: 0 0 110px;
+  margin: 0;
+  padding: 9px;
+  border-radius: 18px;
   background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(248, 252, 250, .96));
   border: 1px solid rgba(247, 198, 0, .18);
-  box-shadow: 0 20px 40px rgba(13, 116, 200, .14), inset 0 1px 0 rgba(255, 255, 255, .92)
+  box-shadow: 0 14px 30px rgba(13, 116, 200, .12), inset 0 1px 0 rgba(255, 255, 255, .92)
 }
 
 .champ-flag-frame:before {
@@ -1993,16 +2029,25 @@ body {
 }
 
 .champ-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(200, 151, 0, .12), rgba(247, 198, 0, .2));
+  border: 1px solid rgba(200, 151, 0, .4);
   font-family: var(--font-jakarta);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 2.8px;
-  margin-bottom: 10px;
-  color: var(--gold)
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  color: #8c6a00;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .4)
 }
 
 .champ-name-wrap h2 {
-  color: #0b2435;
+  background: linear-gradient(135deg, #0b2435 0%, #1e4d70 50%, #0b2435 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   line-height: .96;
   letter-spacing: .02em;
   text-wrap: balance
@@ -2010,39 +2055,70 @@ body {
 
 .champ-meta {
   max-width: 380px;
-  margin: 14px auto 0;
+  margin: 8px auto 0;
   color: #5d6678;
-  font-size: 14px;
-  line-height: 1.5
+  font-size: 13px;
+  line-height: 1.45
 }
 
 .champ-timeline-shell {
   position: relative;
-  padding: 26px 22px 18px;
-  border-radius: 24px;
+  padding: 18px 18px 14px;
+  border-radius: 20px;
   background: rgba(255, 255, 255, .86);
   border: 1px solid rgba(16, 24, 40, .08);
   box-shadow: 0 22px 56px rgba(13, 116, 200, .1), inset 0 1px 0 rgba(255, 255, 255, .88)
 }
 
 .champ-timeline-head {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   text-align: center
 }
 
 .champ-timeline-sub {
-  margin-top: 8px;
+  margin-top: 4px;
   color: #667085;
-  font-size: 13px;
-  line-height: 1.5
+  font-size: 12px;
+  line-height: 1.4
 }
 
 .champ-path-row {
   border: 1px solid rgba(16, 24, 40, .08);
-  border-radius: 18px;
-  padding: 14px 16px;
+  border-radius: 14px;
+  padding: 10px 13px;
   background: linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(248, 252, 250, .9));
-  box-shadow: 0 12px 32px rgba(13, 116, 200, .08)
+  box-shadow: 0 8px 20px rgba(13, 116, 200, .07)
+}
+
+/* Etiqueta de ronda: verde sólido, bold, lo más legible */
+.champ-path-round {
+  font-family: var(--font-jakarta);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #0a9e56;
+  width: 72px;
+  flex-shrink: 0
+}
+
+/* Separador SUPERÓ A: secundario pero legible */
+.champ-path-vs {
+  font-family: var(--font-jakarta);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #8fa3b1;
+  flex-shrink: 0
+}
+
+/* Nombre del rival: texto principal del item */
+.champ-path-opp {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2535;
+  line-height: 1.2
 }
 
 .champ-actions-shell {
@@ -2160,8 +2236,19 @@ body {
 
   .champ-card {
     max-width: 100%;
-    padding: 34px 22px 32px;
-    border-radius: 24px
+    padding: 18px 16px;
+    border-radius: 20px;
+    /* En mobile vuelve a centrar */
+  }
+
+  .champ-card-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center
+  }
+
+  .champ-card-text {
+    text-align: center
   }
 
   .champ-card:before {
@@ -2180,9 +2267,10 @@ body {
   }
 
   .champ-flag-frame {
-    width: 126px;
-    height: 92px;
-    margin-bottom: 16px
+    width: 110px;
+    height: 78px;
+    flex: none;
+    margin: 0 auto 12px
   }
 
   .champ-hero-lead,

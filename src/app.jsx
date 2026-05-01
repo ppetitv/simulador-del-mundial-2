@@ -847,7 +847,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
   }, []);
 
   const copyURL = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => notify('URL copiada al portapapeles')).catch(() => notify('No se pudo copiar'));
+    navigator.clipboard.writeText(window.location.href).then(() => notify('Enlace copiado')).catch(() => notify('No se pudo copiar'));
   };
   const shareNative = async () => {
     const text = 'Mi campeón del Mundial 2026: ' + team.nm + ' - Simula tu pronóstico en RPP';
@@ -879,7 +879,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
 
   const downloadImg = async () => {
     const card = document.getElementById('share-card');
-    notify('Generando imagen...');
+    notify('Generando tu imagen...');
 
     /* Pre-convert all SVG flags to PNG data URLs */
     const flagCodes = [team.c, ...timeline.map(t => { const o = TM[t.opponent]; return o ? o.c : 'xx'; })];
@@ -953,13 +953,13 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       link.download = 'mi-campeon-mundial-2026.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
-      notify('Imagen descargada exitosamente');
+      notify('¡Imagen lista para compartir!');
     } catch (e) { notify('Error al generar la imagen'); }
     card.style.left = '-9999px';
   };
 
   return (
-    <div className="champ-stage min-h-screen flex flex-col items-center pt-6 pb-12 px-4">
+    <div className="champ-stage min-h-screen flex flex-col items-center pt-3 pb-8 px-4">
       <div className="champ-stage-lights" aria-hidden="true"></div>
       {showCelebration && <div className="champ-burst" aria-hidden="true"></div>}
       {showCelebration && sparks.map((p, i) => (
@@ -968,43 +968,40 @@ function ChampScreen({ champ, bracket, restart, notify }) {
           backgroundColor: p.c, width: p.sz + 'px', height: p.sz + 'px'
         }}></div>
       ))}
-      <div className="champ-hero a-up text-center mb-8">
-        <div className="eyebrow">Mundial 2026</div>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-wide">TU CAMPEÓN</h1>
-        <p className="champ-hero-lead">Tu pronóstico llegó hasta la cima. Este es el país que levantará la copa según tu simulación.</p>
+      <div className="champ-hero a-up text-center mb-3">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold champ-hero-statement">¡ASÍ LO CANTA EL HINCHA!</h1>
       </div>
       <div className="champ-card a-up pulse-glow" style={{ animationDelay: '.3s' }}>
         <div className="champ-spotlight" aria-hidden="true"></div>
-        <div className="champ-card-inner">
-          <div className="champ-trophy a-crown"><Icon name="trophy" label="Trofeo" /></div>
+        <div className="champ-card-inner champ-card-row">
           <div className="champ-flag-frame">
             <img className="champ-flag-image"
               src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
           </div>
-          <div className="champ-kicker">CAMPEÓN DEL MUNDIAL 2026</div>
-          <div className="champ-name-wrap">
-            <h2 className="font-display text-4xl sm:text-6xl font-bold">{team.nm.toUpperCase()}</h2>
-            <p className="champ-meta">Tu selección culmina una ruta de {timeline.length} rondas hasta la gloria.</p>
+          <div className="champ-card-text">
+            <div className="champ-kicker">EL NUEVO REY DEL MUNDIAL</div>
+            <div className="champ-name-wrap">
+              <h2 className="font-display text-xl sm:text-2xl font-bold">{team.nm.toUpperCase()}</h2>
+            </div>
           </div>
         </div>
       </div>
-      <div className="champ-timeline-shell a-up max-w-2xl w-full mt-8" style={{ animationDelay: '.5s' }}>
+      <div className="champ-timeline-shell a-up max-w-2xl w-full mt-3" style={{ animationDelay: '.5s' }}>
         <div className="champ-timeline-head">
-          <div className="font-display text-xs tracking-[3px] text-center" style={{ color: 'rgba(18,200,111,.82)' }}>CAMINO AL TÍTULO</div>
-          <p className="champ-timeline-sub">Así quedó trazada la ruta del campeón en tu bracket.</p>
+          <div className="font-display text-xs tracking-[3px] text-center" style={{ color: 'rgba(18,200,111,.82)' }}>LA RUTA HACIA LA GLORIA</div>
         </div>
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-1.5">
           {timeline.map((t, i) => {
             const opp = TM[t.opponent];
             return (
               <div key={i} className="champ-path-row flex items-center gap-3 a-slide" style={{ animationDelay: (.6 + i * .08) + 's' }}>
-                <div className="font-display text-xs tracking-wider w-20 shrink-0" style={{ color: 'rgba(18,200,111,.76)' }}>{t.short}</div>
-                <div className="text-[10px] font-bold font-display tracking-wider shrink-0" style={{ color: 'rgba(18,200,111,.82)' }}>SUPERÓ A</div>
+                <div className="champ-path-round">{t.short}</div>
+                <div className="champ-path-vs">{t.isFinal ? '¡SE CORONÓ ANTE!' : 'DEJÓ EN EL CAMINO A'}</div>
                 <div className="flex-1 flex items-center gap-2">
                   {opp ? (
                     <>
-                      <img style={{ width: '22px', height: '15px', objectFit: 'cover', borderRadius: '2px' }} src={flg(opp.c, 80)} alt={opp.nm} onError={e => { e.target.style.opacity = '0.2' }} />
-                      <span className="text-sm">{opp.nm}</span>
+                      <img style={{ width: '24px', height: '16px', objectFit: 'cover', borderRadius: '3px' }} src={flg(opp.c, 80)} alt={opp.nm} onError={e => { e.target.style.opacity = '0.2' }} />
+                      <span className="champ-path-opp">{opp.nm}</span>
                     </>
                   ) : <span className="text-sm text-gray-500">?</span>}
                 </div>
@@ -1013,16 +1010,15 @@ function ChampScreen({ champ, bracket, restart, notify }) {
           })}
         </div>
       </div>
-      <div className="champ-actions-shell a-up mt-10 max-w-md w-full" style={{ animationDelay: '1s' }}>
-        <div className="font-display text-xs tracking-[3px] text-gray-600 mb-4 text-center">COMPARTIR</div>
+      <div className="champ-actions-shell a-up mt-4 max-w-md w-full" style={{ animationDelay: '1s' }}>
         <div className="flex items-center justify-center gap-4">
           <button className="share-btn" onClick={shareNative} title="Compartir"><Icon name="share" label="Compartir" /></button>
-          <button className="share-btn" onClick={copyURL} title="Copiar URL"><Icon name="link" label="Copiar URL" /></button>
+          <button className="share-btn" onClick={copyURL} title="Copiar enlace"><Icon name="link" label="Copiar enlace" /></button>
           <button className="share-btn" onClick={downloadImg} title="Descargar imagen"><Icon name="download" label="Descargar imagen" /></button>
         </div>
       </div>
-      <div className="a-up mt-8" style={{ animationDelay: '1.2s' }}>
-        <button className="btn-s icon-btn" onClick={restart}><Icon name="restart" label="Nuevo pronóstico" /> Hacer un nuevo pronóstico</button>
+      <div className="a-up mt-4" style={{ animationDelay: '1.2s' }}>
+        <button className="btn-s icon-btn" onClick={restart}><Icon name="restart" label="¿OTRA VUELTA?" /> ¿OTRA VUELTA?</button>
       </div>
     </div>
   );
