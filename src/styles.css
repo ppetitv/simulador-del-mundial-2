@@ -2407,6 +2407,17 @@ body {
     padding: 11px 16px
   }
 
+  .toast-c {
+    bottom: 16px;
+    width: calc(100% - 32px);
+    max-width: 360px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.35;
+    text-align: center
+  }
+
   .interstitial-wrap {
     min-height: calc(100vh - 150px);
     padding-top: 4px
