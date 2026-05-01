@@ -1274,9 +1274,10 @@ body {
 
   .match-prompt {
     min-height: 24px;
-    padding: 0 8px;
-    font-size: 9px;
-    letter-spacing: .6px
+    padding: 0 6px;
+    font-size: 8px;
+    letter-spacing: .35px;
+    white-space: nowrap
   }
 
   .prompt-mobile {
