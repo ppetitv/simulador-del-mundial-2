@@ -624,7 +624,7 @@ function GCard({ group, sel, toggle, delay, openInsight }) {
           const pi = sel.indexOf(tm.id);
           const cls = pi >= 0 ? ' s' + (pi + 1) : '';
           return (
-            <button key={tm.id} type="button" className={"team-row" + cls} onClick={() => toggle(group.n, tm.id)}>
+            <button key={tm.id} type="button" className={"team-row" + cls} onClick={() => toggle(group.n, tm.id)} title={tm.nm} aria-label={`Seleccionar ${tm.nm} en el Grupo ${group.n}`}>
               <div className="pos-b">{pi >= 0 ? (pi + 1) : ''}</div>
               <img className="flag-img" src={flg(tm.c, 160)} alt={tm.nm} onError={e => { e.target.style.opacity = '0.2' }} />
               <span className="font-medium text-sm flex-1">{tm.nm}</span>
@@ -680,7 +680,7 @@ function BTPhase({ teams, sel, toggle, go, simulate }) {
           if (!team) return null;
           const isSel = sel.includes(tid);
           return (
-            <button key={tid} type="button" className={"third-c" + (isSel ? ' sel' : '')} onClick={() => toggle(tid)}>
+            <button key={tid} type="button" className={"third-c" + (isSel ? ' sel' : '')} onClick={() => toggle(tid)} title={team.nm} aria-label={`Seleccionar a ${team.nm} como mejor tercero del Grupo ${group}`}>
               <img className="flag-img" src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
               <div className="third-c-body flex-1">
                 <div className="third-c-name">{team.nm}</div>
@@ -734,7 +734,8 @@ function MatchView({ match, onPick, interactive }) {
       <button type="button" className={"m-tm" + (!t1 ? ' empty' : (w === match.team1 ? ' w' : (w ? ' l' : '')))}
         onClick={t1 && interactive ? () => onPick(match.team1) : undefined}
         disabled={!t1 || !interactive}
-        aria-label={t1 ? `Seleccionar ${t1.nm} como ganador` : undefined}>
+        aria-label={t1 ? `Seleccionar ${t1.nm} como ganador` : undefined}
+        title={t1 ? t1.nm : undefined}>
         {t1 ? (
           <>
             <img className="flag-img" src={flg(t1.c, 160)} alt={t1.nm} onError={e => { e.target.style.opacity = '0.2' }} />
@@ -747,7 +748,8 @@ function MatchView({ match, onPick, interactive }) {
       <button type="button" className={"m-tm" + (!t2 ? ' empty' : (w === match.team2 ? ' w' : (w ? ' l' : '')))}
         onClick={t2 && interactive ? () => onPick(match.team2) : undefined}
         disabled={!t2 || !interactive}
-        aria-label={t2 ? `Seleccionar ${t2.nm} como ganador` : undefined}>
+        aria-label={t2 ? `Seleccionar ${t2.nm} como ganador` : undefined}
+        title={t2 ? t2.nm : undefined}>
         {t2 ? (
           <>
             <img className="flag-img" src={flg(t2.c, 160)} alt={t2.nm} onError={e => { e.target.style.opacity = '0.2' }} />
