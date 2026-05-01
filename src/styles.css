@@ -355,6 +355,184 @@ body {
   font-weight: normal
 }
 
+.interstitial-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 180px)
+}
+
+.interstitial-card {
+  position: relative;
+  width: min(760px, 100%);
+  padding: 16px 0 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none
+}
+
+.interstitial-copy,
+.interstitial-actions {
+  position: relative;
+  z-index: 1
+}
+
+.interstitial-eyebrow {
+  margin-bottom: 10px;
+  color: #72839a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: center
+}
+
+.interstitial-ad-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 14px
+}
+
+.interstitial-ad-surface {
+  width: min(100%, 640px);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .92);
+  border: 1px solid rgba(16, 24, 40, .08);
+  box-shadow: 0 14px 28px rgba(13, 116, 200, .08)
+}
+
+.interstitial-ad-slot.is-box .interstitial-ad-surface {
+  width: 300px;
+  aspect-ratio: 300 / 250;
+  border-radius: 20px
+}
+
+.interstitial-ad-logo {
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase
+}
+
+.interstitial-body {
+  max-width: 420px;
+  margin: 0 auto;
+  color: #6a7b91;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+  text-align: center
+}
+
+.interstitial-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px
+}
+
+.interstitial-countdown {
+  margin: 0;
+  color: #7a8ca0;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 600
+}
+
+.top-sponsor-shell {
+  position: sticky;
+  top: 72px;
+  z-index: 35;
+  padding: 2px 16px 10px
+}
+
+.top-sponsor-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .9);
+  border: 1px solid rgba(16, 24, 40, .08);
+  box-shadow: 0 10px 24px rgba(13, 116, 200, .08)
+}
+
+.top-sponsor-label {
+  color: #72839a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase
+}
+
+.top-sponsor-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 136px;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(247, 251, 255, .96);
+  border: 1px solid rgba(13, 116, 200, .1);
+  color: #5e7187;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase
+}
+
+.site-footer {
+  margin-top: 18px;
+  padding: 24px 0 34px;
+  border-top: 1px solid rgba(16, 24, 40, .08);
+  background: rgba(255, 255, 255, .46)
+}
+
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px
+}
+
+.site-footer-title {
+  margin-bottom: 10px;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase
+}
+
+.site-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px
+}
+
+.site-footer-links a,
+.site-footer-copy {
+  color: #5f7288;
+  font-size: 14px;
+  line-height: 1.45;
+  text-decoration: none
+}
+
+.site-footer-links a:hover {
+  color: #0d74c8
+}
+
 .phase-wrap,
 .ko-shell {
   position: relative
@@ -1019,8 +1197,8 @@ body {
 }
 
 .share-btn .icon {
-  width: 21px;
-  height: 21px
+  width: 20px;
+  height: 20px
 }
 
 .icon-btn {
@@ -1031,8 +1209,8 @@ body {
 }
 
 .icon-btn .icon {
-  width: 16px;
-  height: 16px
+  width: 18px;
+  height: 18px
 }
 
 .r-tab {
@@ -1126,7 +1304,10 @@ body {
 .icon {
   display: inline-block;
   width: 1.5em;
-  height: 1.5em
+  height: 1.5em;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  vertical-align: middle
 }
 
 .ko-desktop {
@@ -1824,18 +2005,13 @@ body {
 
 .champ-stage {
   position: relative;
-  overflow: hidden
+  overflow: hidden;
+  margin-top: -88px;
+  padding-top: 100px
 }
 
 .champ-stage:before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 8%, rgba(247, 198, 0, .28), transparent 40%),
-    radial-gradient(ellipse at 20% 55%, rgba(18, 200, 111, .16), transparent 42%),
-    radial-gradient(ellipse at 82% 20%, rgba(13, 116, 200, .18), transparent 38%);
-  pointer-events: none
+  content: none
 }
 
 .champ-stage-lights {
@@ -1843,10 +2019,9 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, .48), transparent 18%),
-    linear-gradient(115deg, transparent 0 45%, rgba(255, 255, 255, .28) 49%, transparent 53%),
-    linear-gradient(245deg, transparent 0 45%, rgba(255, 255, 255, .24) 49%, transparent 53%);
-  opacity: .88
+    linear-gradient(115deg, transparent 0 45%, rgba(255, 255, 255, .18) 49%, transparent 53%),
+    linear-gradient(245deg, transparent 0 45%, rgba(255, 255, 255, .14) 49%, transparent 53%);
+  opacity: .62
 }
 
 .champ-burst {
@@ -1886,11 +2061,12 @@ body {
 
 .champ-card {
   position: relative;
+  overflow: hidden;
   border: 1px solid rgba(245, 197, 66, .32);
   border-radius: 24px;
   padding: 22px 24px;
   text-align: center;
-  max-width: 640px;
+  max-width: 672px;
   width: 100%;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(246, 252, 250, .98)),
@@ -1912,6 +2088,23 @@ body {
 .champ-card-text {
   flex: 1;
   min-width: 0
+}
+
+.champ-corner-icon {
+  position: absolute;
+  right: -12px;
+  bottom: -14px;
+  width: 150px;
+  height: 150px;
+  color: rgba(13, 116, 200, .09);
+  pointer-events: none;
+  z-index: 0;
+  transform: rotate(-18deg)
+}
+
+.champ-corner-icon .icon {
+  width: 100%;
+  height: 100%
 }
 
 .champ-rounds-badge {
@@ -2075,6 +2268,15 @@ body {
   text-align: center
 }
 
+.champ-timeline-title {
+  color: #0b4f7a;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  line-height: 1.1;
+  text-shadow: 0 2px 10px rgba(13, 116, 200, .08)
+}
+
 .champ-timeline-sub {
   margin-top: 4px;
   color: #667085;
@@ -2126,6 +2328,38 @@ body {
   padding-top: 6px
 }
 
+.champ-share-lead {
+  margin-bottom: 12px;
+  text-align: center;
+  color: #65758a;
+  font-size: 13px;
+  line-height: 1.45
+}
+
+.champ-share-primary {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px
+}
+
+.champ-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-inline: 22px;
+  background: #16a34a
+}
+
+.champ-wa-btn:hover {
+  background: #15803d
+}
+
+.champ-wa-btn .icon {
+  width: 18px;
+  height: 18px
+}
+
 @media(max-width:768px) {
   .bk-d {
     display: none !important
@@ -2171,6 +2405,66 @@ body {
     gap: 8px;
     margin-bottom: 14px;
     padding: 11px 16px
+  }
+
+  .interstitial-wrap {
+    min-height: calc(100vh - 150px);
+    padding-top: 4px
+  }
+
+  .interstitial-card {
+    padding: 24px 18px 20px;
+    border-radius: 24px
+  }
+
+  .interstitial-card:before {
+    inset: 8px;
+    border-radius: 18px
+  }
+
+  .interstitial-ad-surface {
+    width: 100%
+  }
+
+  .interstitial-ad-slot.is-box .interstitial-ad-surface {
+    width: min(100%, 300px)
+  }
+
+  .interstitial-body {
+    font-size: 14px;
+    line-height: 1.5
+  }
+
+  .interstitial-actions {
+    margin-top: 16px
+  }
+
+  .top-sponsor-shell {
+    top: 64px;
+    padding: 0 16px 10px
+  }
+
+  .top-sponsor-card {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 18px
+  }
+
+  .top-sponsor-logo {
+    min-width: 118px;
+    min-height: 32px;
+    padding-inline: 12px;
+    font-size: 11px
+  }
+
+  .site-footer {
+    padding: 22px 0 28px
+  }
+
+  .site-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 16px
   }
 
   .phase-bar p {
@@ -2254,6 +2548,13 @@ body {
   .champ-card:before {
     inset: 12px;
     border-radius: 18px
+  }
+
+  .champ-corner-icon {
+    width: 118px;
+    height: 118px;
+    right: -8px;
+    bottom: -10px
   }
 
   .champ-trophy {

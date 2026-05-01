@@ -121,20 +121,21 @@ function simulateGroups() {
 function flg(c) { return '/flags/' + c + '.svg'; }
 
 function Icon({ name = 'check', label, className = '', style }) {
-  const common = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': 'true' };
+  const common = { viewBox: '0 0 24 24', fill: 'currentColor', preserveAspectRatio: 'xMidYMid meet', 'aria-hidden': 'true' };
   const paths = {
-    check: <path d="M5 12.5l4.2 4.2L19 7" />,
-    chevron: <path d="M9 6l6 6-6 6" />,
-    share: <><path d="M8.5 13.5l7-4" /><path d="M8.5 10.5l7 4" /><circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="7.5" r="2.5" /><circle cx="18" cy="16.5" r="2.5" /></>,
-    link: <><path d="M10.2 13.8a4 4 0 0 1 0-5.6l1.6-1.6a4 4 0 0 1 5.6 5.6l-.8.8" /><path d="M13.8 10.2a4 4 0 0 1 0 5.6l-1.6 1.6a4 4 0 0 1-5.6-5.6l.8-.8" /></>,
-    chart: <><path d="M5 19V5" /><path d="M5 19h14" /><path d="M9 15v-4" /><path d="M13 15V8" /><path d="M17 15v-6" /></>,
-    info: <><circle cx="12" cy="12" r="8" /><path d="M12 11v5" /><path d="M12 8h.01" /></>,
-    close: <><path d="M6 6l12 12" /><path d="M18 6L6 18" /></>,
-    external: <><path d="M14 5h5v5" /><path d="M10 14L19 5" /><path d="M19 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4" /></>,
-    download: <><path d="M12 4v10" /><path d="M8 10l4 4 4-4" /><path d="M5 19h14" /></>,
-    trophy: <><path d="M8 4h8v5a4 4 0 0 1-8 0V4z" /><path d="M8 6H5.5A2.5 2.5 0 0 0 8 10" /><path d="M16 6h2.5A2.5 2.5 0 0 1 16 10" /><path d="M12 13v4" /><path d="M8.5 20h7" /></>,
-    restart: <><path d="M4 12a8 8 0 1 0 2.35-5.65" /><path d="M4 5v5h5" /></>,
-    spark: <><path d="M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9L12 3z" /><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z" /></>
+    check: <path d="M9 16.17 4.83 12 3.41 13.41 9 19l12-12-1.41-1.41z" />,
+    chevron: <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />,
+    share: <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.06-.23.09-.46.09-.7s-.03-.47-.09-.7l7.05-4.11A2.99 2.99 0 0 0 21 5c0-1.66-1.34-3-3-3s-3 1.34-3 3c0 .24.03.47.09.7L8.04 9.81A2.99 2.99 0 0 0 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.2-.08.41-.08.63 0 1.61 1.31 2.92 2.92 2.92S21 20.61 21 19s-1.31-2.92-2.92-2.92z" />,
+    link: <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />,
+    chart: <path d="M5 9.2h3V19H5zm5.5-4.2h3V19h-3zM16 12h3v7h-3z" />,
+    info: <path d="M11 17h2v-6h-2zm1-14C6.48 3 2 7.48 2 13s4.48 10 10 10 10-4.48 10-10S17.52 3 12 3zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v2h-2z" />,
+    close: <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />,
+    external: <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3zm5 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2z" />,
+    download: <path d="M5 20h14v-2H5zm7-18-5.5 5.5 1.42 1.42L11 5.84V16h2V5.84l3.08 3.08 1.42-1.42z" />,
+    trophy: <path d="M18 2H6v3H2v3c0 2.97 2.16 5.43 5 5.91V17H5v2h14v-2h-2v-3.09c2.84-.48 5-2.94 5-5.91V5h-4zm-2 10.82V17H8v-4.18C5.67 12.4 4 10.39 4 8V7h2v3h12V7h2v1c0 2.39-1.67 4.4-4 4.82z" />,
+    restart: <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />,
+    whatsapp: <><path d="M12.04 2C6.49 2 2 6.49 2 12.04c0 1.76.46 3.48 1.32 5L2.25 22l5.08-1.03a10 10 0 0 0 4.71 1.17h.01C17.59 22.14 22 17.65 22 12.1A10 10 0 0 0 12.04 2zm0 18.12h-.01a8.06 8.06 0 0 1-4.1-1.12l-.29-.17-3.01.61.64-2.94-.19-.3A8.03 8.03 0 0 1 3.9 12.04C3.9 7.52 7.54 3.9 12.04 3.9a8.03 8.03 0 0 1 8.06 8.1 8.03 8.03 0 0 1-8.06 8.12z" /><path d="M16.52 14.23c-.25-.13-1.47-.72-1.7-.8-.23-.09-.4-.13-.57.12-.16.24-.65.8-.8.97-.14.16-.29.18-.54.06a6.6 6.6 0 0 1-1.94-1.19 7.35 7.35 0 0 1-1.35-1.68c-.14-.24-.01-.37.1-.5.11-.11.25-.28.37-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.57-1.37-.78-1.88-.2-.49-.41-.42-.57-.43h-.48c-.16 0-.42.06-.64.3-.22.25-.84.82-.84 2 0 1.17.86 2.3.98 2.45.12.16 1.68 2.56 4.07 3.59.57.25 1.02.4 1.37.51.58.18 1.11.15 1.53.09.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.29z" /></>,
+    spark: <path d="m12 3-1.9 5.1L5 10l5.1 1.9L12 17l1.9-5.1L19 10l-5.1-1.9zm7 10-1.25 2.75L15 17l2.75 1.25L19 21l1.25-2.75L23 17l-2.75-1.25z" />
   };
   return <svg className={"icon " + className} style={style} {...common}>{paths[name] || paths.check}<title>{label}</title></svg>;
 }
@@ -143,10 +144,53 @@ function phaseLabel(phase) {
   return { groups: 'Fase de grupos', bestThird: 'Mejores terceros', knockout: 'Eliminatorias', champion: 'Campeón' }[phase] || 'Simulador';
 }
 
+const INTERSTITIAL_DEFAULT_DURATION = 10;
+const CURRENT_YEAR = 2026;
+const ECOSYSTEM_LINKS = {
+  varDelSaber: 'https://rpp.pe/el-var-del-saber',
+  calculadora: 'https://rpp.pe/calculadora-copa-mundial-futbol-2026',
+  rppHome: 'https://rpp.pe',
+  landing: 'https://rpp.pe/mundial-2026/simulador-rpp'
+};
+const TOP_SPONSOR = {
+  label: 'Gracias a',
+  logo: 'Logo sponsor'
+};
+const INTERSTITIAL_FLOWS = {
+  bestThird: {
+    enabled: true,
+    eyebrow: 'Espacio publicitario',
+    body: 'Después de esta pauta sigues con la definición de los mejores terceros.',
+    sponsor: 'Banner de patrocinante',
+    format: 'video',
+    duration: INTERSTITIAL_DEFAULT_DURATION,
+    cta: 'Continuar a mejores terceros'
+  },
+  knockout: {
+    enabled: true,
+    eyebrow: 'Espacio publicitario',
+    body: 'Después de esta pauta pasas a la fase eliminatoria.',
+    sponsor: 'Banner de patrocinante',
+    format: 'video',
+    duration: INTERSTITIAL_DEFAULT_DURATION,
+    cta: 'Continuar a eliminatorias'
+  },
+  champion: {
+    enabled: false,
+    eyebrow: 'Espacio publicitario',
+    body: 'Después de esta pauta verás el cierre de tu pronóstico.',
+    sponsor: 'Banner de patrocinante',
+    format: 'box',
+    duration: INTERSTITIAL_DEFAULT_DURATION,
+    cta: 'Ver a mi campeón'
+  }
+};
+
 /* ======================== APP PRINCIPAL ======================== */
 export default function App() {
   const appRef = useRef(null);
   const [phase, setPhase] = useState('groups');
+  const [interstitial, setInterstitial] = useState(null);
   const [gSel, setGSel] = useState({});
   const [btSel, setBtSel] = useState([]);
   const [bracket, setBracket] = useState({ r32: [], r16: [], qf: [], sf: [], fi: [] });
@@ -171,6 +215,21 @@ export default function App() {
   };
 
   const notify = (m) => { setToast({ s: true, m }); setTimeout(() => setToast({ s: false, m: '' }), 2500); };
+
+  const openInterstitial = (nextPhase) => {
+    const cfg = INTERSTITIAL_FLOWS[nextPhase];
+    if (!cfg || !cfg.enabled) {
+      setPhase(nextPhase);
+      return;
+    }
+    setInterstitial({ nextPhase, ...cfg });
+  };
+
+  const continueFromInterstitial = () => {
+    if (!interstitial) return;
+    setPhase(interstitial.nextPhase);
+    setInterstitial(null);
+  };
 
   const emptyBracket = () => ({ r32: [], r16: [], qf: [], sf: [], fi: [] });
   const resetKnockoutProgress = () => {
@@ -223,7 +282,7 @@ export default function App() {
   /* Avanzar a mejores terceros */
   const goBestThird = () => {
     if (!allGroupsDone) return;
-    setPhase('bestThird');
+    openInterstitial('bestThird');
   };
 
   /* Toggle mejor tercero */
@@ -276,7 +335,7 @@ export default function App() {
       fi: [{ team1: null, team2: null, winner: null }]
     });
     setCurRound('r32');
-    setPhase('knockout');
+    openInterstitial('knockout');
   };
 
   /* Limpiar resultados en cascada */
@@ -322,7 +381,7 @@ export default function App() {
     }
     if (rnd === 'fi') {
       setChampion(tid);
-      setTimeout(() => setPhase('champion'), 600);
+      setTimeout(() => openInterstitial('champion'), 600);
     }
     setBracket(nb);
   };
@@ -334,11 +393,13 @@ export default function App() {
 
   const navigateToPhase = (nextPhase) => {
     if (!canNavigateTo[nextPhase]) return;
+    setInterstitial(null);
     setPhase(nextPhase);
   };
 
   /* Reiniciar */
   const restart = () => {
+    setInterstitial(null);
     setPhase('groups'); setGSel({}); setBtSel([]);
     setBracket(emptyBracket());
     setCurRound('r32'); setChampion(null);
@@ -348,15 +409,100 @@ export default function App() {
     <div ref={appRef} className="relative z-10 min-h-screen flex flex-col">
       <Header phase={phase} progress={totalProgress} />
       <Stepper phase={phase} canNavigateTo={canNavigateTo} onNavigate={navigateToPhase} />
+      {!interstitial && <TopSponsorRibbon sponsor={TOP_SPONSOR} />}
       <main className="flex-1 pb-8">
-        {phase === 'groups' && <GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups} openInsight={setInsightTeam} />}
-        {phase === 'bestThird' && <BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout} simulate={autoFillBestThirds} />}
-        {phase === 'knockout' && <KOPhase bracket={bracket} cur={curRound} pick={pickWinner} />}
-        {phase === 'champion' && <ChampScreen champ={champion} bracket={bracket} restart={restart} notify={notify} />}
+        {interstitial ? (
+          <InterstitialScreen config={interstitial} onContinue={continueFromInterstitial} />
+        ) : (
+          <>
+            {phase === 'groups' && <GroupPhase gSel={gSel} toggle={toggleGroup} go={goBestThird} simulate={autoFillGroups} openInsight={setInsightTeam} />}
+            {phase === 'bestThird' && <BTPhase teams={thirdTeams} sel={btSel} toggle={toggleBT} go={goKnockout} simulate={autoFillBestThirds} />}
+            {phase === 'knockout' && <KOPhase bracket={bracket} cur={curRound} pick={pickWinner} />}
+            {phase === 'champion' && <ChampScreen champ={champion} bracket={bracket} restart={restart} notify={notify} />}
+          </>
+        )}
       </main>
+      {!interstitial && <SiteFooter />}
       {insightTeam && <TeamInsight team={TM[insightTeam]} onClose={() => setInsightTeam(null)} />}
       <ToastC msg={toast.m} show={toast.s} />
     </div>
+  );
+}
+
+function TopSponsorRibbon({ sponsor }) {
+  return (
+    <div className="top-sponsor-shell">
+      <div className="top-sponsor-card max-w-7xl mx-auto">
+        <span className="top-sponsor-label">{sponsor.label}</span>
+        <div className="top-sponsor-logo" aria-label={sponsor.logo}>{sponsor.logo}</div>
+      </div>
+    </div>
+  );
+}
+
+function InterstitialScreen({ config, onContinue }) {
+  const duration = config.duration ?? INTERSTITIAL_DEFAULT_DURATION;
+  const [remaining, setRemaining] = useState(duration);
+
+  useEffect(() => {
+    setRemaining(duration);
+  }, [duration, config.nextPhase]);
+
+  useEffect(() => {
+    if (remaining <= 0) {
+      onContinue();
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setRemaining(prev => prev - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [remaining, onContinue]);
+
+  return (
+    <section className="interstitial-wrap px-4 py-8">
+      <div className="interstitial-card a-up">
+        <div className="interstitial-copy">
+          <div className="interstitial-eyebrow">{config.eyebrow}</div>
+          <div className={"interstitial-ad-slot " + (config.format === 'box' ? 'is-box' : 'is-video')} aria-label={config.sponsor}>
+            <div className="interstitial-ad-surface">
+              <div className="interstitial-ad-logo">{config.sponsor}</div>
+            </div>
+          </div>
+          <p className="interstitial-body">{config.body}</p>
+        </div>
+        <div className="interstitial-actions">
+          <button className="btn-p" type="button" onClick={onContinue}>{config.cta}</button>
+          <p className="interstitial-countdown">Avanza automáticamente en {remaining}s</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <div className="site-footer-grid max-w-7xl mx-auto px-4">
+        <div>
+          <div className="site-footer-title">Más herramientas</div>
+          <div className="site-footer-links">
+            <a href={ECOSYSTEM_LINKS.varDelSaber} target="_blank" rel="noreferrer">El Var del Saber</a>
+            <a href={ECOSYSTEM_LINKS.calculadora} target="_blank" rel="noreferrer">Calculadora RPP Deportes</a>
+          </div>
+        </div>
+        <div>
+          <div className="site-footer-title">Cobertura RPP</div>
+          <div className="site-footer-links">
+            <a href={ECOSYSTEM_LINKS.rppHome} target="_blank" rel="noreferrer">Ir a RPP.pe</a>
+            <a href={ECOSYSTEM_LINKS.landing} target="_blank" rel="noreferrer">Ver landing del especial</a>
+          </div>
+        </div>
+        <div>
+          <div className="site-footer-title">Legal</div>
+          <div className="site-footer-copy">© {CURRENT_YEAR} GRPP</div>
+          <div className="site-footer-copy">Todos los derechos reservados</div>
+        </div>
+      </div>
+    </footer>
   );
 }
 
@@ -849,8 +995,13 @@ function ChampScreen({ champ, bracket, restart, notify }) {
   const copyURL = () => {
     navigator.clipboard.writeText(window.location.href).then(() => notify('Enlace copiado')).catch(() => notify('No se pudo copiar'));
   };
+  const shareWhatsApp = () => {
+    const text = 'Mi campeón del Mundial 2026 es ' + team.nm + '. Arma tu pronóstico en el Simulador Mundial 2026 de RPP.';
+    const url = 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + window.location.href);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
   const shareNative = async () => {
-    const text = 'Mi campeón del Mundial 2026: ' + team.nm + ' - Simula tu pronóstico en RPP';
+    const text = 'Mi campeón del Mundial 2026 es ' + team.nm + '. Arma tu pronóstico en el Simulador Mundial 2026 de RPP.';
     if (!navigator.share) {
       copyURL();
       return;
@@ -918,7 +1069,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       '<div style="text-align:right;padding:10px 14px 12px;border-radius:18px;background:rgba(8,37,63,.18);backdrop-filter:blur(4px);">' +
       '<div style="' + F + 'font-weight:800;font-size:10px;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.4;">Simulador Mundial 2026 de RPP</div></div></div>' +
       '<div style="margin-bottom:18px;max-width:420px;"><div style="' + F + 'font-size:28px;line-height:1.02;font-weight:900;color:#ffffff;letter-spacing:.2px;margin-bottom:10px;text-shadow:0 3px 18px rgba(8,37,63,.18);">Mi campeón del Mundial 2026 es</div>' +
-      '<div style="' + F + 'font-size:14px;line-height:1.38;font-weight:700;color:#0f3553;max-width:360px;">Comparte tu cierre de torneo con una pieza vertical pensada para historias.</div></div>' +
+      '<div style="' + F + 'font-size:14px;line-height:1.38;font-weight:700;color:#0f3553;max-width:360px;">Comparte al equipo que, para ti, termina levantando la copa.</div></div>' +
       '<div style="position:relative;overflow:hidden;padding:24px 24px 22px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 100%);border:1.5px solid rgba(247,198,0,.26);box-shadow:0 26px 65px rgba(13,116,200,.14),0 10px 28px rgba(15,23,42,.07);margin-bottom:18px;">' +
       '<div style="position:absolute;left:50%;top:-18px;transform:translateX(-50%);width:300px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.34) 0%,rgba(247,198,0,.12) 40%,transparent 74%);"></div>' +
       '<div style="position:relative;z-index:1;text-align:center;">' +
@@ -928,19 +1079,19 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       (champPng ? '<img src="' + champPng + '" width="102" height="102" style="position:relative;z-index:1;width:102px;height:102px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 8px 18px rgba(15,23,42,.12);" />' : '') +
       '</div>' +
       '<div style="' + F + 'font-size:40px;line-height:.96;font-weight:900;color:#0f172a;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px;">' + team.nm.toUpperCase() + '</div>' +
-      '<div style="' + F + 'font-size:13px;line-height:1.38;font-weight:700;color:#4f6278;max-width:410px;margin:0 auto 18px;">Tu simulación trazó una ruta de ' + timeline.length + ' rondas hasta levantar la copa.</div>' +
+      '<div style="' + F + 'font-size:13px;line-height:1.38;font-weight:700;color:#4f6278;max-width:410px;margin:0 auto 18px;">Tu pronóstico lo llevó por ' + timeline.length + ' rondas hasta tocar la gloria.</div>' +
       '<div style="display:flex;align-items:stretch;gap:12px;text-align:left;">' +
       '<div style="display:flex;align-items:center;justify-content:center;width:72px;flex:0 0 72px;border-radius:20px;background:linear-gradient(180deg,rgba(247,198,0,.2),rgba(247,198,0,.08));border:1px solid rgba(247,198,0,.34);box-shadow:inset 0 1px 0 rgba(255,255,255,.7);">' +
       '<div style="' + F + 'font-weight:900;font-size:26px;color:#c99700;line-height:1;">#1</div></div>' +
       '<div style="flex:1;min-width:0;padding:14px 15px;border-radius:18px;background:linear-gradient(135deg,rgba(18,200,111,.1),rgba(13,116,200,.08));border:1px solid rgba(18,200,111,.14);">' +
       '<div style="' + F + 'font-weight:800;font-size:10px;color:#0d74c8;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:6px;">Predicción final</div>' +
-      '<div style="' + F + 'font-weight:700;font-size:13px;color:#23405c;line-height:1.32;">Una coronación editorial para compartir el desenlace de tu bracket.</div></div></div></div></div>' +
+      '<div style="' + F + 'font-weight:700;font-size:13px;color:#23405c;line-height:1.32;">Tu apuesta final: ' + team.nm + ' termina dando la vuelta.</div></div></div></div></div>' +
       '<div style="flex:1;padding:20px 20px 14px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.98));border:1px solid rgba(13,116,200,.1);box-shadow:0 18px 42px rgba(13,116,200,.08);display:flex;flex-direction:column;">' +
       '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px;"><div><div style="' + F + 'font-weight:800;font-size:11px;color:#12c86f;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:6px;">Camino al título</div>' +
-      '<div style="' + F + 'font-weight:800;font-size:14px;color:#4f6278;line-height:1.28;max-width:320px;">Así quedó definida la ruta del campeón en tu simulación.</div></div></div>' +
+      '<div style="' + F + 'font-weight:800;font-size:14px;color:#4f6278;line-height:1.28;max-width:320px;">Así quedó el recorrido del campeón en tu simulación.</div></div></div>' +
       '<div style="flex:1;">' + tlRows + '</div>' +
-      '<div style="padding-top:14px;border-top:1px solid rgba(16,24,40,.08);margin-top:2px;display:flex;align-items:center;justify-content:space-between;gap:14px;">' +
-      '<div><div style="' + F + 'font-weight:800;font-size:15px;color:#0d74c8;line-height:1.15;margin-bottom:5px">Haz el tuyo con el Simulador de RPP</div>' +
+      '<div style="padding-top:14px;border-top:1px solid rgba(16,24,40,.08);margin-top:2px;display:flex;align-items:center;justify-content:space-between;gap:14px;transform:translateY(-10px);">' +
+      '<div><div style="' + F + 'font-weight:800;font-size:15px;color:#0d74c8;line-height:1.15;margin-bottom:5px">Haz tu pronóstico en el Simulador de RPP</div>' +
       '<div style="' + F + 'font-weight:700;font-size:11px;color:#6b7080;line-height:1.2">rpp.pe/mundial-2026/simulador-rpp</div></div>' +
       '<div style="padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,#0d74c8,#0b62ab);color:#ffffff;' + F + 'font-weight:800;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 22px rgba(13,116,200,.18);">Comparte tu campeón</div></div></div></div>';
 
@@ -969,17 +1120,20 @@ function ChampScreen({ champ, bracket, restart, notify }) {
         }}></div>
       ))}
       <div className="champ-hero a-up text-center mb-3">
-        <h1 className="font-display text-2xl sm:text-3xl font-bold champ-hero-statement">¡ASÍ LO CANTA EL HINCHA!</h1>
+        <h1 className="font-display text-2xl sm:text-3xl font-bold champ-hero-statement">Así termina tu Mundial</h1>
       </div>
-      <div className="champ-card a-up pulse-glow" style={{ animationDelay: '.3s' }}>
+      <div className="champ-card a-up pulse-glow max-w-2xl w-full" style={{ animationDelay: '.3s' }}>
         <div className="champ-spotlight" aria-hidden="true"></div>
+        <div className="champ-corner-icon" aria-hidden="true">
+          <Icon name="trophy" label="Copa decorativa" />
+        </div>
         <div className="champ-card-inner champ-card-row">
           <div className="champ-flag-frame">
             <img className="champ-flag-image"
               src={flg(team.c, 160)} alt={team.nm} onError={e => { e.target.style.opacity = '0.2' }} />
           </div>
           <div className="champ-card-text">
-            <div className="champ-kicker">EL NUEVO REY DEL MUNDIAL</div>
+            <div className="champ-kicker">TU CAMPEÓN DEL MUNDIAL 2026</div>
             <div className="champ-name-wrap">
               <h2 className="font-display text-xl sm:text-2xl font-bold">{team.nm.toUpperCase()}</h2>
             </div>
@@ -988,7 +1142,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       </div>
       <div className="champ-timeline-shell a-up max-w-2xl w-full mt-3" style={{ animationDelay: '.5s' }}>
         <div className="champ-timeline-head">
-          <div className="font-display text-xs tracking-[3px] text-center" style={{ color: 'rgba(18,200,111,.82)' }}>LA RUTA HACIA LA GLORIA</div>
+          <div className="champ-timeline-title font-display text-center">La ruta del campeón</div>
         </div>
         <div className="flex flex-col gap-1.5">
           {timeline.map((t, i) => {
@@ -996,7 +1150,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
             return (
               <div key={i} className="champ-path-row flex items-center gap-3 a-slide" style={{ animationDelay: (.6 + i * .08) + 's' }}>
                 <div className="champ-path-round">{t.short}</div>
-                <div className="champ-path-vs">{t.isFinal ? '¡SE CORONÓ ANTE!' : 'DEJÓ EN EL CAMINO A'}</div>
+                <div className="champ-path-vs">{t.isFinal ? 'SE IMPUSO EN LA FINAL A' : 'DEJÓ EN EL CAMINO A'}</div>
                 <div className="flex-1 flex items-center gap-2">
                   {opp ? (
                     <>
@@ -1011,6 +1165,12 @@ function ChampScreen({ champ, bracket, restart, notify }) {
         </div>
       </div>
       <div className="champ-actions-shell a-up mt-4 max-w-md w-full" style={{ animationDelay: '1s' }}>
+        <div className="champ-share-lead">Compártelo con tu grupo y compara pronósticos.</div>
+        <div className="champ-share-primary">
+          <button className="btn-p champ-wa-btn" onClick={shareWhatsApp} title="Compartir por WhatsApp">
+            <Icon name="whatsapp" label="Compartir por WhatsApp" /> Compartir por WhatsApp
+          </button>
+        </div>
         <div className="flex items-center justify-center gap-4">
           <button className="share-btn" onClick={shareNative} title="Compartir"><Icon name="share" label="Compartir" /></button>
           <button className="share-btn" onClick={copyURL} title="Copiar enlace"><Icon name="link" label="Copiar enlace" /></button>
@@ -1018,7 +1178,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
         </div>
       </div>
       <div className="a-up mt-4" style={{ animationDelay: '1.2s' }}>
-        <button className="btn-s icon-btn" onClick={restart}><Icon name="restart" label="¿OTRA VUELTA?" /> ¿OTRA VUELTA?</button>
+        <button className="btn-s icon-btn" onClick={restart}><Icon name="restart" label="Haz otro pronóstico" /> Haz otro pronóstico</button>
       </div>
     </div>
   );
