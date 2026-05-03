@@ -1049,7 +1049,7 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       const opp = TM[t.opponent];
       const oppCode = opp ? opp.c : 'xx';
       const oppPng = pngMap[oppCode] || '';
-      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.92);border:1px solid rgba(13,116,200,.1);border-radius:18px;box-shadow:0 10px 20px rgba(13,116,200,.05);margin-bottom:10px;">' +
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,.92);border:1px solid rgba(13,116,200,.1);border-radius:18px;box-shadow:0 10px 20px rgba(13,116,200,.05);margin-bottom:8px;">' +
         '<div style="width:72px;flex:0 0 72px;"><div style="' + F + 'font-weight:800;color:#12c86f;font-size:10px;text-transform:uppercase;letter-spacing:1.8px;line-height:1;margin-bottom:5px;">' + t.short + '</div>' +
         '<div style="' + F + 'font-weight:700;color:#61748f;font-size:9px;letter-spacing:1.1px;text-transform:uppercase;line-height:1.1;">' + t.round + '</div></div>' +
         '<div style="width:1px;height:32px;background:linear-gradient(180deg,rgba(18,200,111,.12),rgba(18,200,111,.62),rgba(13,116,200,.18));flex:0 0 1px;"></div>' +
@@ -1066,33 +1066,26 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       '<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.84),transparent 26%),radial-gradient(circle at 50% 10%,rgba(247,198,0,.18),transparent 28%),radial-gradient(circle at 12% 18%,rgba(18,200,111,.18),transparent 28%),radial-gradient(circle at 88% 12%,rgba(13,116,200,.18),transparent 28%),linear-gradient(180deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,.58) 38%,rgba(255,255,255,.94) 68%,#f8fbff 100%) top/100% 18rem no-repeat,linear-gradient(118deg,rgba(18,200,111,.98) 0%,rgba(5,170,152,.92) 46%,rgba(13,116,200,.98) 100%) top/100% 18rem no-repeat,linear-gradient(180deg,#f4fbff 0%,#ffffff 42%,#f4faff 100%);"></div>' +
       '<div style="position:absolute;left:50%;top:56px;transform:translateX(-50%);width:520px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.88) 0%,rgba(255,255,255,.2) 42%,transparent 76%);filter:blur(10px);"></div>' +
       '<div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">' +
-      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">' +
       (logoPng ? '<img src="' + logoPng + '" style="height:42px;width:auto;display:block;" />' : '') +
       '<div style="text-align:right;padding:10px 14px 12px;border-radius:18px;background:rgba(8,37,63,.18);backdrop-filter:blur(4px);">' +
       '<div style="' + F + 'font-weight:800;font-size:10px;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.4;">Simulador Mundial 2026 de RPP</div></div></div>' +
-      '<div style="margin-bottom:18px;max-width:420px;"><div style="' + F + 'font-size:28px;line-height:1.02;font-weight:900;color:#ffffff;letter-spacing:.2px;margin-bottom:10px;text-shadow:0 3px 18px rgba(8,37,63,.18);">Mi campeón del Mundial 2026 es</div>' +
-      '<div style="' + F + 'font-size:14px;line-height:1.38;font-weight:700;color:#0f3553;max-width:360px;">Comparte al equipo que, para ti, termina levantando la copa.</div></div>' +
-      '<div style="position:relative;overflow:hidden;padding:24px 24px 22px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 100%);border:1.5px solid rgba(247,198,0,.26);box-shadow:0 26px 65px rgba(13,116,200,.14),0 10px 28px rgba(15,23,42,.07);margin-bottom:18px;">' +
+      '<div style="margin-bottom:14px;max-width:420px;"><div style="' + F + 'font-size:28px;line-height:1.02;font-weight:900;color:#ffffff;letter-spacing:.2px;margin-bottom:8px;text-shadow:0 3px 18px rgba(8,37,63,.18);">Mi campeón del Mundial 2026 es</div>' +
+      '<div style="' + F + 'font-size:14px;line-height:1.38;font-weight:700;color:#0f3553;max-width:360px;">Comparte tu cierre de torneo con una pieza vertical pensada para historias.</div></div>' +
+      '<div style="position:relative;overflow:hidden;padding:20px 24px 14px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 100%);border:1.5px solid rgba(247,198,0,.26);box-shadow:0 26px 65px rgba(13,116,200,.14),0 10px 28px rgba(15,23,42,.07);margin-bottom:14px;">' +
       '<div style="position:absolute;left:50%;top:-18px;transform:translateX(-50%);width:300px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.34) 0%,rgba(247,198,0,.12) 40%,transparent 74%);"></div>' +
-      '<div style="position:relative;z-index:1;text-align:center;">' +
-      '<div style="' + F + 'font-weight:800;font-size:10px;color:#12c86f;letter-spacing:2.6px;text-transform:uppercase;margin-bottom:12px;">Campeón del Mundial 2026</div>' +
-      '<div style="position:relative;width:124px;height:124px;margin:0 auto 14px;border-radius:50%;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(255,250,231,.98));border:1.5px solid rgba(247,198,0,.34);box-shadow:0 14px 30px rgba(247,198,0,.16),0 8px 20px rgba(13,116,200,.07);">' +
+      '<div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">' +
+      '<div style="' + F + 'font-weight:800;font-size:10px;color:#12c86f;letter-spacing:2.6px;text-transform:uppercase;margin-bottom:10px;">Campeón del Mundial 2026</div>' +
+      '<div style="position:relative;width:112px;height:112px;margin:0 auto 10px;border-radius:50%;padding:9px;background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(255,250,231,.98));border:1.5px solid rgba(247,198,0,.34);box-shadow:0 14px 30px rgba(247,198,0,.16),0 8px 20px rgba(13,116,200,.07);">' +
       '<div style="position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.24) 0%,transparent 70%);"></div>' +
-      (champPng ? '<img src="' + champPng + '" width="102" height="102" style="position:relative;z-index:1;width:102px;height:102px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 8px 18px rgba(15,23,42,.12);" />' : '') +
+      (champPng ? '<img src="' + champPng + '" width="94" height="94" style="position:relative;z-index:1;width:94px;height:94px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 8px 18px rgba(15,23,42,.12);" />' : '') +
       '</div>' +
-      '<div style="' + F + 'font-size:40px;line-height:.96;font-weight:900;color:#0f172a;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px;">' + team.nm.toUpperCase() + '</div>' +
-      '<div style="' + F + 'font-size:13px;line-height:1.38;font-weight:700;color:#4f6278;max-width:410px;margin:0 auto 18px;">Tu pronóstico lo llevó por ' + timeline.length + ' rondas hasta tocar la gloria.</div>' +
-      '<div style="display:flex;align-items:stretch;gap:12px;text-align:left;">' +
-      '<div style="display:flex;align-items:center;justify-content:center;width:72px;flex:0 0 72px;border-radius:20px;background:linear-gradient(180deg,rgba(247,198,0,.2),rgba(247,198,0,.08));border:1px solid rgba(247,198,0,.34);box-shadow:inset 0 1px 0 rgba(255,255,255,.7);">' +
-      '<div style="' + F + 'font-weight:900;font-size:26px;color:#c99700;line-height:1;">#1</div></div>' +
-      '<div style="flex:1;min-width:0;padding:14px 15px;border-radius:18px;background:linear-gradient(135deg,rgba(18,200,111,.1),rgba(13,116,200,.08));border:1px solid rgba(18,200,111,.14);">' +
-      '<div style="' + F + 'font-weight:800;font-size:10px;color:#0d74c8;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:6px;">Predicción final</div>' +
-      '<div style="' + F + 'font-weight:700;font-size:13px;color:#23405c;line-height:1.32;">Tu apuesta final: ' + team.nm + ' termina dando la vuelta.</div></div></div></div></div>' +
-      '<div style="flex:1;padding:20px 20px 14px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.98));border:1px solid rgba(13,116,200,.1);box-shadow:0 18px 42px rgba(13,116,200,.08);display:flex;flex-direction:column;">' +
-      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px;"><div><div style="' + F + 'font-weight:800;font-size:11px;color:#12c86f;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:6px;">Camino al título</div>' +
-      '<div style="' + F + 'font-weight:800;font-size:14px;color:#4f6278;line-height:1.28;max-width:320px;">Así quedó el recorrido del campeón en tu simulación.</div></div></div>' +
+      '<div style="' + F + 'max-width:100%;font-size:34px;line-height:1;font-weight:900;color:#0f172a;letter-spacing:.4px;text-transform:uppercase;margin:0;word-break:break-word;">' + team.nm.toUpperCase() + '</div></div>' +
+      '<div style="flex:1;padding:18px 20px 12px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.98));border:1px solid rgba(13,116,200,.1);box-shadow:0 18px 42px rgba(13,116,200,.08);display:flex;flex-direction:column;">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px;"><div><div style="' + F + 'font-weight:800;font-size:11px;color:#12c86f;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:6px;">Camino al título</div>' +
+      '<div style="' + F + 'font-weight:800;font-size:14px;color:#4f6278;line-height:1.28;max-width:320px;">Así quedó definida la ruta del campeón en tu simulación.</div></div></div>' +
       '<div style="flex:1;">' + tlRows + '</div>' +
-      '<div style="padding-top:14px;border-top:1px solid rgba(16,24,40,.08);margin-top:2px;display:flex;align-items:center;justify-content:space-between;gap:14px;transform:translateY(-10px);">' +
+      '<div style="padding-top:12px;border-top:1px solid rgba(16,24,40,.08);margin-top:0;display:flex;align-items:center;justify-content:space-between;gap:14px;">' +
       '<div><div style="' + F + 'font-weight:800;font-size:15px;color:#0d74c8;line-height:1.15;margin-bottom:5px">Haz tu pronóstico en el Simulador de RPP</div>' +
       '<div style="' + F + 'font-weight:700;font-size:11px;color:#6b7080;line-height:1.2">rpp.pe/mundial-2026/simulador-rpp</div></div>' +
       '<div style="padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,#0d74c8,#0b62ab);color:#ffffff;' + F + 'font-weight:800;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 22px rgba(13,116,200,.18);">Comparte tu campeón</div></div></div></div>';
