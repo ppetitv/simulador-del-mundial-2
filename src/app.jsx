@@ -1048,13 +1048,11 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       const oppCode = opp ? opp.c : 'xx';
       const oppPng = pngMap[oppCode] || '';
       return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,.92);border:1px solid rgba(13,116,200,.1);border-radius:18px;box-shadow:0 10px 20px rgba(13,116,200,.05);margin-bottom:8px;">' +
-        '<div style="width:72px;flex:0 0 72px;"><div style="' + F + 'font-weight:800;color:#12c86f;font-size:10px;text-transform:uppercase;letter-spacing:1.8px;line-height:1;margin-bottom:5px;">' + t.short + '</div>' +
-        '<div style="' + F + 'font-weight:700;color:#61748f;font-size:9px;letter-spacing:1.1px;text-transform:uppercase;line-height:1.1;">' + t.round + '</div></div>' +
+        '<div style="width:78px;flex:0 0 78px;"><div style="' + F + 'font-weight:800;color:#12c86f;font-size:10px;text-transform:uppercase;letter-spacing:1.4px;line-height:1.1;">' + t.round + '</div></div>' +
         '<div style="width:1px;height:32px;background:linear-gradient(180deg,rgba(18,200,111,.12),rgba(18,200,111,.62),rgba(13,116,200,.18));flex:0 0 1px;"></div>' +
         '<div style="flex:1;display:flex;align-items:center;gap:10px;min-width:0;">' +
         (oppPng ? '<img src="' + oppPng + '" width="32" height="24" style="width:32px;height:24px;border-radius:5px;object-fit:cover;display:block;box-shadow:0 4px 12px rgba(15,23,42,.08);" />' : '') +
-        '<div style="flex:1;min-width:0"><div style="' + F + 'font-weight:700;font-size:14px;line-height:1.15;color:#0f172a;">' + (opp ? opp.nm : '?') + '</div>' +
-        '<div style="' + F + 'font-weight:800;font-size:10px;line-height:1.2;color:#0d74c8;letter-spacing:1.4px;text-transform:uppercase;margin-top:4px;">Superó a este rival</div></div></div></div>';
+        '<div style="flex:1;min-width:0"><div style="' + F + 'font-weight:700;font-size:14px;line-height:1.15;color:#0f172a;">' + (opp ? opp.nm : '?') + '</div></div></div></div>';
     }).join('');
 
     const champPng = pngMap[team.c] || '';
@@ -1068,25 +1066,22 @@ function ChampScreen({ champ, bracket, restart, notify }) {
       (logoPng ? '<img src="' + logoPng + '" style="height:42px;width:auto;display:block;" />' : '') +
       '<div style="text-align:right;padding:10px 14px 12px;border-radius:18px;background:rgba(8,37,63,.18);backdrop-filter:blur(4px);">' +
       '<div style="' + F + 'font-weight:800;font-size:10px;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.4;">Simulador Mundial 2026 de RPP</div></div></div>' +
-      '<div style="margin-bottom:14px;max-width:420px;"><div style="' + F + 'font-size:28px;line-height:1.02;font-weight:900;color:#ffffff;letter-spacing:.2px;margin-bottom:8px;text-shadow:0 3px 18px rgba(8,37,63,.18);">Mi campeón del Mundial 2026 es</div>' +
-      '<div style="' + F + 'font-size:14px;line-height:1.38;font-weight:700;color:#0f3553;max-width:360px;">Comparte tu cierre de torneo con una pieza vertical pensada para historias.</div></div>' +
-      '<div style="position:relative;overflow:hidden;padding:20px 24px 14px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 100%);border:1.5px solid rgba(247,198,0,.26);box-shadow:0 26px 65px rgba(13,116,200,.14),0 10px 28px rgba(15,23,42,.07);margin-bottom:14px;">' +
+      '<div style="margin-top:30px;margin-bottom:16px;max-width:420px;"><div style="' + F + 'font-size:28px;line-height:1.02;font-weight:900;color:#ffffff;letter-spacing:.2px;text-shadow:0 8px 24px rgba(8,37,63,.38),0 2px 8px rgba(8,37,63,.28);">Mi campeón del Mundial 2026 es</div></div>' +
+      '<div style="position:relative;overflow:hidden;padding:18px 24px 12px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 100%);border:1.5px solid rgba(247,198,0,.26);box-shadow:0 26px 65px rgba(13,116,200,.14),0 10px 28px rgba(15,23,42,.07);margin-top:60px;margin-bottom:18px;">' +
       '<div style="position:absolute;left:50%;top:-18px;transform:translateX(-50%);width:300px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.34) 0%,rgba(247,198,0,.12) 40%,transparent 74%);"></div>' +
-      '<div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">' +
-      '<div style="' + F + 'font-weight:800;font-size:10px;color:#12c86f;letter-spacing:2.6px;text-transform:uppercase;margin-bottom:10px;">Campeón del Mundial 2026</div>' +
-      '<div style="position:relative;width:112px;height:112px;margin:0 auto 10px;border-radius:50%;padding:9px;background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(255,250,231,.98));border:1.5px solid rgba(247,198,0,.34);box-shadow:0 14px 30px rgba(247,198,0,.16),0 8px 20px rgba(13,116,200,.07);">' +
-      '<div style="position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(247,198,0,.24) 0%,transparent 70%);"></div>' +
-      (champPng ? '<img src="' + champPng + '" width="94" height="94" style="position:relative;z-index:1;width:94px;height:94px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 8px 18px rgba(15,23,42,.12);" />' : '') +
+      '<div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:40px;">' +
+      '<div style="position:relative;width:140px;height:94px;margin:0 auto 12px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(255,250,231,.98));border:1.5px solid rgba(247,198,0,.34);border-radius:18px;box-shadow:0 14px 30px rgba(247,198,0,.16),0 8px 20px rgba(13,116,200,.07);">' +
+      '<div style="position:absolute;inset:-8px;border-radius:22px;background:radial-gradient(circle,rgba(247,198,0,.24) 0%,transparent 70%);"></div>' +
+      (champPng ? '<img src="' + champPng + '" width="124" height="78" style="position:relative;z-index:1;width:124px;height:78px;border-radius:12px;object-fit:cover;display:block;box-shadow:0 8px 18px rgba(15,23,42,.12);" />' : '') +
       '</div>' +
       '<div style="' + F + 'max-width:100%;font-size:34px;line-height:1;font-weight:900;color:#0f172a;letter-spacing:.4px;text-transform:uppercase;margin:0;word-break:break-word;">' + team.nm.toUpperCase() + '</div></div>' +
-      '<div style="flex:1;padding:18px 20px 12px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.98));border:1px solid rgba(13,116,200,.1);box-shadow:0 18px 42px rgba(13,116,200,.08);display:flex;flex-direction:column;">' +
-      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px;"><div><div style="' + F + 'font-weight:800;font-size:11px;color:#12c86f;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:6px;">Camino al título</div>' +
-      '<div style="' + F + 'font-weight:800;font-size:14px;color:#4f6278;line-height:1.28;max-width:320px;">Así quedó definida la ruta del campeón en tu simulación.</div></div></div>' +
+      '<div style="flex:1;padding:16px 20px 12px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.98));border:1px solid rgba(13,116,200,.1);box-shadow:0 18px 42px rgba(13,116,200,.08);display:flex;flex-direction:column;">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px;"><div><div style="' + F + 'font-weight:800;font-size:11px;color:#12c86f;letter-spacing:2.2px;text-transform:uppercase;">Camino al título</div></div></div>' +
       '<div style="flex:1;">' + tlRows + '</div>' +
-      '<div style="padding-top:12px;border-top:1px solid rgba(16,24,40,.08);margin-top:0;display:flex;align-items:center;justify-content:space-between;gap:14px;">' +
-      '<div><div style="' + F + 'font-weight:800;font-size:15px;color:#0d74c8;line-height:1.15;margin-bottom:5px">Haz tu pronóstico en el Simulador de RPP</div>' +
+      '<div style="padding-top:12px;border-top:1px solid rgba(16,24,40,.08);margin-top:0;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;">' +
+      '<div style="max-width:100%;padding-right:8px;"><div style="' + F + 'font-weight:800;font-size:18px;color:#0d74c8;line-height:1.18;margin-bottom:7px">Haz tu pronóstico en el Simulador de RPP</div>' +
       '<div style="' + F + 'font-weight:700;font-size:11px;color:#6b7080;line-height:1.2">rpp.pe/mundial-2026/simulador-rpp</div></div>' +
-      '<div style="padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,#0d74c8,#0b62ab);color:#ffffff;' + F + 'font-weight:800;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 22px rgba(13,116,200,.18);">Comparte tu campeón</div></div></div></div>';
+      '</div></div></div></div>';
 
     /* Wait for PNG data-url images to paint in the DOM */
     await new Promise(r => setTimeout(r, 300));
