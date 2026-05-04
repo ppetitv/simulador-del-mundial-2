@@ -48,8 +48,6 @@ const TEAM_STRENGTH = {
   zaf: 60, irq: 59, jor: 58, cpv: 57, cod: 57, nzl: 56, cur: 55, hai: 53
 };
 
-const SOURCE_URL = 'https://www.365scores.com/es/football/league/fifa-world-cup-5930/stats';
-
 const TEAM_STATS = {
   eng: { gf: { t: 13, p: 2.6 }, ga: { t: 4, p: .8 }, cs: { pj: 5, v: 3 }, pos: { pj: 5, v: '63%' }, cor: { t: 25, p: 5 }, ps: { g: 13, v: '1/2' }, pc: { ga: 4, v: '1/1' }, rc: { ya: 1, v: 0 }, yc: { rc: 0, v: 1 } },
   por: { gf: { t: 12, p: 2.4 }, ga: { t: 6, p: 1.2 }, cs: { pj: 5, v: 1 }, pos: { pj: 5, v: '60%' }, cor: { t: 28, p: 5.6 }, ps: { g: 12, v: '2/2' }, rc: { ya: 6, v: 0 }, yc: { rc: 0, v: 6 } },
@@ -1187,20 +1185,290 @@ function teamProfile(score) {
   return 'Sorpresa';
 }
 
+const INSIGHT_METRICS = [
+  {
+    id: 'attack',
+    category: 'Ofensiva',
+    tone: 'attack',
+    short: 'Ataque',
+    label: 'Goles por partido',
+    detail: 'Promedio ofensivo del equipo.',
+    value: stats => Number(stats.gf?.p ?? 0),
+    display: stats => stats.gf?.p ?? 0,
+    meta: stats => 'Total de goles: ' + stats.gf.t,
+    format: value => value.toFixed(2)
+  },
+  {
+    id: 'defense',
+    category: 'Defensiva',
+    tone: 'defense',
+    short: 'Defensa',
+    label: 'Goles recibidos por partido',
+    detail: 'Mientras menor es este dato, mejor es la solidez defensiva.',
+    value: stats => Number(stats.ga?.p ?? 0),
+    display: stats => stats.ga?.p ?? 0,
+    meta: stats => 'Total recibidos: ' + stats.ga.t,
+    invert: true,
+    format: value => value.toFixed(2)
+  },
+  {
+    id: 'cleanSheets',
+    category: 'Defensiva',
+    tone: 'defense',
+    short: 'Arco en cero',
+    label: 'Porterías a cero',
+    detail: 'Partidos sin recibir goles dentro de la muestra disponible.',
+    value: stats => {
+      const matches = Number(stats.cs?.pj ?? 0);
+      return matches > 0 ? Number(stats.cs.v ?? 0) / matches : 0;
+    },
+    display: stats => stats.cs?.v ?? 0,
+    meta: stats => 'Partidos jugados: ' + stats.cs.pj,
+    format: (value, stats) => `${stats.cs.v}/${stats.cs.pj}`
+  },
+  {
+    id: 'possession',
+    category: 'Control',
+    tone: 'control',
+    short: 'Posesión',
+    label: 'Posesión del balón',
+    detail: 'Capacidad para controlar el ritmo del partido con pelota.',
+    value: stats => parseFloat(stats.pos?.v ?? 0),
+    display: stats => stats.pos?.v ?? '0%',
+    meta: stats => 'Partidos jugados: ' + stats.pos.pj,
+    format: value => `${Math.round(value)}%`
+  },
+  {
+    id: 'setPieces',
+    category: 'Ofensiva',
+    tone: 'attack',
+    short: 'Balón parado',
+    label: 'Corners por partido',
+    detail: 'Frecuencia con la que el equipo fuerza acciones a balón parado.',
+    value: stats => Number(stats.cor?.p ?? 0),
+    display: stats => stats.cor?.p ?? 0,
+    meta: stats => 'Corners totales: ' + stats.cor.t,
+    format: value => value.toFixed(2)
+  },
+  {
+    id: 'discipline',
+    category: 'Disciplina',
+    tone: 'discipline',
+    short: 'Disciplina',
+    label: 'Tarjetas',
+    detail: 'Balance disciplinario considerando amarillas y rojas.',
+    value: stats => {
+      const matches = Math.max(
+        Number(stats.cs?.pj ?? 0),
+        Number(stats.pos?.pj ?? 0),
+        1
+      );
+      return (Number(stats.yc?.v ?? 0) + Number(stats.rc?.v ?? 0) * 3) / matches;
+    },
+    display: stats => `${stats.yc?.v ?? 0}A · ${stats.rc?.v ?? 0}R`,
+    meta: stats => `Amarillas: ${stats.yc?.v ?? 0} · Rojas: ${stats.rc?.v ?? 0}`,
+    invert: true,
+    format: (value, stats) => `${stats.yc?.v ?? 0}A · ${stats.rc?.v ?? 0}R`
+  }
+];
+
+const INSIGHT_METRIC_LIMITS = INSIGHT_METRICS.reduce((acc, metric) => {
+  const values = Object.values(TEAM_STATS)
+    .map(stats => metric.value(stats))
+    .filter(value => Number.isFinite(value));
+  acc[metric.id] = {
+    min: values.length ? Math.min(...values) : 0,
+    max: values.length ? Math.max(...values) : 1
+  };
+  return acc;
+}, {});
+
+const INSIGHT_TONE_LABELS = {
+  attack: 'Ofensiva',
+  defense: 'Defensiva',
+  control: 'Control',
+  discipline: 'Disciplina'
+};
+
+function normalizeInsightMetric(metric, stats) {
+  const raw = metric.value(stats);
+  const limits = INSIGHT_METRIC_LIMITS[metric.id];
+  if (!limits) return 0;
+  const range = limits.max - limits.min;
+  if (range <= 0) return 100;
+  const ratio = metric.invert
+    ? (limits.max - raw) / range
+    : (raw - limits.min) / range;
+  return Math.max(0, Math.min(100, ratio * 100));
+}
+
+function radarPoint(cx, cy, radius, index, total, value) {
+  const angle = Math.PI * 2 * index / total - Math.PI / 2;
+  const depth = Math.max(0, value / 100) * radius;
+  return { x: cx + depth * Math.cos(angle), y: cy + depth * Math.sin(angle) };
+}
+
+function radarPolygon(cx, cy, radius, values) {
+  return values.map((value, index) => {
+    const point = radarPoint(cx, cy, radius, index, values.length, value);
+    return `${point.x},${point.y}`;
+  }).join(' ');
+}
+
+function radarGrid(cx, cy, radius, total, level) {
+  return Array.from({ length: total }, (_, index) => {
+    const angle = Math.PI * 2 * index / total - Math.PI / 2;
+    return `${cx + radius * level * Math.cos(angle)},${cy + radius * level * Math.sin(angle)}`;
+  }).join(' ');
+}
+
+function InsightRadar({ metrics, activeMetric, onSelect }) {
+  const cx = 180;
+  const cy = 170;
+  const radius = 122;
+  const values = metrics.map(metric => metric.score);
+  const activeIndex = metrics.findIndex(metric => metric.id === activeMetric);
+
+  return (
+    <div className="insight-radar-shell">
+      <svg viewBox="0 0 360 340" className="insight-radar" aria-label="Gráfico de radar de estadísticas del equipo">
+        <defs>
+          <radialGradient id="insightRadarFill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#f7c600" stopOpacity="0.34" />
+            <stop offset="100%" stopColor="#12c86f" stopOpacity="0.08" />
+          </radialGradient>
+        </defs>
+        {[0.25, 0.5, 0.75, 1].map(level => (
+          <polygon
+            key={level}
+            points={radarGrid(cx, cy, radius, metrics.length, level)}
+            fill="none"
+            stroke="rgba(15, 23, 42, 0.1)"
+            strokeWidth="1"
+          />
+        ))}
+        {metrics.map((metric, index) => {
+          const edgePoint = radarPoint(cx, cy, radius, index, metrics.length, 100);
+          const active = metric.id === activeMetric;
+          return (
+            <line
+              key={metric.id}
+              className={"insight-radar-axis" + (active ? ' is-active' : '')}
+              x1={cx}
+              y1={cy}
+              x2={edgePoint.x}
+              y2={edgePoint.y}
+              stroke="rgba(15, 23, 42, 0.1)"
+              strokeWidth="1"
+            />
+          );
+        })}
+        <polygon
+          className="insight-radar-poly"
+          points={radarPolygon(cx, cy, radius, values)}
+          fill="url(#insightRadarFill)"
+          stroke="#d8a116"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        {metrics.map((metric, index) => {
+          const point = radarPoint(cx, cy, radius, index, metrics.length, metric.score);
+          const labelPoint = radarPoint(cx, cy, radius + 32, index, metrics.length, 100);
+          const active = metric.id === activeMetric;
+
+          return (
+            <g key={metric.id}>
+              {active && (
+                <circle
+                  className="insight-radar-halo"
+                  cx={point.x}
+                  cy={point.y}
+                  r="12"
+                />
+              )}
+              <circle
+                className={"insight-radar-dot" + (active ? ' is-active' : '')}
+                cx={point.x}
+                cy={point.y}
+                r={active ? 6 : 4.5}
+                tabIndex="0"
+                onMouseEnter={() => onSelect(metric.id)}
+                onFocus={() => onSelect(metric.id)}
+              />
+              <text
+                x={labelPoint.x}
+                y={labelPoint.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className={"insight-radar-label" + (active ? ' is-active' : '')}
+                onMouseEnter={() => onSelect(metric.id)}
+              >
+                {metric.short}
+              </text>
+            </g>
+          );
+        })}
+        {activeIndex >= 0 && (
+          <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle" className="insight-radar-center-label">
+            {metrics[activeIndex].short}
+          </text>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+function CardStatValue({ yellow = 0, red = 0 }) {
+  return (
+    <div className="card-stat-value" aria-label={`Tarjetas: ${yellow} amarillas y ${red} rojas`}>
+      <span className="card-chip is-yellow">
+        <i aria-hidden="true"></i>
+        <b>{yellow}</b>
+      </span>
+      <span className="card-chip is-red">
+        <i aria-hidden="true"></i>
+        <b>{red}</b>
+      </span>
+    </div>
+  );
+}
+
 function TeamInsight({ team, onClose }) {
   const score = TEAM_STRENGTH[team.id] ?? 60;
   const stats = TEAM_STATS[team.id];
+  const radarMetrics = useMemo(() => stats ? INSIGHT_METRICS.map(metric => ({
+    ...metric,
+    raw: metric.display(stats),
+    metaText: metric.meta(stats),
+    score: normalizeInsightMetric(metric, stats),
+    formatted: metric.format(metric.value(stats), stats)
+  })) : [], [stats]);
+  const [activeMetric, setActiveMetric] = useState(radarMetrics[0]?.id ?? null);
   const statRows = stats ? [
-    { label: 'Goles por partido', value: stats.gf.p, meta: 'Total de goles: ' + stats.gf.t },
-    { label: 'Goles recibidos por partido', value: stats.ga.p, meta: 'Total recibidos: ' + stats.ga.t },
-    { label: 'Porterías a cero', value: stats.cs.v, meta: 'Partidos jugados: ' + stats.cs.pj },
-    { label: 'Posesión del balón', value: stats.pos.v, meta: 'Partidos jugados: ' + stats.pos.pj },
-    { label: 'Corners por partido', value: stats.cor.p, meta: 'Corners totales: ' + stats.cor.t },
-    stats.ps ? { label: 'Penaltis convertidos', value: stats.ps.v, meta: 'Total de goles: ' + stats.ps.g } : null,
-    stats.pc ? { label: 'Penaltis cometidos', value: stats.pc.v, meta: 'Total recibidos: ' + stats.pc.ga } : null,
-    { label: 'Tarjetas rojas', value: stats.rc.v, meta: 'Tarjetas amarillas: ' + stats.rc.ya },
-    { label: 'Tarjetas amarillas', value: stats.yc.v, meta: 'Tarjetas rojas: ' + stats.yc.rc }
+    { label: 'Goles por partido', value: stats.gf.p, meta: 'Total de goles: ' + stats.gf.t, metricId: 'attack', tone: 'attack' },
+    { label: 'Goles recibidos por partido', value: stats.ga.p, meta: 'Total recibidos: ' + stats.ga.t, metricId: 'defense', tone: 'defense' },
+    { label: 'Porterías a cero', value: stats.cs.v, meta: 'Partidos jugados: ' + stats.cs.pj, metricId: 'cleanSheets', tone: 'defense' },
+    { label: 'Posesión del balón', value: stats.pos.v, meta: 'Partidos jugados: ' + stats.pos.pj, metricId: 'possession', tone: 'control' },
+    { label: 'Corners por partido', value: stats.cor.p, meta: 'Corners totales: ' + stats.cor.t, metricId: 'setPieces', tone: 'attack' },
+    stats.ps ? { label: 'Penaltis convertidos', value: stats.ps.v, meta: 'Total de goles: ' + stats.ps.g, metricId: 'attack', tone: 'attack' } : null,
+    stats.pc ? { label: 'Penaltis cometidos', value: stats.pc.v, meta: 'Total recibidos: ' + stats.pc.ga, metricId: 'defense', tone: 'defense' } : null,
+    { label: 'Tarjetas rojas', value: stats.rc.v, meta: 'Tarjetas amarillas: ' + stats.rc.ya, metricId: 'discipline', tone: 'discipline' },
+    { label: 'Tarjetas amarillas', value: stats.yc.v, meta: 'Tarjetas rojas: ' + stats.yc.rc, metricId: 'discipline', tone: 'discipline' }
   ].filter(Boolean) : [];
+  const highlightedMetric = radarMetrics.find(metric => metric.id === activeMetric) || radarMetrics[0] || null;
+  const strongestMetric = radarMetrics.length ? [...radarMetrics].sort((a, b) => b.score - a.score)[0] : null;
+  const weakestMetric = radarMetrics.length ? [...radarMetrics].sort((a, b) => a.score - b.score)[0] : null;
+  const isDisciplineFocus = highlightedMetric?.id === 'discipline';
+  const focusMetaText = isDisciplineFocus && stats
+    ? `Registro de tarjetas: ${stats.yc?.v ?? 0} amarillas y ${stats.rc?.v ?? 0} rojas.`
+    : highlightedMetric?.metaText;
+
+  useEffect(() => {
+    if (!radarMetrics.length) return;
+    if (!radarMetrics.some(metric => metric.id === activeMetric)) {
+      setActiveMetric(radarMetrics[0].id);
+    }
+  }, [activeMetric, radarMetrics]);
 
   return (
     <div className="insight-overlay" role="dialog" aria-modal="true" aria-label={'Estadísticas de ' + team.nm} onClick={onClose}>
@@ -1225,21 +1493,83 @@ function TeamInsight({ team, onClose }) {
             <span>Índice del simulador</span>
             <strong>{score}</strong>
           </div>
-          <p>Resumen comparativo del rendimiento reciente por equipo, basado en métricas de ataque, defensa, posesión y disciplina.</p>
         </div>
 
         <div className="insight-section">
-          <h4>Estadísticas de equipo</h4>
           {stats ? (
-            <div className="stats-grid">
-              {statRows.map(row => (
-                <div className="stat-card" key={row.label}>
-                  <span>{row.label}</span>
-                  <strong>{row.value}</strong>
-                  <small>{row.meta}</small>
+            <>
+              <div className="insight-chart-card">
+                <div className="insight-chart-head">
+                  <strong>Radar</strong>
                 </div>
-              ))}
-            </div>
+                <div className="insight-storyline">
+                  {strongestMetric && (
+                    <button
+                      className="insight-story-chip is-positive"
+                      type="button"
+                      onClick={() => setActiveMetric(strongestMetric.id)}
+                    >
+                      <span>Mejor</span>
+                      <strong>{strongestMetric.short}</strong>
+                    </button>
+                  )}
+                  {weakestMetric && (
+                    <button
+                      className="insight-story-chip is-neutral"
+                      type="button"
+                      onClick={() => setActiveMetric(weakestMetric.id)}
+                    >
+                      <span>Más baja</span>
+                      <strong>{weakestMetric.short}</strong>
+                    </button>
+                  )}
+                </div>
+                <InsightRadar metrics={radarMetrics} activeMetric={activeMetric} onSelect={setActiveMetric} />
+                <div className="insight-metric-pills" role="tablist" aria-label="Métricas del radar">
+                  {radarMetrics.map(metric => (
+                    <button
+                      key={metric.id}
+                      className={`insight-metric-pill tone-${metric.tone}` + (metric.id === activeMetric ? ' is-active' : '')}
+                      type="button"
+                      role="tab"
+                      aria-selected={metric.id === activeMetric}
+                      onClick={() => setActiveMetric(metric.id)}
+                    >
+                      {metric.short}
+                    </button>
+                  ))}
+                </div>
+                {highlightedMetric && (
+                  <div className="insight-focus-card">
+                    <div className={"insight-focus-head" + (isDisciplineFocus ? ' is-discipline' : '')}>
+                      <span className="insight-focus-label">{highlightedMetric.short}</span>
+                      {isDisciplineFocus && stats ? (
+                        <CardStatValue yellow={stats.yc?.v ?? 0} red={stats.rc?.v ?? 0} />
+                      ) : (
+                        <strong>{highlightedMetric.formatted}</strong>
+                      )}
+                    </div>
+                    <p>{focusMetaText}</p>
+                  </div>
+                )}
+              </div>
+              <div className="stats-grid">
+                  {statRows.map((row, index) => (
+                    <div
+                      className={`stat-card is-passive tone-${row.tone}` + (row.metricId === activeMetric ? ' is-linked' : '')}
+                      key={row.label}
+                      style={{ animationDelay: `${index * 35}ms` }}
+                    >
+                      <div className="stat-card-topline">
+                        <span>{row.label}</span>
+                        <i className={`stat-card-dot tone-${row.tone}`} aria-hidden="true"></i>
+                      </div>
+                      <strong>{row.value}</strong>
+                      <small>{row.meta}</small>
+                    </div>
+                ))}
+              </div>
+            </>
           ) : (
             <p className="insight-muted">No hay estadísticas de equipo disponibles para esta selección por el momento.</p>
           )}
