@@ -137,13 +137,13 @@ function Icon({ name = 'check', label, className = '', style }) {
     full_coverage: <path d="M160-120q-33 0-56.5-23.5T80-200v-480h80v480h600v80H160Zm160-160q-33 0-56.5-23.5T240-360v-480h680v480q0 33-23.5 56.5T840-280H320Zm0-80h520v-400H320v400Zm80-120h160v-200H400v200Zm200 0h160v-80H600v80Zm0-120h160v-80H600v80ZM320-360v-400 400Z" />,
     calculate: <path d="M320-240h60v-80h80v-60h-80v-80h-60v80h-80v60h80v80Zm200-30h200v-60H520v60Zm0-100h200v-60H520v60Zm44-152 56-56 56 56 42-42-56-58 56-56-42-42-56 56-56-56-42 42 56 56-56 58 42 42Zm-314-70h200v-60H250v60Zm-50 472q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
   };
-  
+
   const isMaterialSymbol = ['quiz', 'full_coverage', 'calculate'].includes(name);
-  const common = { 
-    viewBox: isMaterialSymbol ? '0 -960 960 960' : '0 0 24 24', 
-    fill: 'currentColor', 
-    preserveAspectRatio: 'xMidYMid meet', 
-    'aria-hidden': 'true' 
+  const common = {
+    viewBox: isMaterialSymbol ? '0 -960 960 960' : '0 0 24 24',
+    fill: 'currentColor',
+    preserveAspectRatio: 'xMidYMid meet',
+    'aria-hidden': 'true'
   };
   return <svg className={"icon " + className} style={style} {...common}>{paths[name] || paths.check}<title>{label}</title></svg>;
 }
@@ -490,11 +490,11 @@ function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="max-w-7xl mx-auto px-4">
-        
+
         <div className="recirculation-banner mb-8">
           <div className="recirculation-header mb-5">
             <h3 className="recirculation-title">Descubre más del Mundial 2026</h3>
-            <p className="recirculation-desc">Continúa viviendo la pasión del fútbol con nuestra cobertura y herramientas exclusivas.</p>
+            <p className="recirculation-desc">Continúa viviendo la fiesta del fútbol con nuestra cobertura y herramientas exclusivas.</p>
           </div>
           <div className="recirculation-grid">
             <a href={ECOSYSTEM_LINKS.landing} target="_blank" rel="noreferrer" className="recirc-card special-landing">
@@ -627,8 +627,8 @@ function GroupPhase({ gSel, toggle, go, simulate, openInsight }) {
         {completeCount === 0
           ? 'Elige 3 clasificados por grupo para comenzar tu pronóstico.'
           : pendingGroups > 0
-          ? `Te faltan ${pendingGroups} ${pendingGroups === 1 ? 'grupo por cerrar' : 'grupos por cerrar'}. Completa 3 clasificados por grupo para avanzar.`
-          : 'Todos los grupos están listos. Ya puedes pasar a mejores terceros.'}
+            ? `Te faltan ${pendingGroups} ${pendingGroups === 1 ? 'grupo por cerrar' : 'grupos por cerrar'}. Completa 3 clasificados por grupo para avanzar.`
+            : 'Todos los grupos están listos. Ya puedes pasar a mejores terceros.'}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 max-w-7xl mx-auto">
         {GR.map((g, gi) => (
@@ -708,8 +708,8 @@ function BTPhase({ teams, sel, toggle, go, simulate }) {
         {cnt === 0
           ? 'Elige 8 mejores terceros para completar el cuadro eliminatorio.'
           : remaining > 0
-          ? `Te faltan ${remaining} ${remaining === 1 ? 'mejor tercero por definir' : 'mejores terceros por definir'}.`
-          : 'Los mejores terceros están listos. Ya puedes pasar a eliminatorias.'}
+            ? `Te faltan ${remaining} ${remaining === 1 ? 'mejor tercero por definir' : 'mejores terceros por definir'}.`
+            : 'Los mejores terceros están listos. Ya puedes pasar a eliminatorias.'}
       </div>
       <div className="survival-grid grid grid-cols-1 sm:grid-cols-2 gap-3">
         {teams.map(({ team, tid, group }) => {
@@ -1587,19 +1587,19 @@ function TeamInsight({ team, onClose }) {
                 )}
               </div>
               <div className="stats-grid">
-                  {statRows.map((row, index) => (
-                    <div
-                      className={`stat-card is-passive tone-${row.tone}` + (row.metricId === activeMetric ? ' is-linked' : '')}
-                      key={row.label}
-                      style={{ animationDelay: `${index * 35}ms` }}
-                    >
-                      <div className="stat-card-topline">
-                        <span>{row.label}</span>
-                        <i className={`stat-card-dot tone-${row.tone}`} aria-hidden="true"></i>
-                      </div>
-                      <strong>{row.value}</strong>
-                      <small>{row.meta}</small>
+                {statRows.map((row, index) => (
+                  <div
+                    className={`stat-card is-passive tone-${row.tone}` + (row.metricId === activeMetric ? ' is-linked' : '')}
+                    key={row.label}
+                    style={{ animationDelay: `${index * 35}ms` }}
+                  >
+                    <div className="stat-card-topline">
+                      <span>{row.label}</span>
+                      <i className={`stat-card-dot tone-${row.tone}`} aria-hidden="true"></i>
                     </div>
+                    <strong>{row.value}</strong>
+                    <small>{row.meta}</small>
+                  </div>
                 ))}
               </div>
             </>
