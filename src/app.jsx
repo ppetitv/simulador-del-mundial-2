@@ -119,7 +119,6 @@ function simulateGroups() {
 function flg(c) { return '/flags/' + c + '.svg'; }
 
 function Icon({ name = 'check', label, className = '', style }) {
-  const common = { viewBox: '0 0 24 24', fill: 'currentColor', preserveAspectRatio: 'xMidYMid meet', 'aria-hidden': 'true' };
   const paths = {
     check: <path d="M9 16.17 4.83 12 3.41 13.41 9 19l12-12-1.41-1.41z" />,
     chevron: <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />,
@@ -133,7 +132,18 @@ function Icon({ name = 'check', label, className = '', style }) {
     trophy: <path d="M18 2H6v3H2v3c0 2.97 2.16 5.43 5 5.91V17H5v2h14v-2h-2v-3.09c2.84-.48 5-2.94 5-5.91V5h-4zm-2 10.82V17H8v-4.18C5.67 12.4 4 10.39 4 8V7h2v3h12V7h2v1c0 2.39-1.67 4.4-4 4.82z" />,
     restart: <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />,
     whatsapp: <><path d="M12.04 2C6.49 2 2 6.49 2 12.04c0 1.76.46 3.48 1.32 5L2.25 22l5.08-1.03a10 10 0 0 0 4.71 1.17h.01C17.59 22.14 22 17.65 22 12.1A10 10 0 0 0 12.04 2zm0 18.12h-.01a8.06 8.06 0 0 1-4.1-1.12l-.29-.17-3.01.61.64-2.94-.19-.3A8.03 8.03 0 0 1 3.9 12.04C3.9 7.52 7.54 3.9 12.04 3.9a8.03 8.03 0 0 1 8.06 8.1 8.03 8.03 0 0 1-8.06 8.12z" /><path d="M16.52 14.23c-.25-.13-1.47-.72-1.7-.8-.23-.09-.4-.13-.57.12-.16.24-.65.8-.8.97-.14.16-.29.18-.54.06a6.6 6.6 0 0 1-1.94-1.19 7.35 7.35 0 0 1-1.35-1.68c-.14-.24-.01-.37.1-.5.11-.11.25-.28.37-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.57-1.37-.78-1.88-.2-.49-.41-.42-.57-.43h-.48c-.16 0-.42.06-.64.3-.22.25-.84.82-.84 2 0 1.17.86 2.3.98 2.45.12.16 1.68 2.56 4.07 3.59.57.25 1.02.4 1.37.51.58.18 1.11.15 1.53.09.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.29z" /></>,
-    spark: <path d="m12 3-1.9 5.1L5 10l5.1 1.9L12 17l1.9-5.1L19 10l-5.1-1.9zm7 10-1.25 2.75L15 17l2.75 1.25L19 21l1.25-2.75L23 17l-2.75-1.25z" />
+    spark: <path d="m12 3-1.9 5.1L5 10l5.1 1.9L12 17l1.9-5.1L19 10l-5.1-1.9zm7 10-1.25 2.75L15 17l2.75 1.25L19 21l1.25-2.75L23 17l-2.75-1.25z" />,
+    quiz: <path d="M560-360q17 0 29.5-12.5T602-402q0-17-12.5-29.5T560-444q-17 0-29.5 12.5T518-402q0 17 12.5 29.5T560-360Zm-30-128h60q0-29 6-42.5t28-35.5q30-30 40-48.5t10-43.5q0-45-31.5-73.5T560-760q-41 0-71.5 23T446-676l54 22q9-25 24.5-37.5T560-704q24 0 39 13.5t15 36.5q0 14-8 26.5T578-596q-33 29-40.5 45.5T530-488ZM320-240q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z" />,
+    full_coverage: <path d="M160-120q-33 0-56.5-23.5T80-200v-480h80v480h600v80H160Zm160-160q-33 0-56.5-23.5T240-360v-480h680v480q0 33-23.5 56.5T840-280H320Zm0-80h520v-400H320v400Zm80-120h160v-200H400v200Zm200 0h160v-80H600v80Zm0-120h160v-80H600v80ZM320-360v-400 400Z" />,
+    calculate: <path d="M320-240h60v-80h80v-60h-80v-80h-60v80h-80v60h80v80Zm200-30h200v-60H520v60Zm0-100h200v-60H520v60Zm44-152 56-56 56 56 42-42-56-58 56-56-42-42-56 56-56-56-42 42 56 56-56 58 42 42Zm-314-70h200v-60H250v60Zm-50 472q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+  };
+  
+  const isMaterialSymbol = ['quiz', 'full_coverage', 'calculate'].includes(name);
+  const common = { 
+    viewBox: isMaterialSymbol ? '0 -960 960 960' : '0 0 24 24', 
+    fill: 'currentColor', 
+    preserveAspectRatio: 'xMidYMid meet', 
+    'aria-hidden': 'true' 
   };
   return <svg className={"icon " + className} style={style} {...common}>{paths[name] || paths.check}<title>{label}</title></svg>;
 }
@@ -165,7 +175,7 @@ const INTERSTITIAL_FLOWS = {
     cta: 'Continuar a mejores terceros'
   },
   knockout: {
-    enabled: true,
+    enabled: false,
     eyebrow: 'Espacio publicitario',
     body: 'Después de esta pauta pasas a la fase eliminatoria.',
     sponsor: 'Banner de patrocinante',
@@ -479,25 +489,53 @@ function InterstitialScreen({ config, onContinue }) {
 function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="site-footer-grid max-w-7xl mx-auto px-4">
-        <div>
-          <div className="site-footer-title">Más herramientas</div>
-          <div className="site-footer-links">
-            <a href={ECOSYSTEM_LINKS.varDelSaber} target="_blank" rel="noreferrer">El Var del Saber</a>
-            <a href={ECOSYSTEM_LINKS.calculadora} target="_blank" rel="noreferrer">Calculadora RPP Deportes</a>
+      <div className="max-w-7xl mx-auto px-4">
+        
+        <div className="recirculation-banner mb-8">
+          <div className="recirculation-header mb-5">
+            <h3 className="recirculation-title">Descubre más del Mundial 2026</h3>
+            <p className="recirculation-desc">Continúa viviendo la pasión del fútbol con nuestra cobertura y herramientas exclusivas.</p>
+          </div>
+          <div className="recirculation-grid">
+            <a href={ECOSYSTEM_LINKS.landing} target="_blank" rel="noreferrer" className="recirc-card special-landing">
+              <div className="recirc-icon"><Icon name="full_coverage" label="Especial" /></div>
+              <div className="recirc-content">
+                <span className="recirc-badge">Especial RPP</span>
+                <span className="recirc-name">La guía definitiva del Mundial</span>
+                <span className="recirc-desc">Noticias, fixture completo y crónicas al instante.</span>
+              </div>
+              <div className="recirc-arrow"><Icon name="external" label="Abrir" /></div>
+            </a>
+            <a href={ECOSYSTEM_LINKS.varDelSaber} target="_blank" rel="noreferrer" className="recirc-card">
+              <div className="recirc-icon"><Icon name="quiz" label="Var" /></div>
+              <div className="recirc-content">
+                <span className="recirc-badge">Trivia y Datos</span>
+                <span className="recirc-name">El Var del Saber</span>
+                <span className="recirc-desc">Compite en trivias contra otros usuarios y gana premios.</span>
+              </div>
+              <div className="recirc-arrow"><Icon name="external" label="Abrir" /></div>
+            </a>
+            <a href={ECOSYSTEM_LINKS.calculadora} target="_blank" rel="noreferrer" className="recirc-card">
+              <div className="recirc-icon"><Icon name="calculate" label="Calculadora" /></div>
+              <div className="recirc-content">
+                <span className="recirc-badge">Estadísticas</span>
+                <span className="recirc-name">Calculadora de posiciones</span>
+                <span className="recirc-desc">Ingresa tus pronósticos y define a los clasificados.</span>
+              </div>
+              <div className="recirc-arrow"><Icon name="external" label="Abrir" /></div>
+            </a>
           </div>
         </div>
-        <div>
-          <div className="site-footer-title">Cobertura RPP</div>
+
+        <div className="site-footer-bottom pt-6 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderTop: '1px solid rgba(16,24,40,.08)' }}>
           <div className="site-footer-links">
             <a href={ECOSYSTEM_LINKS.rppHome} target="_blank" rel="noreferrer">Ir a RPP.pe</a>
-            <a href={ECOSYSTEM_LINKS.landing} target="_blank" rel="noreferrer">Ver landing del especial</a>
           </div>
-        </div>
-        <div>
-          <div className="site-footer-title">Legal</div>
-          <div className="site-footer-copy">© {CURRENT_YEAR} GRPP</div>
-          <div className="site-footer-copy">Todos los derechos reservados</div>
+          <div className="flex items-center gap-3">
+            <span className="site-footer-copy">© {CURRENT_YEAR} GRPP</span>
+            <span className="site-footer-copy" style={{ opacity: 0.4 }}>|</span>
+            <span className="site-footer-copy">Todos los derechos reservados</span>
+          </div>
         </div>
       </div>
     </footer>
