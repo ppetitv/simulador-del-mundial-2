@@ -297,7 +297,7 @@ body {
 
 .app-header {
   border-bottom: 1px solid rgba(16, 24, 40, .08);
-  background: rgba(255, 255, 255, .78);
+  background: rgb(255, 255, 255);
   backdrop-filter: blur(18px) saturate(130%);
   box-shadow: 0 16px 36px rgba(15, 23, 42, .08), inset 0 1px 0 rgba(255, 255, 255, .84)
 }
@@ -485,7 +485,7 @@ body {
   margin: 0 auto;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, .9);
+  background: rgb(255, 255, 255);
   border: 1px solid rgba(16, 24, 40, .08);
   box-shadow: 0 10px 24px rgba(13, 116, 200, .08)
 }
