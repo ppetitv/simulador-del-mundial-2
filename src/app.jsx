@@ -1531,6 +1531,9 @@ function TeamInsight({ team, onClose }) {
         <div className="insight-section">
           {stats ? (
             <>
+              <p className="insight-disclaimer">
+                Los datos mostrados son estimaciones generadas con IA para enriquecer la experiencia del simulador. Úsalos como guía, no como una predicción exacta.
+              </p>
               <div className="insight-chart-card">
                 <div className="insight-chart-head">
                   <strong>Radar</strong>
